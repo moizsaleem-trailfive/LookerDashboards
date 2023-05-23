@@ -2,6 +2,23 @@
 view: events {
   sql_table_name: `evident-catcher-381918.analytics_299163363.events_*`
     ;;
+  measure: event_count {
+    type: count_distinct
+    sql:  ${TABLE}.event_name;;
+  }
+  # measure: sum_of_events {
+  #   type: sum
+  #   sql: ${event_count} ;;
+  #   filters: {
+  #     field: event_name
+  #     value: "Sollicitatie_Intentie"
+  #   }
+  #   filters: {
+  #     field: traffic_source__source
+  #     value: "%RecruitNow"
+
+  #   }
+  # }
 
   dimension: app_info__firebase_app_id {
     type: string
@@ -240,7 +257,7 @@ view: events {
   }
 
   dimension: event_date {
-    type: string
+    type: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
 
   }
@@ -376,6 +393,11 @@ view: events {
     sql: ${TABLE}.traffic_source.name ;;
     group_label: "Traffic Source"
     group_item_label: "Name"
+  }
+
+  measure: total_traffic_source__name{
+    type: count_distinct
+    sql:${traffic_source__name}  ;;
   }
   dimension: landing_pages{
     label: "Landing Pages"
@@ -680,4 +702,5 @@ view: events_20230502__user_properties {
     group_label: "Value"
     group_item_label: "String Value"
   }
+
 }

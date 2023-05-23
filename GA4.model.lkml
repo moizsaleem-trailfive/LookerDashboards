@@ -17,3 +17,4 @@ explore: p_ads_keyword_stats_6357933521
     sql_on: ${p_ads_keyword_stats_6357933521.campaign_id}=${p_campaign_6357933521.campaign_id} ;;
   }
 }
+explore: p_budget_stats_6357933521 {}
