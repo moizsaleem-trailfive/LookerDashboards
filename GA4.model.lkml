@@ -18,3 +18,5 @@ explore: p_ads_keyword_stats_6357933521
   }
 }
 explore: p_budget_stats_6357933521 {}
+explore: p_ads_budget_6357933521 {}
+explore: p_budget_6357933521 {}
