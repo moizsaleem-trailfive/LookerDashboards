@@ -448,6 +448,36 @@ view: events {
     sql: ${TABLE}.user_pseudo_id ;;
   }
 
+  dimension: fc_budget_aduzana {
+    type: number
+    value_format_name: eur
+    sql: 487;;
+  }
+  dimension: fcpa {
+    type: number
+    value_format_name: eur
+    sql:22;;
+  }
+  dimension:fc_Jobrapido  {
+    type: number
+    value_format_name: eur
+    sql: 887 ;;
+  }
+  dimension:fc_cpa_Jobrapido  {
+    type: number
+    value_format_name: eur
+    sql: 88 ;;
+  }
+  dimension: fc_jobbird {
+    type: number
+    value_format_name: eur
+    sql: 786 ;;
+  }
+  dimension: fc_cpa_jobbird {
+    type: number
+    value_format_name: eur
+    sql: 67;;
+  }
   measure: total_user {
     type: count_distinct
     sql: ${TABLE}.user_pseudo_id ;;
