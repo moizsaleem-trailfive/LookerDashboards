@@ -453,6 +453,8 @@ view: events {
     value_format_name: eur
     sql: 487;;
   }
+
+
   dimension: fcpa {
     type: number
     value_format_name: eur
