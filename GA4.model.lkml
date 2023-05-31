@@ -28,3 +28,4 @@ explore: p_budget_6357933521 {}
 explore: stats {
 
 }
+explore: apics_flexjobs {}
