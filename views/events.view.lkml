@@ -255,16 +255,31 @@ view: events {
     type: number
     sql: ${TABLE}.event_bundle_sequence_id ;;
   }
+  dimension_group: end {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${event_date} ;;
+  }
 
   dimension: event_date {
     type: date
+    # sql:${TABLE}.event_date;;
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
 
   }
-  dimension: previous_event_date {
-    type: date
-    sql: DATE_ADD(${event_date}, INTERVAL -1 DAY) ;;
-  }
+  # dimension: previous_event_date {
+  #   type: date
+  #   sql: DATE_ADD(${event_date1, INTERVAL -1 DAY) ;;
+  # }
 
   dimension: event_dimensions__hostname {
     type: string
@@ -485,6 +500,12 @@ view: events {
     sql: ${TABLE}.user_pseudo_id ;;
 
   }
+  measure: t{
+    type: count_distinct
+    sql: ${TABLE}.event_name ;;
+
+  }
+
 
 
   measure: count {
