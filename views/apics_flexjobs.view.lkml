@@ -26,6 +26,10 @@ view: apics_flexjobs {
     value_format_name: eur
   }
 
+measure: example {
+  type: number
+  sql: ${adzuna_spend_incl}/${events.total_user} ;;
+}
   dimension_group: date {
     type: time
     timeframes: [

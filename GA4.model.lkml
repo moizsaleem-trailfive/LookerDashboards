@@ -2,7 +2,13 @@ connection: "googlebigquery"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
-explore: events {}
+explore: events {
+  join: apics_flexjobs {
+    relationship: many_to_one
+    sql_on: 1=1 ;;
+    type: cross
+  }
+}
 explore: p_campaign_stats_6357933521 {
   join: p_campaign_6357933521 {
     relationship: many_to_one
@@ -28,4 +34,10 @@ explore: p_budget_6357933521 {}
 explore: stats {
 
 }
-explore: apics_flexjobs {}
+explore: apics_flexjobs {
+  join: events {
+    relationship: many_to_one
+    sql_on: 1 = 1 ;; # this sql_on condition is required in some dialects,
+    type: cross      # but causes problems in other dialects, try adding or
+  }
+}
