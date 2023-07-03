@@ -20,6 +20,11 @@ view: events {
   #   }
   # }
 
+measure: countapp {
+  type: count_distinct
+  sql: COALESCE(${TABLE}.user_first_touch_timestamp, 0) ;;
+}
+
   dimension: app_info__firebase_app_id {
     type: string
     sql: ${TABLE}.app_info.firebase_app_id ;;
@@ -255,7 +260,38 @@ view: events {
     type: number
     sql: ${TABLE}.event_bundle_sequence_id ;;
   }
-  dimension_group: end {
+
+  # dimension_group: end {
+  #   type: time
+  #   timeframes: [
+  #     raw,
+  #     date,
+  #     week,
+  #     month,
+  #     quarter,
+  #     year
+  #   ]
+  #   convert_tz: no
+  #   datatype: date
+  #   sql: ${event_date} ;;
+  # }
+
+  dimension: event_date {
+    type: date_time
+    # sql:${TABLE}.event_date;;
+    sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
+
+  }
+  measure: count_by_month {
+    type: sum
+    sql: ${TABLE}.user_first_touch_timestamp;;
+    filters: {
+      field:test_date_month
+      value: "month"
+      }
+  }
+
+  dimension_group: test_date {
     type: time
     timeframes: [
       raw,
@@ -267,14 +303,7 @@ view: events {
     ]
     convert_tz: no
     datatype: date
-    sql: ${event_date} ;;
-  }
-
-  dimension: event_date {
-    type: date
-    # sql:${TABLE}.event_date;;
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
-
   }
   # dimension: previous_event_date {
   #   type: date
@@ -417,11 +446,19 @@ view: events {
   dimension: landing_pages{
     label: "Landing Pages"
     type: string
-    sql: (SELECT value.string_value
+    sql: (SELECT value.int_value
              FROM UNNEST(${event_params})
-             WHERE key = 'page_title');;
+             WHERE key = 'ga_session_id');;
+  }
+  measure: clicks_count {
+    type: count_distinct
+    sql: ${landing_pages} ;;
   }
 
+measure: sollicitates_count {
+  type: count_distinct
+  sql: ${event_name} ;;
+}
   dimension: traffic_source__source {
     type: string
     sql: ${TABLE}.traffic_source.source ;;
