@@ -450,6 +450,13 @@ measure: countapp {
              FROM UNNEST(${event_params})
              WHERE key = 'ga_session_id');;
   }
+  dimension: Vacature{
+    label: "Vacature"
+    type: string
+    sql: (SELECT value.string_value
+             FROM UNNEST(${event_params})
+             WHERE key = 'page_title');;
+  }
   measure: clicks_count {
     type: count_distinct
     sql: ${landing_pages} ;;
