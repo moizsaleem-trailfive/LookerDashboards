@@ -3,6 +3,10 @@ connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
 explore: events {
+  # access_filter: {
+  #   user_attribute: event_name
+  #   field: events.event_name
+  # }
   join: apics_flexjobs{
     relationship: many_to_one
     sql_on: 1=1 ;;
@@ -15,7 +19,12 @@ explore: p_campaign_stats_6357933521 {
     sql_on: ${p_campaign_stats_6357933521.campaign_id}=${p_campaign_6357933521.campaign_id} ;;
   }
 }
-explore: p_campaign_6357933521 {}
+explore: p_campaign_6357933521 {
+   # access_filter: {
+  #   user_attribute: customer_id
+  #   field: external_customer_id
+  # }
+}
 explore: p_ads_keyword_stats_6357933521
 {
   join: p_campaign_6357933521 {

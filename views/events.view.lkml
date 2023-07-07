@@ -459,12 +459,16 @@ measure: countapp {
   }
   measure: clicks_count {
     type: count_distinct
-    sql: ${landing_pages} ;;
+    sql: ${user_pseudo_id} ;;
   }
 
 measure: sollicitates_count {
   type: count_distinct
   sql: ${event_name} ;;
+  filters: {
+    field: event_name
+    value: "Sollicitatie_succesvol"
+  }
 }
   dimension: traffic_source__source {
     type: string
