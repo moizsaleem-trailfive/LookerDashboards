@@ -23,7 +23,7 @@ explore: events {
 
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
+    sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}   ;;
   }
 }
 explore: campaign {}
@@ -73,6 +73,10 @@ explore: events_vapro {
     relationship: many_to_many
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
   }
+  join: utm_id {
+    relationship: many_to_many
+    sql_on: ${campaign.id}=${utm_id.utm_id} ;;
+  }
 }
 explore: events_1voud {}
 # explore: apics_flexjobs {
@@ -104,3 +108,5 @@ explore: utm_id {
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
   }
 }
+
+explore: gawa_publishing_20230502 {}
