@@ -107,6 +107,11 @@ explore: utm_id {
     relationship: many_to_many
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
   }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
+  }
 }
+explore :job_board_budget_amount{}
 
 explore: gawa_publishing_20230502 {}
