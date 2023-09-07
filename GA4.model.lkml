@@ -26,7 +26,24 @@ explore: events {
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}   ;;
   }
 }
-explore: campaign {}
+explore: campaign {
+  join: client {
+    relationship: many_to_many
+    sql_on: ${campaign.clientid}=${client.id} ;;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+  }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
+    }
+}
 
 # explore: job_board_budget_amount {}
 # explore: p_campaign_stats_6357933521 {

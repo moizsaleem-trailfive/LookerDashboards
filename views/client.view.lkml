@@ -1,5 +1,5 @@
 view: client {
-  sql_table_name: `evident-catcher-381918.onlineResult_Sql_DB.client` ;;
+  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.client` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -23,6 +23,7 @@ view: client {
   dimension_group: createddate {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
+    datatype: datetime
     sql: ${TABLE}.createddate ;;
   }
   dimension: directorypath {
@@ -59,7 +60,7 @@ view: client {
     sql: ${TABLE}.parentid ;;
   }
   dimension: percentage {
-    type: number
+    type: string
     sql: ${TABLE}.percentage ;;
   }
   dimension: status {
@@ -73,23 +74,11 @@ view: client {
   dimension_group: updateddate {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
+    datatype: datetime
     sql: ${TABLE}.updateddate ;;
   }
   measure: count {
     type: count
-    drill_fields: [detail*]
+    drill_fields: [id, name]
   }
-
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-	id,
-	name,
-	budget_planning_jobboard.count,
-	budget_planning.count,
-	vacancy.count,
-	campaign.count
-	]
-  }
-
 }

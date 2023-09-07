@@ -24,7 +24,7 @@ view: utm_data {
   }
   dimension: utm_source {
     type: string
-    sql: ${TABLE}.utm_source ;;
+    sql: INITCAP(${TABLE}.utm_source) ;;
   }
   measure: count {
     type: count
