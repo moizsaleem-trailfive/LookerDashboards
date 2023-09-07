@@ -13,9 +13,14 @@ view: utm_data {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-  dimension: utm_id {
+
+  dimension: utm_id_string {
     type: string
     sql: ${TABLE}.utm_id ;;
+  }
+  dimension: utm_id {
+    type: number
+    sql: CAST(${utm_id_string} AS INTEGER);;
   }
   dimension: utm_source {
     type: string
