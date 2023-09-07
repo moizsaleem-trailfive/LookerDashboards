@@ -94,14 +94,14 @@ explore: events_1voud {}
 #   }
 # }
 
-explore: utm_id {
+explore: utm_data {
   join: campaign {
     relationship: many_to_many
-    sql_on: ${utm_id.utm_id}=${campaign.id} ;;
+    sql_on: ${utm_data.utm_id}=${campaign.id} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${utm_id.utm_id} ;;
+    sql_on:   ${campaign_job_board.campaignid}=${utm_data.utm_id} ;;
   }
   join: job_board_budget_amount {
     relationship: many_to_many
