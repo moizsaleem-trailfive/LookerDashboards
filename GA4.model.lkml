@@ -129,13 +129,12 @@ explore: utm_id {
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
 
   }
-<<<<<<< HEAD
+
   }
 
-=======
 
-}
->>>>>>> c1d8a8707be886a242a2458e2adc669a9baddead
+
+
 explore: utm_data {
   join: campaign {
     relationship: many_to_many
