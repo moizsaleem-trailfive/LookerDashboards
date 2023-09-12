@@ -1,5 +1,5 @@
-view: utm_data {
-  sql_table_name: `evident-catcher-381918.analytics_278355110.utm_data` ;;
+view: page_views {
+  sql_table_name: `evident-catcher-381918.analytics_278355110.page_views` ;;
 
   dimension: event_date {
     type: string
@@ -27,27 +27,11 @@ view: utm_data {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-
-  dimension: utm_id_string {
+  dimension: utm_id {
     type: string
     sql: ${TABLE}.utm_id ;;
-  }
-  dimension: utm_id {
-    type: number
-    sql: CAST(${utm_id_string} AS INTEGER);;
-  }
-  dimension: utm_source {
-    type: string
-    sql: INITCAP(${TABLE}.utm_source) ;;
-
   }
   measure: count {
     type: count
   }
-  measure: count_user_pseudo_id {
-    type: count_distinct
-    sql: ${TABLE}.user_pseudo_id ;;
-  }
-
-
 }
