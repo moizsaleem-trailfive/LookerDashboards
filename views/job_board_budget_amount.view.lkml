@@ -26,6 +26,15 @@ view: job_board_budget_amount {
 
   }
 
+  measure: perday {
+    type: number
+  sql:${amount_int}/31 ;;
+  }
+  measure:  amount_per_campaign{
+    type: sum
+    sql: ${amount_int} ;;
+  }
+
 
   dimension: amountperday {
     type: string
@@ -57,6 +66,7 @@ view: job_board_budget_amount {
     type: string
     sql: ${TABLE}.month ;;
   }
+
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
@@ -73,10 +83,7 @@ view: job_board_budget_amount {
     type: string
     sql: ${TABLE}.year ;;
   }
-  measure:  amount_per_campaign{
-    type: sum
-    sql: ${amount_int} ;;
-  }
+
   measure: budget_per_day {
     type: number
     sql: ${amount_int}/31 ;;

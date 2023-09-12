@@ -130,7 +130,11 @@ explore: utm_id {
 
   }
 
-}
+  }
+
+
+
+
 explore: utm_data {
   join: campaign {
     relationship: many_to_many
