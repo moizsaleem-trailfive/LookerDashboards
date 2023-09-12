@@ -18,6 +18,7 @@ view: utm_id {
     convert_tz: no
     datatype: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
+    allow_fill: yes
   }
   dimension: page_location {
     type: string

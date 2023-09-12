@@ -24,11 +24,14 @@ view: job_board_budget_amount {
     type: number
     sql: cast(${amount_string} as INTEGER) ;;
   }
+  measure: perday {
+    type: number
+  sql:${amount_int}/31 ;;
+  }
   measure:  amount_per_campaign{
     type: sum
     sql: ${amount_int} ;;
   }
-
   dimension: amountperday {
     type: string
     sql: ${TABLE}.amountperday ;;
@@ -59,6 +62,7 @@ view: job_board_budget_amount {
     type: string
     sql: ${TABLE}.month ;;
   }
+
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;

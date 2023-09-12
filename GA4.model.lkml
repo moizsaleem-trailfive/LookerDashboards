@@ -128,7 +128,8 @@ explore: utm_id {
     relationship: many_to_many
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
   }
-}
+  }
+
 explore: utm_data {
   join: campaign {
     relationship: many_to_many
