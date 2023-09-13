@@ -31,6 +31,11 @@ view: page_views {
     type: string
     sql: ${TABLE}.utm_id ;;
   }
+  dimension: utm_source {
+    type: string
+    sql: ${TABLE}.utm_source ;;
+
+  }
   measure: count {
     type: count
   }

@@ -165,5 +165,15 @@ explore: utm_budget {}
 
 explore: conv_rate {
 }
-explore: page_views {}
-explore : applied_views{}
+explore: page_views {
+  join: jobboard {
+    relationship: one_to_one
+    sql_on: ${jobboard.name}=${page_views.utm_source} ;;
+  }
+}
+explore : applied_views{
+  join: jobboard {
+    relationship: one_to_one
+    sql_on: ${jobboard.name}=${applied_views.utm_source} ;;
+  }
+}
