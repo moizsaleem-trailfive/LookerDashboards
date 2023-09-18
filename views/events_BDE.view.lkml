@@ -456,6 +456,14 @@ view: events_BDE {
              FROM UNNEST(${event_params})
              WHERE key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
+  dimension: Page_views{
+
+    label: "Page Views"
+    type: string
+    sql: (SELECT DISTINCT(${user_pseudo_id})
+             FROM UNNEST(${event_params})
+             WHERE event_name = 'page_view' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
   dimension: UTM {
     label: "UTM"
     type: number
@@ -481,6 +489,10 @@ view: events_BDE {
     type: count_distinct
     sql:  ${TABLE}.user_pseudo_id ;;
     filters: [utm_id_integer: "not null"]
+  }
+  measure: total_page_views {
+    type: count_distinct
+    sql:  ${Page_views} ;;
   }
 
 
