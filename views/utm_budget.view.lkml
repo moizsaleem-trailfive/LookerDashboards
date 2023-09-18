@@ -15,4 +15,5 @@ view: utm_budget {
   measure: count {
     type: count
   }
+
 }

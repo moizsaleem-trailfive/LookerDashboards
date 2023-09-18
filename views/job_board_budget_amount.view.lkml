@@ -22,7 +22,7 @@ view: job_board_budget_amount {
   }
   dimension: amount_int {
     type: number
-    sql: cast(${amount_string} as INTEGER) ;;
+    sql: safe_cast(${amount_string} as INTEGER) ;;
 
   }
 
@@ -91,5 +91,9 @@ view: job_board_budget_amount {
   measure: count {
     type: count
     drill_fields: [id, name]
+  }
+  measure: budget {
+    type: sum_distinct
+    sql: ${amount_int} ;;
   }
 }
