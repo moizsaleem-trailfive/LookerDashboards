@@ -88,6 +88,11 @@ view: job_board_budget_amount {
     type: number
     sql: ${amount_int}/31 ;;
   }
+
+  measure: amount_sum {
+    type:sum
+    sql: (select  sum(${amount_int}) from `evident-catcher-381918.sql_server_live_dbo.jobboardbudgetamount`  group by ${month});;
+  }
   measure: count {
     type: count
     drill_fields: [id, name]
