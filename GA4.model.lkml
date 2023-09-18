@@ -226,20 +226,50 @@ explore: events_apics {
     relationship: many_to_many
     sql_on: ${campaign.id}=${events_apics.utm_id};;
   }
-  join: campaign_job_board {
+
+  join: unique_campaignjobboards {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${events_apics.utm_id} ;;
+    sql_on:   ${unique_campaignjobboards.campaignid}=${events_apics.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
     type: inner
   }
 
   join: jobboard {
     relationship: many_to_many
-    sql_on:( ${jobboard.id}=${campaign_job_board.jobboardid}) AND (${jobboard.name}=${events_apics.source});;
+    sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_apics.source});;
     type: inner
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
+    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_apics.event_month};;
     type: inner
   }
+}
+
+
+explore: events_Djopzz {
+    join: campaign {
+      relationship: many_to_many
+      sql_on: ${campaign.id}=${events_Djopzz.utm_id} ;;
+      type: inner
+    }
+    join: jobboard {
+      relationship: one_to_one
+      sql_on:  ${jobboard.name}=${events_Djopzz.source}  ;;
+      type: inner
+    }
+    join: unique_campaignjobboards {
+      relationship: many_to_many
+      sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+      type: inner
+    }
+    # join:jobboard  {
+    #   relationship: many_to_many
+    #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
+    #   type: inner
+    # }
+    join: job_board_budget_amount {
+      relationship: many_to_many
+      sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
+      type: inner
+    }
 }
