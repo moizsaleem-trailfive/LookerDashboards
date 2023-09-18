@@ -1,24 +1,7 @@
-# # Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-# explore: events_20230502 {
-#   hidden: yes
-#     join: events_20230502__items {
-#       view_label: "Events 20230502: Items"
-#       sql: LEFT JOIN UNNEST(${events_20230502.items}) as events_20230502__items ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230502__event_params {
-#       view_label: "Events 20230502: Event Params"
-#       sql: LEFT JOIN UNNEST(${events_20230502.event_params}) as events_20230502__event_params ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230502__user_properties {
-#       view_label: "Events 20230502: User Properties"
-#       sql: LEFT JOIN UNNEST(${events_20230502.user_properties}) as events_20230502__user_properties ;;
-#       relationship: one_to_many
-#     }
-# }
-view: events_apics {
-  sql_table_name: `evident-catcher-381918.analytics_299163363.events_*` ;;
+# Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
+
+view: events_Jopp {
+  sql_table_name: `evident-catcher-381918.analytics_383498344.events_*` ;;
 
   dimension: app_info__firebase_app_id {
     type: string
@@ -50,6 +33,60 @@ view: events_apics {
     group_label: "App Info"
     group_item_label: "Version"
   }
+  dimension: collected_traffic_source__dclid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.dclid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Dclid"
+  }
+  dimension: collected_traffic_source__gclid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.gclid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Gclid"
+  }
+  dimension: collected_traffic_source__manual_campaign_id {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_campaign_id ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Campaign ID"
+  }
+  dimension: collected_traffic_source__manual_campaign_name {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_campaign_name ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Campaign Name"
+  }
+  dimension: collected_traffic_source__manual_content {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_content ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Content"
+  }
+  dimension: collected_traffic_source__manual_medium {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_medium ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Medium"
+  }
+  dimension: collected_traffic_source__manual_source {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_source ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Source"
+  }
+  dimension: collected_traffic_source__manual_term {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_term ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Term"
+  }
+  dimension: collected_traffic_source__srsltid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.srsltid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Srsltid"
+  }
   dimension: device__advertising_id {
     type: string
     sql: ${TABLE}.device.advertising_id ;;
@@ -73,30 +110,6 @@ view: events_apics {
     sql: ${TABLE}.device.category ;;
     group_label: "Device"
     group_item_label: "Category"
-  }
-  dimension: Page_location{
-    label: "Page Referrer"
-    type: string
-    sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE key = 'page_referrer' and
-            REGEXP_EXTRACT(value.string_value, 'utm_id=([^%&]+)') is not null
-            );;
-  }
-  dimension: source {
-    label: "source"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^%0-9&]+)')) ;;
-  }
-  dimension: UTM {
-    label: "UTM"
-    type: string
-    sql:REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)') ;;
-  }
-  dimension: utm_id {
-    type: number # Assuming utm_id is an integer
-    sql: CAST(${UTM} as INTEGER);;
-
   }
   dimension: device__is_limited_ad_tracking {
     type: string
@@ -250,7 +263,7 @@ view: events_apics {
     type: string
     sql: ${TABLE}.event_date ;;
   }
-  dimension_group: date {
+  dimension_group: Event_Date{
     type: time
     timeframes: [
       raw,
@@ -264,11 +277,17 @@ view: events_apics {
     datatype: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
   }
-  dimension: month {
+  dimension: event_month_int {
+
+    type: string
+
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
+    label: "Event Month"
+  }
+  dimension: event_month_string {
     type: string
     sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
     label: "Month"
-
   }
   dimension: event_dimensions__hostname {
     type: string
@@ -335,6 +354,10 @@ view: events_apics {
     sql: ${TABLE}.geo.sub_continent ;;
     group_label: "Geo"
     group_item_label: "Sub Continent"
+  }
+  dimension: is_active_user {
+    type: yesno
+    sql: ${TABLE}.is_active_user ;;
   }
   dimension: items {
     hidden: yes
@@ -412,9 +435,52 @@ view: events_apics {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
+
+  dimension: Page_location{
+
+    label: "Page Referrer"
+    type: string
+    sql: (SELECT value.string_value
+             FROM UNNEST(${event_params})
+             WHERE key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: Page_views{
+
+    label: "Page Views"
+    type: string
+    sql: (SELECT DISTINCT(${user_pseudo_id})
+             FROM UNNEST(${event_params})
+             WHERE event_name = 'page_view' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM {
+    label: "UTM"
+    type: number
+    sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
+  }
+  dimension: utm_id_integer {
+    label: "utm_id_integer"
+    type: number
+    sql: safe_cast(${UTM} AS INTEGER);;
+
+  }
+  dimension: UTM_SOURCE {
+    label: "UTM_SOURCE"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
+  }
+  measure: sollitatie {
+    type: count_distinct
+    sql:  ${TABLE}.user_pseudo_id ;;
+    filters: [utm_id_integer: "not null"]
+  }
+  measure: total_page_views {
+    type: count_distinct
+    sql:  ${Page_views} ;;
   }
 
   # ----- Sets of fields for drilling ------
@@ -426,13 +492,14 @@ view: events_apics {
   device__mobile_brand_name,
   device__web_info__hostname,
   event_dimensions__hostname,
-  device__mobile_marketing_name
+  device__mobile_marketing_name,
+  collected_traffic_source__manual_campaign_name
   ]
   }
 
 }
 
-view: events_apics__items {
+view: events_Jopp__items {
   drill_fields: [item_id]
 
   dimension: item_id {
@@ -456,10 +523,10 @@ view: events_apics__items {
     type: string
     sql: creative_slot ;;
   }
-  dimension: events_20230502__items {
+  dimension: events_20230915__items {
     type: string
     hidden: yes
-    sql: events_20230502__items ;;
+    sql: events_20230915__items ;;
   }
   dimension: item_brand {
     type: string
@@ -547,12 +614,12 @@ view: events_apics__items {
   }
 }
 
-view: events_apics__event_params {
+view: events_Jopp__event_params {
 
-  dimension: events_20230502__event_params {
+  dimension: events_20230915__event_params {
     type: string
     hidden: yes
-    sql: events_20230502__event_params ;;
+    sql: events_20230915__event_params ;;
   }
   dimension: key {
     type: string
@@ -584,12 +651,12 @@ view: events_apics__event_params {
   }
 }
 
-view: events_apics__user_properties {
+view: events_Jopp__user_properties {
 
-  dimension: events_20230502__user_properties {
+  dimension: events_20230915__user_properties {
     type: string
     hidden: yes
-    sql: events_20230502__user_properties ;;
+    sql: events_20230915__user_properties ;;
   }
   dimension: key {
     type: string
