@@ -246,6 +246,7 @@ explore: events_apics {
 }
 
 
+
 explore: events_Djopzz {
     join: campaign {
       relationship: many_to_many
@@ -272,4 +273,28 @@ explore: events_Djopzz {
       sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
       type: inner
     }
+}
+explore: events_Jopp {
+  join: campaign {
+    relationship: many_to_many
+    sql_on: ${campaign.id}=${events_Jopp.utm_id_integer} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ${jobboard.name}=${events_Jopp.UTM_SOURCE}  ;;
+    type: inner
+  }
+  join: unique_campaignjobboards {
+    relationship: many_to_many
+    sql_on:   ${unique_campaignjobboards.campaignid}=${events_Jopp.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_Jopp.event_month_int};;
+    type: inner
+  }
+
 }
