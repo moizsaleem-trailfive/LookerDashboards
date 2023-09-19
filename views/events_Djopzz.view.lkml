@@ -119,6 +119,14 @@ view: events_Djopzz {
             REGEXP_EXTRACT(value.string_value, 'utm_id=([^%&]+)') is not null
             );;
   }
+  dimension: Page_views{
+
+    label: "Page Views"
+    type: string
+    sql: (SELECT DISTINCT(${user_pseudo_id})
+             FROM UNNEST(${event_params})
+             WHERE  key = 'page_location' and event_name = 'page_view' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
   dimension: source {
     label: "source"
     type: string
@@ -129,10 +137,24 @@ view: events_Djopzz {
     type: string
     sql:REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)') ;;
   }
+  measure: count_soll {
+    type: count_distinct
+    sql: ${TABLE}.event_name ;;
+  }
   dimension: utm_id {
     type: number # Assuming utm_id is an integer
     sql: CAST(${UTM} as INTEGER);;
+    primary_key: yes
 
+  }
+  measure: total_page_views {
+    type: count_distinct
+    sql:  ${Page_views} ;;
+  }
+  measure: sollitatie {
+    type: count_distinct
+    sql:  ${TABLE}.user_pseudo_id ;;
+    filters: [utm_id: "not null"]
   }
   dimension: device__browser {
     type: string
