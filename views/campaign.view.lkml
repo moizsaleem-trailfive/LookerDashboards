@@ -57,8 +57,10 @@ view: campaign {
   }
   dimension: name {
     type: string
-    sql: ${TABLE}.name ;;
+    sql: CASE WHEN lower(${TABLE}.name) NOT LIKE '%test%' THEN ${TABLE}.name END;;
+
   }
+
   dimension: priority {
     type: number
     sql: ${TABLE}.priority ;;
@@ -101,6 +103,7 @@ view: campaign {
       campaign_job_board.count,
       vacancy.count
     ]
+
   }
 
 }
