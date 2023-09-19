@@ -280,6 +280,7 @@ view: events_BDE {
     type: string
     sql: ${TABLE}.event_date ;;
   }
+
   dimension_group: date {
     type: time
     timeframes: [
@@ -454,7 +455,7 @@ view: events_BDE {
     type: string
     sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
   dimension: Page_views{
 
@@ -480,15 +481,21 @@ view: events_BDE {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
   }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  }
 
   measure: count {
     type: count
     drill_fields: [detail*]
   }
   measure: sollitatie {
-    type: count_distinct
-    sql:  ${TABLE}.user_pseudo_id ;;
-    filters: [utm_id_integer: "not null"]
+    type: sum
+    sql: CASE
+          WHEN ${utm_id_integer} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
   }
   measure: total_page_views {
     type: count_distinct

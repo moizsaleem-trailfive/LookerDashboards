@@ -144,24 +144,45 @@ explore: utm_id {
 explore: utm_data {
   join: campaign {
     relationship: many_to_many
-    sql_on: ${utm_data.utm_id}=${campaign.id} ;;
-    type: inner
-  }
-  join: campaign_job_board {
-    relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${utm_data.utm_id} ;;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
+    sql_on: ${campaign.id}=${utm_data.utm_id} ;;
     type: inner
   }
   join: jobboard {
-    relationship: many_to_many
-    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
+    relationship: one_to_one
+    sql_on:  ${jobboard.name}=${utm_data.utm_source}  ;;
     type: inner
   }
+  join: unique_campaignjobboards {
+    relationship: many_to_many
+    sql_on:   ${unique_campaignjobboards.campaignid}=${utm_data.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${utm_data.event_month};;
+    type: inner
+  }
+  # join: campaign {
+  #   relationship: many_to_many
+  #   sql_on: ${utm_data.utm_id}=${campaign.id} ;;
+  #   type: inner
+  # }
+  # join: campaign_job_board {
+  #   relationship: many_to_many
+  #   sql_on:   ${campaign_job_board.campaignid}=${utm_data.utm_id} ;;
+  #   type: inner
+  # }
+  # join: job_board_budget_amount {
+  #   relationship: many_to_many
+  #   sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
+  #   type: inner
+  # }
+  # join: jobboard {
+  #   relationship: many_to_many
+  #   sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
+  #   type: inner
+  # }
 
 }
 explore :job_board_budget_amount{}

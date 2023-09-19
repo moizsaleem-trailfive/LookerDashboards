@@ -19,6 +19,18 @@ view: utm_data {
     datatype: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
   }
+  dimension: event_month {
+
+    type: string
+
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
+    label: "Event Month"
+  }
+  dimension: month {
+    type: string
+    sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
+    label: "Month"
+  }
   dimension: page_location {
     type: string
     sql: ${TABLE}.page_location ;;
