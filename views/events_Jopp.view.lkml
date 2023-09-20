@@ -448,9 +448,9 @@ view: events_Jopp {
 
     label: "Page Views"
     type: string
-    sql: (SELECT DISTINCT(${user_pseudo_id})
+    sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE event_name = 'page_view' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
   dimension: UTM {
     label: "UTM"
@@ -485,9 +485,13 @@ view: events_Jopp {
         END;;
   }
   measure: total_page_views {
-    type: count_distinct
-    sql:  ${Page_views} ;;
-  }
+    type: sum
+    sql: CASE
+          WHEN ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+
+    }
 
 
   # ----- Sets of fields for drilling ------

@@ -271,7 +271,7 @@ explore: events_apics {
 explore: events_Djopzz {
     join: campaign {
       relationship: many_to_many
-      sql_on: ${campaign.id}=${events_Djopzz.utm_id} ;;
+      sql_on: ${campaign.id}=${events_Djopzz.utm_id_integer} ;;
       type: inner
     }
     join: jobboard {
@@ -281,7 +281,7 @@ explore: events_Djopzz {
     }
     join: unique_campaignjobboards {
       relationship: many_to_many
-      sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+      sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
       type: inner
     }
     # join:jobboard  {

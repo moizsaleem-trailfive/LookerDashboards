@@ -115,7 +115,7 @@ view: events_Djopzz {
     type: string
     sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE key = 'page_referrer' and
+             WHERE ${event_name}="solliciteren" AND key = 'page_referrer' and
             REGEXP_EXTRACT(value.string_value, 'utm_id=([^%&]+)') is not null
             );;
   }
@@ -123,10 +123,12 @@ view: events_Djopzz {
 
     label: "Page Views"
     type: string
-    sql: (SELECT DISTINCT(${user_pseudo_id})
+    sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE  key = 'page_location' and event_name = 'page_view' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name = 'page_view' AND key = 'page_refferer'  AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
+
+
   dimension: source {
     label: "source"
     type: string
@@ -141,21 +143,26 @@ view: events_Djopzz {
     type: count_distinct
     sql: ${TABLE}.event_name ;;
   }
-  dimension: utm_id {
+  dimension: utm_id_integer {
     type: number # Assuming utm_id is an integer
     sql: CAST(${UTM} as INTEGER);;
-    primary_key: yes
 
   }
-  measure: total_page_views {
-    type: count_distinct
-    sql:  ${Page_views} ;;
-  }
-  measure: sollitatie {
-    type: count_distinct
-    sql:  ${TABLE}.user_pseudo_id ;;
-    filters: [utm_id: "not null"]
-  }
+ measure: sollitatie {
+  type: sum
+  sql: CASE
+          WHEN ${utm_id_integer} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+}
+measure: total_page_views {
+  type: sum
+  sql: CASE
+          WHEN ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+
+}
   dimension: device__browser {
     type: string
     sql: ${TABLE}.device.browser ;;
@@ -497,10 +504,15 @@ view: events_Djopzz {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  }
   measure: count {
     type: count
     drill_fields: [detail*]
   }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {
