@@ -125,7 +125,7 @@ view: events_Djopzz {
     type: string
     sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE event_name = 'page_view' AND key = 'page_refferer'  AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name = 'page_view' AND key = 'page_referrer'  AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
 
 
