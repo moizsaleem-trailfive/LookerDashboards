@@ -468,6 +468,30 @@ view: events_Jopp {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
   }
+  dimension: Page_views_params{
+
+    label: "Page Views Params"
+    type: string
+    sql: (SELECT value.string_value
+             FROM UNNEST(${event_params})
+             WHERE event_name="page_view" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM_SOURCE_Page_views {
+    label: "UTM_SOURCE_Page_views"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
+  }
+  dimension: UTM_Page_views {
+    label: "UTM_Page_views"
+    type: number
+    sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
+  }
+  dimension: utm_id_integer_Page_views {
+    label: "utm_id_integer_Page_views"
+    type: number
+    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
+
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;

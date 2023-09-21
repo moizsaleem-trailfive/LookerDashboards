@@ -216,13 +216,13 @@ explore : applied_views{
 
 explore: events_BDE{
   join: campaign {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_BDE.utm_id_integer} ;;
+    relationship: one_to_one
+    sql_on: (${campaign.id}=${events_BDE.utm_id_integer}) OR (${campaign.id}= ${events_BDE.utm_id_integer_Page_views});;
     type: inner
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.name}=${events_BDE.UTM_SOURCE}  ;;
+    sql_on:  (${jobboard.name}=${events_BDE.UTM_SOURCE}) OR (${jobboard.name}=${events_BDE.UTM_SOURCE_Page_views})   ;;
     type: inner
   }
   join: unique_campaignjobboards {
@@ -270,13 +270,13 @@ explore: events_apics {
 
 explore: events_Djopzz {
     join: campaign {
-      relationship: many_to_many
-      sql_on: ${campaign.id}=${events_Djopzz.utm_id_integer} ;;
+      relationship: one_to_one
+      sql_on: (${campaign.id}=${events_Djopzz.utm_id_integer}) OR (${campaign.id}= ${events_Djopzz.utm_id_integer_Page_views});;
       type: inner
     }
     join: jobboard {
       relationship: one_to_one
-      sql_on:  ${jobboard.name}=${events_Djopzz.source}  ;;
+      sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
       type: inner
     }
     join: unique_campaignjobboards {
@@ -297,13 +297,13 @@ explore: events_Djopzz {
 }
 explore: events_Jopp {
   join: campaign {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_Jopp.utm_id_integer} ;;
+    relationship: one_to_one
+    sql_on: (${campaign.id}=${events_Jopp.utm_id_integer}) OR (${campaign.id}= ${events_Jopp.utm_id_integer_Page_views});;
     type: inner
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.name}=${events_Jopp.UTM_SOURCE}  ;;
+    sql_on:  ${jobboard.name}=${events_Jopp.UTM_SOURCE}  OR (${jobboard.name}=${events_Jopp.UTM_SOURCE_Page_views});;
     type: inner
   }
   join: unique_campaignjobboards {
@@ -321,13 +321,13 @@ explore: events_Jopp {
 }
 explore: events_Trixxo {
   join: campaign {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_Trixxo.utm_id_integer} ;;
+    relationship: one_to_one
+    sql_on: (${campaign.id}=${events_Trixxo.utm_id_integer}) OR (${campaign.id}= ${events_Trixxo.utm_id_integer_Page_views});;
     type: inner
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.name}=${events_Trixxo.UTM_SOURCE}  ;;
+    sql_on:  (${jobboard.name}=${events_Trixxo.UTM_SOURCE}) OR (${jobboard.name}=${events_Trixxo.UTM_SOURCE_Page_views}) ;;
     type: inner
   }
   join: unique_campaignjobboards {
