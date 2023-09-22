@@ -7,6 +7,10 @@ view: campaign {
     type: number
     sql: ${TABLE}.id ;;
   }
+  dimension: id_str {
+    type: string
+    sql: CAST(${id} AS STRING) ;;
+  }
   dimension: _fivetran_deleted {
     type: yesno
     sql: ${TABLE}._fivetran_deleted ;;
