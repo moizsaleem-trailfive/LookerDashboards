@@ -342,3 +342,39 @@ explore: events_Trixxo {
     type: inner
   }
 }
+
+explore: jopp_utm_data {
+  join: campaign {
+    relationship: many_to_many
+    sql_on: ${campaign.id}=${jopp_utm_data.utm_id_integer} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ${jobboard.name}=${jopp_utm_data.utm_source}  ;;
+    type: inner
+  }
+  join: unique_campaignjobboards {
+    relationship: many_to_many
+    sql_on:   ${unique_campaignjobboards.campaignid}=${jopp_utm_data.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${jopp_utm_data.event_month_int};;
+    type: inner
+  }
+  }
+  explore: jopp_page_views {
+    join: campaign {
+      relationship: many_to_many
+      sql_on: ${campaign.id}=${jopp_page_views.utm_id_integer} ;;
+      type: inner
+    }
+    join: jobboard {
+      relationship: one_to_one
+      sql_on:  ${jobboard.name}=${jopp_page_views.utm_source}  ;;
+      type: inner
+    }
+  }
