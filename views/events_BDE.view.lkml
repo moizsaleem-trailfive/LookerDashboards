@@ -482,6 +482,11 @@ view: events_BDE {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
   }
+  dimension: UTM_Campaign {
+    label: "UTM Campaign"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
+  }
   dimension: Page_views_params{
 
     label: "Page Views Params"

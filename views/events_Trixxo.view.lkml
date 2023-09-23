@@ -487,6 +487,11 @@ view: events_Trixxo {
     type: number
     sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
   }
+  dimension: UTM_Campaign {
+    label: "UTM Campaign"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
+  }
   dimension: utm_id_integer_Page_views {
     label: "utm_id_integer_Page_views"
     type: number

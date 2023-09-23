@@ -217,7 +217,7 @@ explore : applied_views{
 explore: events_BDE{
   join: campaign {
     relationship: one_to_one
-    sql_on: (${campaign.id}=${events_BDE.utm_id_integer}) OR (${campaign.id}= ${events_BDE.utm_id_integer_Page_views});;
+    sql_on: (${campaign.id}=${events_BDE.utm_id_integer}) OR (${campaign.id}= ${events_BDE.utm_id_integer_Page_views}) or (${campaign.name}=${events_BDE.UTM_Campaign});;
     type: inner
   }
   join: jobboard {

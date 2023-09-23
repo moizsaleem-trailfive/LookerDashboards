@@ -35,6 +35,11 @@ view: jopp_utm_data {
     type: string
     sql: ${TABLE}.page_location ;;
   }
+  dimension: utm_campaign{
+    label: "UTM Campaign"
+    type: string
+    sql:  INITCAP(REGEXP_EXTRACT(${TABLE}.page_location, 'utm_campaign=([^%&]+)'));;
+  }
   dimension: user_pseudo_id {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
