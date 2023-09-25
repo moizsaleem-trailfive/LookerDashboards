@@ -502,7 +502,22 @@ view: events_Trixxo {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
+          ELSE ''
+        END;;
 
+  }
+  dimension: campaign_name_page_views {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
   measure: count {
     type: count
     drill_fields: [detail*]

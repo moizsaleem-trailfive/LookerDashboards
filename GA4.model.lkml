@@ -295,30 +295,7 @@ explore: events_Djopzz {
       type: inner
     }
 }
-explore: events_Jopp {
-  join: campaign {
-    relationship: one_to_one
-    sql_on: (${campaign.id}=${events_Jopp.utm_id_integer}) OR (${campaign.id}= ${events_Jopp.utm_id_integer_Page_views});;
-    type: inner
-  }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  ${jobboard.name}=${events_Jopp.UTM_SOURCE}  OR (${jobboard.name}=${events_Jopp.UTM_SOURCE_Page_views});;
-    type: inner
-  }
-  join: unique_campaignjobboards {
-    relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${events_Jopp.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_Jopp.event_month_int};;
-    type: inner
-  }
 
-}
 explore: events_Trixxo {
   join: campaign {
     relationship: one_to_one
