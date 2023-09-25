@@ -518,6 +518,7 @@ view: events_Trixxo {
         END;;
 
   }
+
   measure: count {
     type: count
     drill_fields: [detail*]

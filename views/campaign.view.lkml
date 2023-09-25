@@ -61,10 +61,8 @@ view: campaign {
   }
   dimension: name {
     type: string
-    sql: CASE WHEN lower(${TABLE}.name) NOT LIKE '%test%' THEN ${TABLE}.name END;;
-
+    sql: CASE WHEN lower(${TABLE}.name) NOT LIKE '%test%' AND ${clientid}=${client.id} THEN ${TABLE}.name END;;
   }
-
   dimension: priority {
     type: number
     sql: ${TABLE}.priority ;;

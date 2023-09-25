@@ -101,4 +101,5 @@ view: job_board_budget_amount {
     type: sum_distinct
     sql: ${amount_int} ;;
   }
+
 }
