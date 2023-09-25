@@ -1,7 +1,5 @@
 connection: "googlebigquery"
-
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-
 explore: events {
   # access_filter: {
   #   user_attribute: event_name
@@ -22,7 +20,6 @@ explore: events {
     sql_on: ${events.utm_id_integer}=${campaign_job_board.campaignid} ;;
     type: inner
   }
-
   join: job_board_budget_amount {
     relationship: many_to_many
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}   ;;
@@ -37,20 +34,16 @@ explore: campaign {
   join: campaign_job_board {
     relationship: many_to_many
     sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
-
   }
   join: job_board_budget_amount {
     relationship: many_to_many
     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
-
   }
   join: jobboard {
     relationship: many_to_many
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
-
-    }
+  }
 }
-
 # explore: job_board_budget_amount {}
 # explore: p_campaign_stats_6357933521 {
 #   join: p_campaign_6357933521 {
@@ -80,13 +73,11 @@ explore: campaign {
 # explore: p_ads_budget_6357933521 {}
 # explore: p_budget_6357933521 {}
 # explore: stats {
-
 # }
 explore: events_vapro {
   join: campaign {
     relationship: many_to_many
     sql_on: ${campaign.id}=${events_vapro.utm_id} ;;
-
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -116,7 +107,6 @@ explore: events_1voud {}
 #     type: cross      # but causes problems in other dialects, try adding or
 #   }
 # }
-
 explore: utm_id {
   join: campaign {
     relationship: many_to_many
@@ -133,14 +123,8 @@ explore: utm_id {
   join: jobboard {
     relationship: many_to_many
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
-
   }
-
-  }
-
-
-
-
+}
 explore: utm_data {
   join: campaign {
     relationship: many_to_many
@@ -183,20 +167,16 @@ explore: utm_data {
   #   sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
   #   type: inner
   # }
-
 }
 explore :job_board_budget_amount{}
-
 explore: gawa_publishing_20230502 {}
 explore: utm_budget {}
-
 explore: conv_rate {
 }
 explore: page_views {
   join: jobboard {
     relationship: one_to_one
     sql_on: ${jobboard.name}=${page_views.utm_source} ;;
-
   }
   join: campaign {
     relationship: one_to_one
@@ -213,7 +193,6 @@ explore : applied_views{
     sql_on: ${campaign.id}=${applied_views.utm_id} ;;
   }
 }
-
 explore: events_BDE{
   join: campaign {
     relationship: one_to_one
@@ -233,27 +212,21 @@ explore: events_BDE{
   join: job_board_budget_amount {
     relationship: one_to_one
     sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-    AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
+      AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
     type: inner
   }
-
-
 }
-
 # explore: events_apics {}
 explore: events_apics {
-
   join: campaign {
     relationship: many_to_many
     sql_on: ${campaign.id}=${events_apics.utm_id};;
   }
-
   join: unique_campaignjobboards {
     relationship: many_to_many
     sql_on:   ${unique_campaignjobboards.campaignid}=${events_apics.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
     type: inner
   }
-
   join: jobboard {
     relationship: many_to_many
     sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_apics.source});;
@@ -265,59 +238,32 @@ explore: events_apics {
     type: inner
   }
 }
-
-
-
 explore: events_Djopzz {
-    join: campaign {
-      relationship: one_to_one
-      sql_on: (${campaign.id}=${events_Djopzz.utm_id_integer}) OR (${campaign.id}= ${events_Djopzz.utm_id_integer_Page_views});;
-      type: inner
-    }
-    join: jobboard {
-      relationship: one_to_one
-      sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
-      type: inner
-    }
-    join: unique_campaignjobboards {
-      relationship: many_to_many
-      sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-      type: inner
-    }
-    # join:jobboard  {
-    #   relationship: many_to_many
-    #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
-    #   type: inner
-    # }
-    join: job_board_budget_amount {
-      relationship: many_to_many
-      sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
-      type: inner
-    }
-}
-explore: events_Jopp {
   join: campaign {
     relationship: one_to_one
-    sql_on: (${campaign.id}=${events_Jopp.utm_id_integer}) OR (${campaign.id}= ${events_Jopp.utm_id_integer_Page_views});;
+    sql_on: (${campaign.id}=${events_Djopzz.utm_id_integer}) OR (${campaign.id}= ${events_Djopzz.utm_id_integer_Page_views});;
     type: inner
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.name}=${events_Jopp.UTM_SOURCE}  OR (${jobboard.name}=${events_Jopp.UTM_SOURCE_Page_views});;
+    sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
     type: inner
   }
   join: unique_campaignjobboards {
     relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${events_Jopp.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
     type: inner
   }
+  # join:jobboard  {
+  #   relationship: many_to_many
+  #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
+  #   type: inner
+  # }
   join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_Jopp.event_month_int};;
+    relationship: many_to_many
+    sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
     type: inner
   }
-
 }
 explore: events_Trixxo {
   join: campaign {
@@ -342,7 +288,6 @@ explore: events_Trixxo {
     type: inner
   }
 }
-
 explore: jopp_utm_data {
   join: campaign {
     relationship: many_to_many
@@ -365,20 +310,19 @@ explore: jopp_utm_data {
       AND ${job_board_budget_amount.month}=${jopp_utm_data.event_month_int};;
     type: inner
   }
+}
+explore: jopp_page_views {
+  join: campaign {
+    relationship: many_to_many
+    sql_on: ${campaign.id}=${jopp_page_views.utm_id_integer} ;;
+    type: inner
   }
-  explore: jopp_page_views {
-    join: campaign {
-      relationship: many_to_many
-      sql_on: ${campaign.id}=${jopp_page_views.utm_id_integer} ;;
-      type: inner
-    }
-    join: jobboard {
-      relationship: one_to_one
-      sql_on:  ${jobboard.name}=${jopp_page_views.utm_source}  ;;
-      type: inner
-    }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ${jobboard.name}=${jopp_page_views.utm_source}  ;;
+    type: inner
   }
-
+}
 explore: events_LabourLink {
   join: campaign {
     relationship: one_to_one
