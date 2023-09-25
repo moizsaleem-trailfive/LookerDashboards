@@ -500,6 +500,11 @@ view: events_BDE {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
   }
+  dimension: UTM_page_view_Campaign {
+    label: "UTM_page_view_Campaign"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_campaign=([^&]+)'));;
+  }
   dimension: UTM_Page_views {
     label: "UTM_Page_views"
     type: number
