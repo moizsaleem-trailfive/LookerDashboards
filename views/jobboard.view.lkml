@@ -45,7 +45,7 @@ view: jobboard {
   }
   dimension: job_name {
     type: string
-    sql: CASE WHEN ${id}=${unique_campaignjobboards.jobboardid} THEN ${TABLE}.name END;;
+    sql: CASE WHEN ${campaign.clientid}=${client.id} THEN ${TABLE}.name END;;
 
   }
   dimension: status {

@@ -303,11 +303,13 @@ explore: events_Trixxo {
     type: inner
 
   }
+
   join: jobboard {
     relationship: one_to_one
     sql_on:  (${jobboard.name}=${events_Trixxo.UTM_SOURCE}) OR (${jobboard.name}=${events_Trixxo.UTM_SOURCE_Page_views}) ;;
     type: inner
   }
+
   join: unique_campaignjobboards {
     relationship: many_to_many
     sql_on:   ${unique_campaignjobboards.campaignid}=${events_Trixxo.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
@@ -320,6 +322,7 @@ explore: events_Trixxo {
       AND ${job_board_budget_amount.month}=${events_Trixxo.event_month};;
     type: inner
   }
+
 }
 
 explore: jopp_utm_data {
