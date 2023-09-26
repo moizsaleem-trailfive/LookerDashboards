@@ -205,22 +205,40 @@ explore: events_BDE{
     sql_on: ${client.id}=${campaign.clientid} AND (${campaign.id}=${events_BDE.utm_id_integer} OR (${campaign.id}= ${events_BDE.utm_id_integer_Page_views}) or ${campaign.name}=${events_BDE.UTM_Campaign});;
     type: inner
   }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  (${jobboard.name}=${events_BDE.UTM_SOURCE}) OR (${jobboard.name}=${events_BDE.UTM_SOURCE_Page_views})   ;;
+
+
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on:   ${campaign_job_board.campaignid}=${events_BDE.utm_id_integer} ;;
     type: inner
   }
-  join: unique_campaignjobboards {
+  join: jobboard {
     relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${events_BDE.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-    AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
+    relationship: many_to_many
+    sql_on: ${jobboard.name}=${events_BDE.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
     type: inner
   }
+  # join: jobboard {
+  #   relationship: one_to_one
+  #   sql_on:  (${jobboard.name}=${events_BDE.UTM_SOURCE}) OR (${jobboard.name}=${events_BDE.UTM_SOURCE_Page_views})   ;;
+  #   type: inner
+  # }
+  # join: campaign_job_board {
+  #   relationship: many_to_many
+  #   sql_on:   ${campaign_job_board.campaignid}=${events_BDE.utm_id_integer} AND ${jobboard.id}=${campaign_job_board.jobboardid};;
+  #   type: inner
+  # }
+  # join: job_board_budget_amount {
+  #   relationship: one_to_one
+  #   sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+  #   AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
+  #   type: inner
+  # }
 
 
 }
@@ -336,19 +354,20 @@ explore: jopp_utm_data {
     sql_on: ${client.id}=${campaign.clientid} AND ${campaign.id}=${jopp_utm_data.utm_id_integer} ;;
     type: inner
   }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  ${jobboard.name}=${jopp_utm_data.utm_source}  ;;
+
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on:   ${campaign_job_board.campaignid}=${jopp_utm_data.utm_id_integer} ;;
     type: inner
   }
-  join: unique_campaignjobboards {
+  join: jobboard {
     relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${jopp_utm_data.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+    relationship: many_to_many
+    sql_on: ${jobboard.name}=${jopp_utm_data.utm_source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${jopp_utm_data.event_month_int};;
     type: inner
   }
