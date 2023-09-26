@@ -526,7 +526,7 @@ view: events_Trixxo {
   measure: sollitatie {
     type: sum
     sql: CASE
-          WHEN ${utm_id_integer} IS NOT NULL THEN 1
+          WHEN ${user_pseudo_id} IS NOT NULL AND ${utm_id_integer} IS NOT NULL THEN 1
           ELSE 0
         END;;
   }
