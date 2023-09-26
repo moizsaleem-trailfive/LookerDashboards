@@ -282,32 +282,47 @@ explore: events_Djopzz {
     type: inner
   }
   join: campaign {
-    relationship: one_to_many
+    relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} AND (${campaign.id}=${events_Djopzz.utm_id_integer} OR ${campaign.id}= ${events_Djopzz.utm_id_integer_Page_views});;
     type: inner
 
   }
-
-    join: jobboard {
-      relationship: one_to_one
-      sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
-      type: inner
-    }
-    join: unique_campaignjobboards {
-      relationship: many_to_many
-      sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-      type: inner
-    }
-    # join:jobboard  {
-    #   relationship: many_to_many
-    #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on:   ${campaign_job_board.campaignid}=${events_Djopzz.utm_id_integer} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: ${jobboard.name}=${events_Djopzz.source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
+    type: inner
+  }
+    # join: jobboard {
+    #   relationship: one_to_one
+    #   sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
     #   type: inner
     # }
-    join: job_board_budget_amount {
-      relationship: many_to_many
-      sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
-      type: inner
-    }
+    # join: unique_campaignjobboards {
+    #   relationship: many_to_many
+    #   sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    #   type: inner
+    # }
+    # # join:jobboard  {
+    # #   relationship: many_to_many
+    # #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
+    # #   type: inner
+    # # }
+    # join: job_board_budget_amount {
+    #   relationship: many_to_many
+    #   sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
+    #   type: inner
+    # }
 }
 explore: events_Trixxo {
   join: client {
@@ -407,20 +422,36 @@ explore: events_LabourLink {
     type: inner
 
   }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  (${jobboard.name}=${events_LabourLink.UTM_SOURCE}) OR (${jobboard.name}=${events_LabourLink.UTM_SOURCE_Page_views}) ;;
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on:   ${campaign_job_board.campaignid}=${events_LabourLink.utm_id_integer} ;;
     type: inner
   }
-  join: unique_campaignjobboards {
+  join: jobboard {
     relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${events_LabourLink.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+    relationship: many_to_many
+    sql_on: ${jobboard.name}=${events_LabourLink.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
     type: inner
   }
+  # join: jobboard {
+  #   relationship: one_to_one
+  #   sql_on:  (${jobboard.name}=${events_LabourLink.UTM_SOURCE}) OR (${jobboard.name}=${events_LabourLink.UTM_SOURCE_Page_views}) ;;
+  #   type: inner
+  # }
+  # join: unique_campaignjobboards {
+  #   relationship: many_to_many
+  #   sql_on:   ${unique_campaignjobboards.campaignid}=${events_LabourLink.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
+  #   type: inner
+  # }
+  # join: job_board_budget_amount {
+  #   relationship: one_to_one
+  #   sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
+  #     AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
+  #   type: inner
+  # }
 }
