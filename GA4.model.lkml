@@ -331,14 +331,14 @@ explore: events_Trixxo {
     type: inner
   }
   join: campaign {
-    relationship: one_to_many
+    relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${events_Trixxo.utm_id_integer} ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
@@ -348,7 +348,7 @@ explore: events_Trixxo {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${campaign.id}=${events_Trixxo.utm_id_integer} AND ${jobboard.name}=${events_Trixxo.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: (${campaign.id}=${events_Trixxo.utm_id_integer}) AND (${jobboard.name}=${events_Trixxo.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${events_Trixxo.event_month};;
     type: inner
   }
