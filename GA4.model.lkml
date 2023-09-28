@@ -244,34 +244,7 @@ explore: events_BDE{
 }
 
 # explore: events_apics {}
-explore: events_apics {
-  join: client {
-    relationship: one_to_one
-    sql_on: ${client.name}="Apics" ;;
-    type: inner
-  }
-  join: campaign {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_apics.utm_id};;
-  }
 
-  join: unique_campaignjobboards {
-    relationship: many_to_many
-    sql_on:   ${unique_campaignjobboards.campaignid}=${events_apics.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-    type: inner
-  }
-
-  join: jobboard {
-    relationship: many_to_many
-    sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_apics.source});;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_apics.event_month};;
-    type: inner
-  }
-}
 
 # explore: client {}
 
@@ -470,4 +443,35 @@ explore: events_LabourLink {
   #     AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
   #   type: inner
   # }
+}
+explore: events_Apics {
+
+    join: client {
+      relationship: one_to_one
+      sql_on: ${client.name}="Apics FlexJobs" ;;
+      type: inner
+    }
+    join: campaign {
+      relationship: one_to_one
+      sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+      type: inner
+
+    }
+    join: campaign_job_board {
+      relationship: many_to_many
+      sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+      type: inner
+    }
+    join: jobboard {
+      relationship: many_to_many
+      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+      type: inner
+    }
+    join: job_board_budget_amount {
+      relationship: many_to_many
+      sql_on: (${campaign.id}=${events_Apics.utm_id_integer}) AND (${jobboard.name}=${events_Apics.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+        AND ${job_board_budget_amount.month}=${events_Apics.event_month_int};;
+      type: inner
+    }
+
 }

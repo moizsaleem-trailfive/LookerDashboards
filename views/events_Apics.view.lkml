@@ -1,23 +1,6 @@
-# # Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-# explore: events_20230502 {
-#   hidden: yes
-#     join: events_20230502__items {
-#       view_label: "Events 20230502: Items"
-#       sql: LEFT JOIN UNNEST(${events_20230502.items}) as events_20230502__items ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230502__event_params {
-#       view_label: "Events 20230502: Event Params"
-#       sql: LEFT JOIN UNNEST(${events_20230502.event_params}) as events_20230502__event_params ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230502__user_properties {
-#       view_label: "Events 20230502: User Properties"
-#       sql: LEFT JOIN UNNEST(${events_20230502.user_properties}) as events_20230502__user_properties ;;
-#       relationship: one_to_many
-#     }
-# }
-view: events_apics {
+# Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
+
+view: events_Apics {
   sql_table_name: `evident-catcher-381918.analytics_299163363.events_*` ;;
 
   dimension: app_info__firebase_app_id {
@@ -73,30 +56,6 @@ view: events_apics {
     sql: ${TABLE}.device.category ;;
     group_label: "Device"
     group_item_label: "Category"
-  }
-  dimension: Page_location{
-    label: "Page Referrer"
-    type: string
-    sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE key = 'page_referrer' and
-            REGEXP_EXTRACT(value.string_value, 'utm_id=([^%&]+)') is not null
-            );;
-  }
-  dimension: source {
-    label: "source"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^%0-9&]+)')) ;;
-  }
-  dimension: UTM {
-    label: "UTM"
-    type: string
-    sql:REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)') ;;
-  }
-  dimension: utm_id {
-    type: number # Assuming utm_id is an integer
-    sql: CAST(${UTM} as INTEGER);;
-
   }
   dimension: device__is_limited_ad_tracking {
     type: string
@@ -264,16 +223,17 @@ view: events_apics {
     datatype: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
   }
+  dimension: event_month_int {
+
+    type: string
+
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
+    label: "Event Month Int"
+  }
   dimension: event_month {
     type: string
-    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
-    label: "Event Month"
-  }
-  dimension: month {
-    type: string
     sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
-    label: "Month"
-
+    label: "Event Month"
   }
   dimension: event_dimensions__hostname {
     type: string
@@ -417,9 +377,108 @@ view: events_apics {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
+  dimension: Page_location{
+
+    label: "Page Referrer"
+    type: string
+    sql: (SELECT value.string_value
+             FROM UNNEST(${event_params})
+             WHERE event_name="Sollicitatie_succesvol" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: Page_views{
+
+    label: "Page Views"
+    type: string
+    sql: (SELECT ${user_pseudo_id}
+             FROM UNNEST(${event_params})
+             WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM {
+    label: "UTM"
+    type: number
+    sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
+  }
+  dimension: utm_id_integer {
+    label: "utm_id_integer"
+    type: number
+    sql: safe_cast(${UTM} AS INTEGER);;
+
+  }
+
+  dimension: UTM_SOURCE {
+    label: "UTM_SOURCE"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
+    can_filter: yes
+  }
+  dimension: Page_views_params{
+
+    label: "Page Views Params"
+    type: string
+    sql: (SELECT value.string_value
+             FROM UNNEST(${event_params})
+             WHERE event_name="page_view" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM_SOURCE_Page_views {
+    label: "UTM_SOURCE_Page_views"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
+  }
+  dimension: UTM_Page_views {
+    label: "UTM_Page_views"
+    type: number
+    sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
+  }
+  dimension: UTM_Campaign {
+    label: "UTM Campaign"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
+  }
+  dimension: utm_id_integer_Page_views {
+    label: "utm_id_integer_Page_views"
+    type: number
+    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
+
+  }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  }
+  dimension: campaign_name {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
+  dimension: campaign_name_page_views {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
+  }
+  measure: sollitatie {
+    type: sum
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM} AND ${user_pseudo_id} IS NOT NULL AND ${utm_id_integer} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+  }
+  measure: total_page_views {
+    type: sum
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Page_views} AND ${user_pseudo_id} IS NOT NULL AND ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+
   }
 
   # ----- Sets of fields for drilling ------
@@ -437,7 +496,7 @@ view: events_apics {
 
 }
 
-view: events_apics__items {
+view: events_Apics__items {
   drill_fields: [item_id]
 
   dimension: item_id {
@@ -552,7 +611,7 @@ view: events_apics__items {
   }
 }
 
-view: events_apics__event_params {
+view: events_Apics__event_params {
 
   dimension: events_20230502__event_params {
     type: string
@@ -589,7 +648,7 @@ view: events_apics__event_params {
   }
 }
 
-view: events_apics__user_properties {
+view: events_Apics__user_properties {
 
   dimension: events_20230502__user_properties {
     type: string
