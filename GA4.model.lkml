@@ -506,3 +506,34 @@ explore: events_InviteJobs {
   }
 
 }
+explore: events_Salland {
+
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Salland" ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: (${campaign.id}=${events_Salland.utm_id_integer}) AND (${jobboard.name}=${events_Salland.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_Salland.event_month_int};;
+    type: inner
+  }
+
+}
