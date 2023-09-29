@@ -475,3 +475,34 @@ explore: events_Apics {
     }
 
 }
+explore: events_InviteJobs {
+
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Invite" ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: (${campaign.id}=${events_InviteJobs.utm_id_integer}) AND (${jobboard.name}=${events_InviteJobs.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_InviteJobs.event_month_int};;
+    type: inner
+  }
+
+}
