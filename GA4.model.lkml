@@ -202,14 +202,14 @@ explore: events_BDE{
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND (${campaign.id}=${events_BDE.utm_id_integer} OR (${campaign.id}= ${events_BDE.utm_id_integer_Page_views}) or ${campaign.name}=${events_BDE.UTM_Campaign});;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
     type: inner
   }
 
 
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${events_BDE.utm_id_integer} ;;
+    sql_on:   ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
@@ -219,34 +219,12 @@ explore: events_BDE{
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${jobboard.name}=${events_BDE.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: ${campaign.id}=${events_BDE.utm_id_integer} AND ${jobboard.name}=${events_BDE.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
     type: inner
   }
-  # join: jobboard {
-  #   relationship: one_to_one
-  #   sql_on:  (${jobboard.name}=${events_BDE.UTM_SOURCE}) OR (${jobboard.name}=${events_BDE.UTM_SOURCE_Page_views})   ;;
-  #   type: inner
-  # }
-  # join: campaign_job_board {
-  #   relationship: many_to_many
-  #   sql_on:   ${campaign_job_board.campaignid}=${events_BDE.utm_id_integer} AND ${jobboard.id}=${campaign_job_board.jobboardid};;
-  #   type: inner
-  # }
-  # join: job_board_budget_amount {
-  #   relationship: one_to_one
-  #   sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-  #   AND ${job_board_budget_amount.month}=${events_BDE.event_month};;
-  #   type: inner
-  # }
-
 
 }
-
-# explore: events_apics {}
-
-
-# explore: client {}
 
 explore: events_Djopzz {
   join: client {
@@ -256,13 +234,13 @@ explore: events_Djopzz {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND (${campaign.id}=${events_Djopzz.utm_id_integer} OR ${campaign.id}= ${events_Djopzz.utm_id_integer_Page_views});;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${events_Djopzz.utm_id_integer} ;;
+    sql_on:   ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
@@ -272,7 +250,7 @@ explore: events_Djopzz {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${jobboard.name}=${events_Djopzz.source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: ${campaign.id}=${events_Djopzz.utm_id_integer} AND ${jobboard.name}=${events_Djopzz.source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
     type: inner
   }
@@ -305,7 +283,7 @@ explore: events_Trixxo {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid};;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
     type: inner
 
   }
@@ -325,26 +303,6 @@ explore: events_Trixxo {
       AND ${job_board_budget_amount.month}=${events_Trixxo.event_month};;
     type: inner
   }
-
-  # join: jobboard {
-  #   relationship: one_to_one
-  #   sql_on:  (${jobboard.name}=${events_Trixxo.UTM_SOURCE}) OR (${jobboard.name}=${events_Trixxo.UTM_SOURCE_Page_views}) ;;
-  #   type: inner
-  # }
-
-  # join: unique_campaignjobboards {
-  #   relationship: many_to_many
-  #   sql_on:   ${unique_campaignjobboards.campaignid}=${events_Trixxo.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-  #   type: inner
-  # }
-
-  # join: job_board_budget_amount {
-  #   relationship: one_to_one
-  #   sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-  #     AND ${job_board_budget_amount.month}=${events_Trixxo.event_month};;
-  #   type: inner
-  # }
-
 }
 
 explore: jopp_utm_data {
@@ -355,7 +313,7 @@ explore: jopp_utm_data {
   }
   join: campaign {
     relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} AND ${campaign.id}=${jopp_utm_data.utm_id_integer} ;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True AND ${campaign.id}=${jopp_utm_data.utm_id_integer} ;;
     type: inner
   }
 
@@ -384,7 +342,7 @@ explore: jopp_utm_data {
     }
     join: campaign {
       relationship: many_to_many
-      sql_on: ${client.id}=${campaign.clientid} AND ${campaign.id}=${jopp_page_views.utm_id_integer} ;;
+      sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True AND ${campaign.id}=${jopp_page_views.utm_id_integer} ;;
       type: inner
     }
     join: jobboard {
@@ -402,18 +360,18 @@ explore: jopp_utm_data {
 explore: events_LabourLink {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Work in holland Labourlink " ;;
+    sql_on: ${client.name}="Work in holland Labourlink "  ;;
     type: inner
   }
   join: campaign {
-    relationship: one_to_many
-    sql_on: ${client.id}=${campaign.clientid} AND (${campaign.id}=${events_LabourLink.utm_id_integer} OR ${campaign.id}= ${events_LabourLink.utm_id_integer_Page_views});;
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${events_LabourLink.utm_id_integer} ;;
+    sql_on:   ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
@@ -423,26 +381,10 @@ explore: events_LabourLink {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${jobboard.name}=${events_LabourLink.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: ${campaign.id}=${events_LabourLink.utm_id_integer} AND ${jobboard.name}=${events_LabourLink.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
     type: inner
   }
-  # join: jobboard {
-  #   relationship: one_to_one
-  #   sql_on:  (${jobboard.name}=${events_LabourLink.UTM_SOURCE}) OR (${jobboard.name}=${events_LabourLink.UTM_SOURCE_Page_views}) ;;
-  #   type: inner
-  # }
-  # join: unique_campaignjobboards {
-  #   relationship: many_to_many
-  #   sql_on:   ${unique_campaignjobboards.campaignid}=${events_LabourLink.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-  #   type: inner
-  # }
-  # join: job_board_budget_amount {
-  #   relationship: one_to_one
-  #   sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-  #     AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
-  #   type: inner
-  # }
 }
 explore: events_Apics {
 
@@ -453,7 +395,7 @@ explore: events_Apics {
     }
     join: campaign {
       relationship: one_to_one
-      sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+      sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
       type: inner
 
     }
@@ -484,7 +426,7 @@ explore: events_InviteJobs {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
     type: inner
 
   }
@@ -515,7 +457,7 @@ explore: events_Salland {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
     type: inner
 
   }

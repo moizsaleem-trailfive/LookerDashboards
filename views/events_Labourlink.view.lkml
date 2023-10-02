@@ -522,14 +522,14 @@ view: events_LabourLink {
   measure: sollitatie {
     type: sum
     sql: CASE
-          WHEN ${utm_id_integer} IS NOT NULL THEN 1
+          WHEN ${campaign.id_str}=${UTM} AND ${utm_id_integer} IS NOT NULL THEN 1
           ELSE 0
         END;;
   }
   measure: total_page_views {
     type: sum
     sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN 1
+          WHEN ${campaign.id_str}=${UTM_Page_views} AND ${Page_views} IS NOT NULL THEN 1
           ELSE 0
         END;;
 

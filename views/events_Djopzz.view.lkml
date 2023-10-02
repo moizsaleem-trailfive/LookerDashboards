@@ -1,22 +1,3 @@
-# Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-# explore: events_20230915 {
-#   hidden: yes
-#     join: events_20230915__items {
-#       view_label: "Events 20230915: Items"
-#       sql: LEFT JOIN UNNEST(${events_20230915.items}) as events_20230915__items ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230915__event_params {
-#       view_label: "Events 20230915: Event Params"
-#       sql: LEFT JOIN UNNEST(${events_20230915.event_params}) as events_20230915__event_params ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230915__user_properties {
-#       view_label: "Events 20230915: User Properties"
-#       sql: LEFT JOIN UNNEST(${events_20230915.user_properties}) as events_20230915__user_properties ;;
-#       relationship: one_to_many
-#     }
-# }
 view: events_Djopzz {
   sql_table_name: `evident-catcher-381918.analytics_319743464.events_*` ;;
 

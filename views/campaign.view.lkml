@@ -89,6 +89,11 @@ view: campaign {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}.updateddate ;;
   }
+  dimension: publish {
+    type: yesno
+    sql: ${TABLE}.publish ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]
