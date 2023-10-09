@@ -95,11 +95,13 @@ view: events_Djopzz {
     label: "Page Referrer"
     type: string
     sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE ${event_name}="solliciteren" AND (key = 'page_referrer' OR key = 'page_location') and
+            FROM UNNEST(${event_params})
+            WHERE ${event_name}="solliciteren" AND (key = 'page_referrer' OR key = 'page_location') and
             REGEXP_EXTRACT(value.string_value, 'utm_id=([^%&]+)') is not null
             );;
   }
+
+
   dimension: Page_views{
 
     label: "Page Views"
