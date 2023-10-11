@@ -527,7 +527,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} AND ${campaign.name}=${cpa.campaign_name} ;;
+    sql_on: ${client.id}=${campaign.clientid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -539,10 +539,10 @@ explore: cpa {
     sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
-  # join: job_board_budget_amount {
-  #   relationship: many_to_many
-  #   sql_on: (${campaign.id}=${events_Salland.utm_id_integer}) AND (${jobboard.name}=${events_Salland.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-  #     AND ${job_board_budget_amount.month}=${events_Salland.event_month_int};;
-  #   type: inner
-  # }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${cpa.event_month_int};;
+    type: inner
+  }
 }
