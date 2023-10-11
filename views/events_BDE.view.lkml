@@ -454,10 +454,9 @@ view: events_BDE {
     label: "Page Referrer"
     type: string
     sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-
+            FROM UNNEST(${event_params})
+            WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+ }
   dimension: Page_views{
 
     label: "Page Views"
