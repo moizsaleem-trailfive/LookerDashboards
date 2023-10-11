@@ -198,6 +198,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # }
 
 explore: events_BDE{
+
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="BDE PROTEQS" ;;
