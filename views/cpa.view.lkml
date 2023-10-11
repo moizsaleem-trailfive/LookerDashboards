@@ -24,7 +24,7 @@ view: cpa {
   }
   dimension: event_month_int {
     type: string
-    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", ${TABLE}.eventdate)) AS STRING);;
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${eventdate_date} as string))) AS STRING);;
     label: "Event Month Int"
   }
   dimension: eventname {
