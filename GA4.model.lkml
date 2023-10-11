@@ -2,6 +2,9 @@ connection: "googlebigquery"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
+
+
+# explore: cph {}
 # explore: events {
 #   # access_filter: {
 #   #   user_attribute: event_name
@@ -275,6 +278,7 @@ explore: events_Djopzz {
     #   type: inner
     # }
 }
+
 explore: djopzz_solliciteren_per_sessie {
   join: client {
     relationship: one_to_one
@@ -508,3 +512,31 @@ explore: events_Salland {
   }
 
 }
+
+
+# explore: cpa {
+#   join: cph {
+#     relationship: many_to_many
+#     sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} ;;
+#   }
+#   join: campaign {
+#     relationship: many_to_many
+#     sql_on: ${campaign.name}=${cpa.campaign_name} ;;
+#   }
+#   join: campaign_job_board {
+#     relationship: many_to_many
+#     sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+#     type: inner
+#   }
+#   join: jobboard {
+#     relationship: many_to_many
+#     sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+#     type: inner
+#   }
+#   join: job_board_budget_amount {
+#     relationship: many_to_many
+#     sql_on: (${campaign.id}=${events_Salland.utm_id_integer}) AND (${jobboard.name}=${events_Salland.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+#       AND ${job_board_budget_amount.month}=${events_Salland.event_month_int};;
+#     type: inner
+#   }
+# }
