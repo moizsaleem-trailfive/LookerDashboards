@@ -527,7 +527,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} ;;
+    sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name};;
   }
   join: campaign_job_board {
     relationship: many_to_many

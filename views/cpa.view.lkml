@@ -27,6 +27,11 @@ view: cpa {
     sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${eventdate_date} as string))) AS STRING);;
     label: "Event Month Int"
   }
+  dimension: event_month {
+    type: string
+    sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${eventdate_date} as string))) ;;
+    label: "Event Month"
+  }
   dimension: eventname {
     type: string
     sql: ${TABLE}.eventname ;;
@@ -80,6 +85,10 @@ view: cpa {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
+  # measure: solli {
+  #   type: count
+  #   sql: ${TABLE}.userpseudoid ;;
+  # }
   measure: count {
     type: count
     drill_fields: [id, eventname]

@@ -54,6 +54,14 @@ view: cph {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
+  dimension: sollic {
+    type: number
+    sql: (SELECT count(${userpseudoid}) from `evident-catcher-381918.luba_data_dbo.cph`  ) ;;
+  }
+  # measure: solli {
+  #   type: count
+  #   sql: count(${TABLE}.userpseudoid ) ;;
+  # }
   measure: count {
     type: count
     drill_fields: [id]
