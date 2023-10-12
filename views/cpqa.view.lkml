@@ -52,6 +52,10 @@ view: cpqa {
     type: string
     sql: ${TABLE}.utmid ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
+  }
   dimension: utmmedium {
     type: string
     sql: ${TABLE}.utmmedium ;;
