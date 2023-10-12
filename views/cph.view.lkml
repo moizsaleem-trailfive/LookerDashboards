@@ -64,6 +64,10 @@ view: cph {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
+  }
   dimension: sollic {
     type: number
     sql: (SELECT count(${userpseudoid}) from `evident-catcher-381918.luba_data_dbo.cph`  ) ;;
