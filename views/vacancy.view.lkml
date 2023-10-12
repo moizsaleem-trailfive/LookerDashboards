@@ -33,6 +33,14 @@ view: vacancy {
     value_format_name: id
     sql: ${TABLE}.campaignid ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id}=${campaignid} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
   dimension: clientfeedid {
     type: number
     value_format_name: id

@@ -559,6 +559,14 @@ view: events_luba {
         END;;
 
   }
+  dimension: campaign_name_clicks {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
