@@ -22,6 +22,16 @@ view: cph {
     datatype: datetime
     sql: ${TABLE}.date ;;
   }
+  dimension: event_month_int {
+    type: string
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) AS STRING);;
+    label: "Event Month Int"
+  }
+  dimension: event_month {
+    type: string
+    sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
+    label: "Event Month"
+  }
   dimension: hired {
     type: yesno
     sql: ${TABLE}.hired ;;
