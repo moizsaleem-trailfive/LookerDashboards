@@ -68,6 +68,13 @@ view: cph {
     type: number
     sql: (SELECT count(${userpseudoid}) from `evident-catcher-381918.luba_data_dbo.cph`  ) ;;
   }
+  measure: total_hired {
+    type: sum
+    sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True THEN 1
+          ELSE 0
+        END;;
+  }
   # measure: solli {
   #   type: count
   #   sql: count(${TABLE}.userpseudoid ) ;;

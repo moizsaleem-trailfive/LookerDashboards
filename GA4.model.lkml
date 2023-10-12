@@ -546,3 +546,31 @@ explore: cpa {
     type: inner
   }
 }
+
+explore: events_luba {
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Luba" ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: many_to_many
+    sql_on: ${campaign.id}=${events_luba.utm_id_integer} AND lower(${jobboard.name})=${events_luba.UTM_SOURCE}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=${events_luba.event_month_int};;
+    type: inner
+  }
+}
