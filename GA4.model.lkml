@@ -542,7 +542,7 @@ explore: cpa {
   join: job_board_budget_amount {
     relationship: many_to_many
     sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${cpa.event_month_int};;
+      AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) ;;
     type: inner
   }
 }
