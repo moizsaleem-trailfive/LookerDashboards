@@ -548,10 +548,15 @@ explore: cpa {
 }
 
 explore: events_luba {
+
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Luba" ;;
     type: inner
+  }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} --and  ${client.name}="Luba"   ;;
   }
   join: campaign {
     relationship: one_to_one
