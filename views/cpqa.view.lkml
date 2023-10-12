@@ -26,6 +26,16 @@ view: cpqa {
     datatype: datetime
     sql: ${TABLE}.date ;;
   }
+  dimension: event_month_int {
+    type: string
+    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) AS STRING);;
+    label: "Event Month Int"
+  }
+  dimension: event_month {
+    type: string
+    sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
+    label: "Event Month"
+  }
   dimension: userpseudoid {
     type: string
     sql: ${TABLE}.userpseudoid ;;
@@ -53,6 +63,13 @@ view: cpqa {
   dimension: utmterm {
     type: string
     sql: ${TABLE}.utmterm ;;
+  }
+  measure: total_call_for_interview {
+    type: sum
+    sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True THEN 1
+          ELSE 0
+        END;;
   }
   measure: count {
     type: count
