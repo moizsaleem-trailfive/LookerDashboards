@@ -520,6 +520,10 @@ explore: cpa {
     relationship: many_to_many
     sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} ;;
   }
+  join: cpqa {
+    relationship: many_to_many
+    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} ;;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Luba" ;;
