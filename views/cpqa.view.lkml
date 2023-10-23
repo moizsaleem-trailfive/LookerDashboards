@@ -68,6 +68,10 @@ view: cpqa {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
+  }
   measure: total_call_for_interview {
     type: sum
     sql: CASE
