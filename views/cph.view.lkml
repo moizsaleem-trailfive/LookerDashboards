@@ -56,6 +56,10 @@ view: cph {
     type: string
     sql: ${TABLE}.utmmedium ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
+  }
   dimension: utmsource {
     type: string
     sql: ${TABLE}.utmsource ;;
