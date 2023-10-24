@@ -520,35 +520,35 @@ explore: cpa {
     relationship: many_to_many
     sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} ;;
   }
-  join: cpqa {
-    relationship: many_to_many
-    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} ;;
-  }
-  join: client {
-    relationship: one_to_one
-    sql_on: ${client.name}="Luba" ;;
-    type: inner
-  }
-  join: campaign {
-    relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name};;
-  }
-  join: campaign_job_board {
-    relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
-    type: inner
-  }
-  join: jobboard {
-    relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) ;;
-    type: inner
-  }
+  # join: cpqa {
+  #   relationship: many_to_many
+  #   sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} ;;
+  # }
+  # join: client {
+  #   relationship: one_to_one
+  #   sql_on: ${client.name}="Luba" ;;
+  #   type: inner
+  # }
+  # join: campaign {
+  #   relationship: many_to_many
+  #   sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name};;
+  # }
+  # join: campaign_job_board {
+  #   relationship: many_to_many
+  #   sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+  #   type: inner
+  # }
+  # join: jobboard {
+  #   relationship: many_to_many
+  #   sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+  #   type: inner
+  # }
+  # join: job_board_budget_amount {
+  #   relationship: many_to_many
+  #   sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+  #     AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) ;;
+  #   type: inner
+  # }
 }
 
 explore: events_luba {
