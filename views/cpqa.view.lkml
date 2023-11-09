@@ -33,8 +33,13 @@ view: cpqa {
   }
   dimension: event_month {
     type: string
-    sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
+      sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
     label: "Event Month"
+  }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y-%m-%d",cast(${date_date} as string))) ;;
+    label: "Event Year"
   }
   dimension: userpseudoid {
     type: string
@@ -68,10 +73,7 @@ view: cpqa {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
-  dimension: campaign_name {
-    type: string
-    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
-  }
+
   measure: total_call_for_interview {
     type: sum
     sql: CASE

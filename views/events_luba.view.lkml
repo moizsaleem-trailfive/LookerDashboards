@@ -296,7 +296,7 @@ view: events_luba {
   }
   dimension: event_month_int {
 
-    type: string
+    type: number
 
     sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
     label: "Event Month Int"
@@ -305,6 +305,11 @@ view: events_luba {
     type: string
     sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
     label: "Event Month"
+  }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
+    label: "Event Year"
   }
   dimension: event_dimensions__hostname {
     type: string
@@ -567,6 +572,15 @@ view: events_luba {
         END;;
 
   }
+  dimension: session_id{
+
+    label: "Session ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
+
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
@@ -577,20 +591,32 @@ view: events_luba {
     drill_fields: [detail*]
   }
   measure: sollitatie {
-    type: sum
+    type: count_distinct
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM} AND ${utm_id_integer} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
+          WHEN ${utm_id_integer} IS NOT NULL AND ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END;;
+  }
+  measure: all_sollitatie {
+    type: count_distinct
+    sql: CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END;;
   }
   measure: total_page_views {
     type: sum
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Page_views} AND ${Page_views} IS NOT NULL THEN 1
+          WHEN ${Page_views} IS NOT NULL THEN 1
           ELSE 0
         END;;
 
   }
+
   measure: total_clicks {
     type: sum
     sql: CASE

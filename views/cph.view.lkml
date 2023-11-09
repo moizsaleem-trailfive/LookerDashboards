@@ -32,6 +32,11 @@ view: cph {
     sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
     label: "Event Month"
   }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y-%m-%d",cast(${date_date} as string))) ;;
+    label: "Event Year"
+  }
   dimension: hired {
     type: yesno
     sql: ${TABLE}.hired ;;
@@ -68,10 +73,7 @@ view: cph {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
-  dimension: campaign_name {
-    type: string
-    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
-  }
+
   dimension: sollic {
     type: number
     sql: (SELECT count(${userpseudoid}) from `evident-catcher-381918.luba_data_dbo.cph`  ) ;;

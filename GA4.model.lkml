@@ -546,7 +546,7 @@ explore: cpa {
   join: job_board_budget_amount {
     relationship: many_to_many
     sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) ;;
+      AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) AND (${job_board_budget_amount.year}=${cpa.event_year} OR ${job_board_budget_amount.year}=${cph.event_year});;
     type: inner
   }
 }
@@ -558,10 +558,10 @@ explore: events_luba {
     sql_on: ${client.name}="Luba" ;;
     type: inner
   }
-  join: vacancy {
-    relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} --and  ${client.name}="Luba"   ;;
-  }
+  # join: vacancy {
+  #   relationship: one_to_one
+  #   sql_on: ${vacancy.clientid}=${client.id};;
+  # }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid};;
@@ -578,8 +578,8 @@ explore: events_luba {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${campaign.id}=${events_luba.utm_id_integer} AND lower(${jobboard.name})=${events_luba.UTM_SOURCE}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_luba.event_month_int};;
+    sql_on: ${campaign.id}=${events_luba.utm_id_integer} AND lower(${jobboard.name})=lower(${events_luba.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year};;
     type: inner
   }
 }

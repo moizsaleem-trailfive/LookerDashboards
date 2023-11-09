@@ -32,6 +32,10 @@ view: cpa {
     sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${eventdate_date} as string))) ;;
     label: "Event Month"
   }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y-%m-%d",cast(${eventdate_date} as string))) ;;
+    }
   dimension: eventname {
     type: string
     sql: ${TABLE}.eventname ;;
