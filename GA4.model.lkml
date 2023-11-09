@@ -558,10 +558,10 @@ explore: events_luba {
     sql_on: ${client.name}="Luba" ;;
     type: inner
   }
-  # join: vacancy {
-  #   relationship: one_to_one
-  #   sql_on: ${vacancy.clientid}=${client.id};;
-  # }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id};;
+  }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid};;
