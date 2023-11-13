@@ -425,7 +425,7 @@ view: events_luba {
   }
   dimension: traffic_source__source {
     type: string
-    sql: ${TABLE}.traffic_source.source ;;
+    sql: INITCAP(${TABLE}.traffic_source.source) ;;
     group_label: "Traffic Source"
     group_item_label: "Source"
   }
