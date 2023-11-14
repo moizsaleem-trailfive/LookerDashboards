@@ -593,7 +593,7 @@ view: events_luba {
   measure: sollitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR ${traffic_source__name} IS NOT NULL  OR ${traffic_source__medium}  IS NOT NULL  OR ${traffic_source__source} IS NOT NULL)AND ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${utm_id_integer} IS NOT NULL OR ${traffic_source__name} IS NOT NULL  OR ${traffic_source__source} IS NOT NULL)and ${traffic_source__medium}  ="cpc"  AND ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
@@ -601,13 +601,15 @@ view: events_luba {
   }
   measure: all_sollitatie {
     type: count_distinct
-    sql: CASE
-          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie"
+    sql:  CASE
+          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
-      END;;
+      END
+        ;;
   }
+
   measure: total_page_views {
     type: sum
     sql: CASE
