@@ -602,8 +602,8 @@ view: events_luba {
   measure: all_sollitatie {
     type: count_distinct
     sql:  CASE
-          WHEN
-           ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
+          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END

@@ -577,8 +577,8 @@ explore: events_luba {
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_luba.utm_id_integer} AND lower(${jobboard.name}) like lower(${events_luba.traffic_source__source})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    relationship: one_to_one
+    sql_on:((${campaign.id}=${events_luba.utm_id_integer} OR lower(${jobboard.name})=${events_luba.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_luba.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_luba.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year};;
     type: inner
   }
