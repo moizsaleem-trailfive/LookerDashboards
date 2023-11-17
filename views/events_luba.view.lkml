@@ -603,7 +603,8 @@ view: events_luba {
     type: count_distinct
     sql:  CASE
           WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
+          AND ${event_name}="sollicitatie" and lower(${traffic_source__medium})  ="cpc"
+          and lower(${traffic_source__source}) not like "%recruitnow%"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END
