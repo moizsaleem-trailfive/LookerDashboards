@@ -480,7 +480,7 @@ view: events_luba {
     type: string
     sql: (SELECT ${user_pseudo_id}
             FROM UNNEST(${event_params})
-            WHERE event_name = 'click' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
   dimension: UTM {
     label: "UTM"
@@ -603,8 +603,7 @@ view: events_luba {
     type: count_distinct
     sql:  CASE
           WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie" and lower(${traffic_source__medium})  ="cpc"
-          and lower(${traffic_source__source}) not like "%recruitnow%"
+          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END
