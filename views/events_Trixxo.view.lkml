@@ -277,17 +277,22 @@ view: events_Trixxo {
     datatype: date
     sql: PARSE_DATE("%Y%m%d", ${TABLE}.event_date);;
   }
-  dimension: event_month {
+  dimension: event_month_int {
 
-    type: string
+    type: number
 
     sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
-    label: "Event Month"
+    label: "Event Month Int"
   }
-  dimension: month {
+  dimension: event_month {
     type: string
     sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
-    label: "Month"
+    label: "Event Month"
+  }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
+    label: "Event Year"
   }
   dimension: event_dimensions__hostname {
     type: string
@@ -403,7 +408,7 @@ view: events_Trixxo {
   }
   dimension: traffic_source__source {
     type: string
-    sql: ${TABLE}.traffic_source.source ;;
+    sql: INITCAP(${TABLE}.traffic_source.source) ;;
     group_label: "Traffic Source"
     group_item_label: "Source"
   }
@@ -443,6 +448,7 @@ view: events_Trixxo {
              FROM UNNEST(${event_params})
              WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
+
   dimension: Page_views{
 
     label: "Page Views"
@@ -450,6 +456,14 @@ view: events_Trixxo {
     sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
              WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: Clicks{
+
+    label: "Clicks"
+    type: string
+    sql: (SELECT ${user_pseudo_id}
+            FROM UNNEST(${event_params})
+            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
   dimension: UTM {
     label: "UTM"
@@ -462,13 +476,13 @@ view: events_Trixxo {
     sql: safe_cast(${UTM} AS INTEGER);;
 
   }
-
   dimension: UTM_SOURCE {
     label: "UTM_SOURCE"
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
-    can_filter: yes
   }
+
+
   dimension: Page_views_params{
 
     label: "Page Views Params"
@@ -487,20 +501,35 @@ view: events_Trixxo {
     type: number
     sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
   }
-  dimension: UTM_Campaign {
-    label: "UTM Campaign"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
-  }
   dimension: utm_id_integer_Page_views {
     label: "utm_id_integer_Page_views"
     type: number
     sql: safe_cast(${UTM_Page_views} AS INTEGER);;
 
   }
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  dimension: Clicks_params{
+
+    label: "Clicks Params"
+    type: string
+    sql: (SELECT value.string_value
+            FROM UNNEST(${event_params})
+            WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM_SOURCE_Clicks {
+    label: "UTM_SOURCE_Clicks"
+    type: string
+    sql:INITCAP(REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)'));;
+  }
+  dimension: UTM_Clicks {
+    label: "UTM_Clicks"
+    type: number
+    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
+  }
+  dimension: utm_id_integer_Clicks {
+    label: "utm_id_integer_Clicks"
+    type: number
+    sql: safe_cast(${UTM_Clicks} AS INTEGER);;
+
   }
   dimension: campaign_name {
     type: string
@@ -518,18 +547,52 @@ view: events_Trixxo {
         END;;
 
   }
+  dimension: campaign_name_clicks {
+    type: string
+    sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
+          ELSE ''
+        END;;
+
+  }
+  dimension: session_id{
+
+    label: "Session ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
+
+  }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  }
 
   measure: count {
     type: count
     drill_fields: [detail*]
   }
-  measure: sollitatie {
-    type: sum
+  measure: sollicitatie {
+    type: count_distinct
     sql: CASE
-          WHEN ${user_pseudo_id} IS NOT NULL AND ${utm_id_integer} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_Trixxo.traffic_source__source} ) ) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END;;
   }
+  measure: all_sollicitatie {
+    type: count_distinct
+    sql:  CASE
+          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
+  }
+
   measure: total_page_views {
     type: sum
     sql: CASE
@@ -538,6 +601,16 @@ view: events_Trixxo {
         END;;
 
   }
+
+  measure: total_clicks {
+    type: sum
+    sql: CASE
+          WHEN ${Clicks} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+
+  }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

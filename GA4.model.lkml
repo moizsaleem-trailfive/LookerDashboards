@@ -253,9 +253,10 @@ explore: events_Djopzz {
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_Djopzz.utm_id_integer} AND ${jobboard.name}=${events_Djopzz.source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
+    relationship: one_to_one
+    sql_on: ((${campaign.id}=${events_Djopzz.utm_id_integer} OR lower(${jobboard.name})=${events_Djopzz.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_Djopzz.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_Djopzz.traffic_source__source})) )
+    AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Djopzz.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_Djopzz.event_year};;
     type: inner
   }
     # join: jobboard {
@@ -333,8 +334,8 @@ explore: events_Trixxo {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: (${campaign.id}=${events_Trixxo.utm_id_integer}) AND (${jobboard.name}=${events_Trixxo.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_Trixxo.event_month};;
+    sql_on: ((${campaign.id}=${events_Trixxo.utm_id_integer} OR lower(${jobboard.name})=${events_Trixxo.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_Trixxo.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_Trixxo.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Trixxo.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_Trixxo.event_year};;
     type: inner
   }
 }
