@@ -59,10 +59,10 @@ view: campaign {
     type: string
     sql: ${TABLE}.lmh ;;
   }
-  dimension: name {
-    type: string
-    sql: CASE WHEN lower(${TABLE}.name) NOT LIKE '%test%' AND ${clientid}=${client.id} THEN ${TABLE}.name END;;
-  }
+  # dimension: name {
+  #   type: string
+  #   sql: CASE WHEN lower(${TABLE}.name) NOT LIKE '%test%' AND ${clientid}=${client.id} THEN ${TABLE}.name END;;
+  # }
   dimension: priority {
     type: number
     sql: ${TABLE}.priority ;;
@@ -104,7 +104,7 @@ view: campaign {
   set: detail {
     fields: [
       id,
-      name,
+
       client.name,
       client.id,
       campaign_job_board.count,
