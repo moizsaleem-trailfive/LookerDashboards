@@ -465,12 +465,48 @@ view: events_Apics {
     type: count
     drill_fields: [detail*]
   }
+  dimension: session_id{
+
+    label: "Session ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_succesvol" AND key = 'ga_session_id');;
+
+  }
   measure: sollitatie {
+    type: count_distinct
+    sql: CASE
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_Apics.traffic_source__source} )) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_succesvol"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+        END;;
+  }
+  dimension: Clicks{
+
+    label: "Clicks"
+    type: string
+    sql: (SELECT ${user_pseudo_id}
+            FROM UNNEST(${event_params})
+            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
+  }
+  measure: all_sollitatie {
+    type: count_distinct
+    sql:  CASE
+          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_succesvol" and ${traffic_source__medium}  ="cpc"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
+  }
+  measure: total_clicks {
     type: sum
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM} AND ${user_pseudo_id} IS NOT NULL AND ${utm_id_integer} IS NOT NULL THEN 1
+          WHEN ${Clicks} IS NOT NULL THEN 1
           ELSE 0
         END;;
+
   }
   measure: total_page_views {
     type: sum

@@ -431,7 +431,7 @@ explore: events_Apics {
     }
     join: campaign {
       relationship: one_to_one
-      sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
+      sql_on: ${client.id}=${campaign.clientid}  ;;
       type: inner
 
     }
