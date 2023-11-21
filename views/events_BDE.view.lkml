@@ -581,7 +581,7 @@ view: events_BDE {
       type: count_distinct
       sql:  CASE
           WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="au_sollicitatie_voltooid" and ${traffic_source__medium}  ="cpc"
+          AND ${event_name}="au_sollicitatie_voltooid"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
         END

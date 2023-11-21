@@ -586,7 +586,7 @@ view: events_InviteJobs {
     type: count_distinct
     sql:  CASE
           WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
+          AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END
