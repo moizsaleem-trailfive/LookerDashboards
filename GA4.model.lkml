@@ -415,9 +415,10 @@ explore: events_LabourLink {
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${events_LabourLink.utm_id_integer} AND ${jobboard.name}=${events_LabourLink.UTM_SOURCE} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_LabourLink.event_month_int};;
+    relationship: one_to_one
+    sql_on: ((${campaign.id}=${events_LabourLink.utm_id_integer} OR lower(${jobboard.name})=${events_LabourLink.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_LabourLink.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_LabourLink.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_LabourLink.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_LabourLink.event_year};;
+
     type: inner
   }
 }

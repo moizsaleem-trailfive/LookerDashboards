@@ -441,7 +441,7 @@ view: events_BDE {
       type: string
       sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name="au_sollicitatie_voltooid" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
     }
 
     dimension: Page_views{
@@ -556,7 +556,7 @@ view: events_BDE {
       type: number
       sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
-           WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
+           WHERE event_name="au_sollicitatie_voltooid" AND key = 'ga_session_id');;
 
     }
     dimension: primary_key {
@@ -572,7 +572,7 @@ view: events_BDE {
       type: count_distinct
       sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_BDE.traffic_source__source} ) ) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie"
+          AND ${event_name}="au_sollicitatie_voltooid"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
         END;;
@@ -581,7 +581,7 @@ view: events_BDE {
       type: count_distinct
       sql:  CASE
           WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie" and ${traffic_source__medium}  ="cpc"
+          AND ${event_name}="au_sollicitatie_voltooid" and ${traffic_source__medium}  ="cpc"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
         END
