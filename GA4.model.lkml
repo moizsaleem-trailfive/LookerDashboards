@@ -609,7 +609,7 @@ explore: events_NoBrothers {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: (${campaign.id}=${events_NoBrothers.utm_id_integer}) AND (${jobboard.name}=${events_NoBrothers.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: ((${campaign.id}=${events_NoBrothers.utm_id_integer} OR lower(${jobboard.name})=${events_NoBrothers.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_NoBrothers.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_NoBrothers.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_NoBrothers.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_NoBrothers.event_year};;
     type: inner
   }
