@@ -509,8 +509,8 @@ explore: events_Salland {
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: (${campaign.id}=${events_Salland.utm_id_integer}) AND (${jobboard.name}=${events_Salland.UTM_SOURCE})  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${events_Salland.event_month_int};;
+    sql_on: ((${campaign.id}=${events_Salland.utm_id_integer} OR lower(${jobboard.name})=${events_Salland.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_Salland.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_Salland.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Salland.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_Salland.event_year};;
     type: inner
   }
 
