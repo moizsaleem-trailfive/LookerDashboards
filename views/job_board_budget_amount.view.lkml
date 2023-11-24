@@ -25,7 +25,15 @@ view: job_board_budget_amount {
     sql: safe_cast(${amount_string} as INTEGER) ;;
 
   }
+  dimension: budgetsp_int {
+    type: number
+    sql: safe_cast(${budgetsp} as INTEGER) ;;
 
+  }
+  dimension: budgetsp {
+    type: string
+    sql: ${TABLE}.budgetsp ;;
+  }
   measure: perday {
     type: number
   sql:${amount_int}/31 ;;
@@ -97,9 +105,17 @@ view: job_board_budget_amount {
     type: count
     drill_fields: [id, name]
   }
-  measure: budget {
+  measure: budget_old {
     type: sum_distinct
     sql: ${amount_int} ;;
+  }
+  measure: budget {
+    type: sum_distinct
+    sql: CASE
+          WHEN ${budgetsp_int} is not null AND ${budgetsp_int}!=0 THEN ${budgetsp_int}
+          ELSE ${amount_int}
+        END;;
+
   }
 
 }

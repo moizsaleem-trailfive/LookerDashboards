@@ -1,24 +1,6 @@
-# # Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-# explore: events_20230901 {
-#   hidden: yes
-#     join: events_20230901__items {
-#       view_label: "Events 20230901: Items"
-#       sql: LEFT JOIN UNNEST(${events_20230901.items}) as events_20230901__items ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230901__event_params {
-#       view_label: "Events 20230901: Event Params"
-#       sql: LEFT JOIN UNNEST(${events_20230901.event_params}) as events_20230901__event_params ;;
-#       relationship: one_to_many
-#     }
-#     join: events_20230901__user_properties {
-#       view_label: "Events 20230901: User Properties"
-#       sql: LEFT JOIN UNNEST(${events_20230901.user_properties}) as events_20230901__user_properties ;;
-#       relationship: one_to_many
-#     }
-# }
-view: events_luba {
-  sql_table_name: `evident-catcher-381918.analytics_256803368.events_*` ;;
+
+view: events_Jopp {
+  sql_table_name: `evident-catcher-381918.analytics_328402066.events_*` ;;
 
   dimension: app_info__firebase_app_id {
     type: string
@@ -419,13 +401,13 @@ view: events_luba {
   }
   dimension: traffic_source__name {
     type: string
-    sql: Replace(${TABLE}.traffic_source.name,"/","_") ;;
+    sql: ${TABLE}.traffic_source.name ;;
     group_label: "Traffic Source"
     group_item_label: "Name"
   }
   dimension: traffic_source__source {
     type: string
-    sql: INITCAP(${TABLE}.traffic_source.source) ;;
+    sql: ${TABLE}.traffic_source.source ;;
     group_label: "Traffic Source"
     group_item_label: "Source"
   }
@@ -457,132 +439,6 @@ view: events_luba {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-  dimension: Page_location{
-
-    label: "Page Referrer"
-    type: string
-    sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-
-  dimension: Page_views{
-
-    label: "Page Views"
-    type: string
-    sql: (SELECT ${user_pseudo_id}
-             FROM UNNEST(${event_params})
-             WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-  dimension: Clicks{
-
-    label: "Clicks"
-    type: string
-    sql: (SELECT ${user_pseudo_id}
-            FROM UNNEST(${event_params})
-            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
-  }
-  dimension: UTM {
-    label: "UTM"
-    type: number
-    sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer {
-    label: "utm_id_integer"
-    type: number
-    sql: safe_cast(${UTM} AS INTEGER);;
-
-  }
-  dimension: UTM_SOURCE {
-    label: "UTM_SOURCE"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
-  }
-
-
-  dimension: Page_views_params{
-
-    label: "Page Views Params"
-    type: string
-    sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE event_name="page_view" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-  dimension: UTM_SOURCE_Page_views {
-    label: "UTM_SOURCE_Page_views"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
-  }
-  dimension: UTM_Page_views {
-    label: "UTM_Page_views"
-    type: number
-    sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer_Page_views {
-    label: "utm_id_integer_Page_views"
-    type: number
-    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
-
-  }
-  dimension: Clicks_params{
-
-    label: "Clicks Params"
-    type: string
-    sql: (SELECT value.string_value
-            FROM UNNEST(${event_params})
-            WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-
-  dimension: UTM_SOURCE_Clicks {
-    label: "UTM_SOURCE_Clicks"
-    type: string
-    sql:CASE when REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') is not null
-       THEN INITCAP(REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)'))
-      WHEN (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} )) THEN ${jobboard.name}
-      END;;
-  }
-  dimension: UTM_Clicks {
-    label: "UTM_Clicks"
-    type: number
-    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer_Clicks {
-    label: "utm_id_integer_Clicks"
-    type: number
-    sql: safe_cast(${UTM_Clicks} AS INTEGER);;
-
-  }
-  dimension: campaign_name_dummy {
-    type: string
-    sql:Concat("%",${campaign.name},"%") ;;
-  }
-  dimension: campaign_name {
-    type: string
-    sql: CASE
-          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True
-          THEN ${campaign.name}
-
-        END;;
-
-  }
-  dimension: campaign_name_page_views {
-    type: string
-    sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
-          ELSE ''
-        END;;
-
-  }
-  dimension: campaign_name_clicks {
-    type: string
-    sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True
-          THEN ${campaign.name}
-        END;;
-
-  }
   dimension: session_id{
 
     label: "Session ID"
@@ -592,58 +448,19 @@ view: events_luba {
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
 
   }
-  dimension: Jobboard_name {
-    label: "Jobboard Name"
-    type: string
-    sql: CASE
-    WHEN ${utm_id_integer} IS NOT NULL THEN ${UTM_SOURCE}
-    WHEN (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} )) THEN ${jobboard.name}
-    END;;
-  }
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
-  }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
-  measure: sollitatie {
+  measure: sollicitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} ) and ${campaign_name} is not null) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${user_pseudo_id} != ${jopp_utm_data.user_pseudo_id}  AND  (lower(${jobboard.name}) like lower(${events_Jopp.traffic_source__source} ) ) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END;;
   }
-  measure: all_sollitatie {
-    type: count_distinct
-    sql:  CASE
-          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
-
-      END
-        ;;
-  }
-
-  measure: total_page_views {
-    type: sum
-    sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
-
-  }
-
-  measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} is not null THEN 1
-        END;;
-
+  measure: count {
+    type: count
+    drill_fields: [detail*]
   }
 
   # ----- Sets of fields for drilling ------
@@ -662,7 +479,7 @@ view: events_luba {
 
 }
 
-view: events_20230901__items {
+view: events_Jopp__items {
   drill_fields: [item_id]
 
   dimension: item_id {
@@ -686,10 +503,10 @@ view: events_20230901__items {
     type: string
     sql: creative_slot ;;
   }
-  dimension: events_20230901__items {
+  dimension: events_20230920__items {
     type: string
     hidden: yes
-    sql: events_20230901__items ;;
+    sql: events_20230920__items ;;
   }
   dimension: item_brand {
     type: string
@@ -777,12 +594,12 @@ view: events_20230901__items {
   }
 }
 
-view: events_20230901__event_params {
+view: events_Jopp__event_params {
 
-  dimension: events_20230901__event_params {
+  dimension: events_20230920__event_params {
     type: string
     hidden: yes
-    sql: events_20230901__event_params ;;
+    sql: events_20230920__event_params ;;
   }
   dimension: key {
     type: string
@@ -814,12 +631,12 @@ view: events_20230901__event_params {
   }
 }
 
-view: events_20230901__user_properties {
+view: events_Jopp__user_properties {
 
-  dimension: events_20230901__user_properties {
+  dimension: events_20230920__user_properties {
     type: string
     hidden: yes
-    sql: events_20230901__user_properties ;;
+    sql: events_20230920__user_properties ;;
   }
   dimension: key {
     type: string
