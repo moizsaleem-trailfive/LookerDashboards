@@ -557,25 +557,25 @@ explore: events_luba {
 
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Luba" ;;
+    sql_on: ${client.name}="Luba" and ${client._fivetran_deleted} = False;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id};;
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid};;
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -583,7 +583,7 @@ explore: events_luba {
     sql_on:((${campaign.id}=${events_luba.utm_id_integer} AND lower(${jobboard.name})=${events_luba.UTM_SOURCE})) OR
     ((REGEXP_CONTAINS((lower(${events_luba.traffic_source__name})), (lower(${campaign.name}))) = True)  AND lower(${jobboard.name}) like lower(${events_luba.traffic_source__source}))
     AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year};;
+      AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year} and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
 }
