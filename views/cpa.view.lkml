@@ -1,5 +1,5 @@
 view: cpa {
-  sql_table_name: `evident-catcher-381918.luba_data_dbo.cpa` ;;
+  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cpa` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -68,11 +68,16 @@ view: cpa {
     type: string
     sql: ${TABLE}.utmcontent ;;
   }
+  # dimension: campaign_name {
+  #   type: string
+  #   sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
+  # }
   dimension: campaign_name {
-    type: string
-    sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
-  }
-
+      type: string
+      sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
+      end
+      ;;
+    }
   dimension: utmid {
     type: string
     sql: ${TABLE}.utmid ;;
@@ -85,14 +90,20 @@ view: cpa {
     type: string
     sql: ${TABLE}.utmsource ;;
   }
+
   dimension: utmterm {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
-  # measure: solli {
-  #   type: count
-  #   sql: ${TABLE}.userpseudoid ;;
-  # }
+  measure: sollicitatie {
+    type: sum
+    sql: case
+         when ${userpseudoid} is not null and ${campaign.name}=${campaign_name} and REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True
+        and lower(${utmsource}) not like "%recruitnow%"
+        then 1
+        else 0
+        end;;
+  }
   measure: count {
     type: count
     drill_fields: [id, eventname]

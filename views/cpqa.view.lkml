@@ -1,5 +1,5 @@
 view: cpqa {
-  sql_table_name: `evident-catcher-381918.luba_data_dbo.cpqa` ;;
+  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cpqa` ;;
   drill_fields: [id]
 
   dimension: id {

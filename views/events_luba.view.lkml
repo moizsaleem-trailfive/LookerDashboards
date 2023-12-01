@@ -552,10 +552,6 @@ view: events_luba {
     sql: safe_cast(${UTM_Clicks} AS INTEGER);;
 
   }
-  dimension: campaign_name_dummy {
-    type: string
-    sql:Concat("%",${campaign.name},"%") ;;
-  }
   dimension: campaign_name {
     type: string
     sql: CASE

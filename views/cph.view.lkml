@@ -1,5 +1,5 @@
 view: cph {
-  sql_table_name: `evident-catcher-381918.luba_data_dbo.cph` ;;
+  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cph` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -74,21 +74,17 @@ view: cph {
     sql: ${TABLE}.utmterm ;;
   }
 
-  dimension: sollic {
-    type: number
-    sql: (SELECT count(${userpseudoid}) from `evident-catcher-381918.luba_data_dbo.cph`  ) ;;
-  }
+
   measure: total_hired {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True THEN 1
+          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True
+          and ${campaign.name} is not null and ${jobboard.name} is not null
+          THEN 1
           ELSE 0
         END;;
   }
-  # measure: solli {
-  #   type: count
-  #   sql: count(${TABLE}.userpseudoid ) ;;
-  # }
+
   measure: count {
     type: count
     drill_fields: [id]

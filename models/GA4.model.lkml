@@ -520,7 +520,7 @@ explore: events_Salland {
 explore: cpa {
   join: cph {
     relationship: many_to_many
-    sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} ;;
+    sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} and ${cph._fivetran_deleted}=False ;;
   }
   join: cpqa {
     relationship: many_to_many
@@ -533,7 +533,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name};;
+    sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -542,7 +542,7 @@ explore: cpa {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and REGEXP_CONTAINS((lower(${cpa.utmsource})), (lower(${jobboard.name}))) = True and lower(${cpa.utmsource}) not like "%recruitnow%"  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -587,35 +587,7 @@ explore: events_luba {
     type: inner
   }
 }
-explore: events_NoBrothers {
-  join: client {
-    relationship: one_to_one
-    sql_on: ${client.name}="No Brothers" ;;
-    type: inner
-  }
-  join: campaign {
-    relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
-    type: inner
 
-  }
-  join: campaign_job_board {
-    relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
-    type: inner
-  }
-  join: jobboard {
-    relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ((${campaign.id}=${events_NoBrothers.utm_id_integer} OR lower(${jobboard.name})=${events_NoBrothers.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_NoBrothers.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_NoBrothers.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=cast(${events_NoBrothers.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_NoBrothers.event_year};;
-    type: inner
-  }
-}
 explore: events_Jopp {
   join: client {
     relationship: one_to_one
