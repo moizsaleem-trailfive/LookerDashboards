@@ -555,11 +555,12 @@ view: events_luba {
   dimension: campaign_name {
     type: string
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True
+          WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name})
           THEN ${campaign.name}
 
-        END;;
+      END;;
 
   }
   dimension: campaign_name_page_views {
@@ -608,7 +609,7 @@ view: events_luba {
   measure: sollitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} ) and ${campaign_name} is not null) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
