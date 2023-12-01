@@ -595,6 +595,8 @@ view: events_NoBrothers {
     sql: CASE
           WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
           WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) THEN ${jobboard.name}
+          WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) THEN ${jobboard.name}
+
           END;;
   }
   # measure: sollicitatie {

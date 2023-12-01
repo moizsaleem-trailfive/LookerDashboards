@@ -593,10 +593,10 @@ view: events_luba {
     label: "Jobboard Name"
     type: string
     sql: CASE
-    WHEN ${utm_id_integer} IS NOT NULL and ${UTM_SOURCE} is not null THEN ${UTM_SOURCE}
-    WHEN (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} )) THEN ${jobboard.name}
-    WHEN (lower(${jobboard.name}) = lower(${events_luba.traffic_source__source} )) THEN ${jobboard.name}
-    END;;
+        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) THEN ${jobboard.name}
+        END;;
   }
   dimension: primary_key {
     primary_key: yes
