@@ -593,7 +593,7 @@ view: events_NoBrothers {
     label: "Jobboard Name"
     type: string
     sql: CASE
-          WHEN ${utm_id_integer} IS NOT NULL THEN ${UTM_SOURCE}
+          WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
           WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) THEN ${jobboard.name}
           END;;
   }
