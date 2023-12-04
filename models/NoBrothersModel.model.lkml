@@ -24,6 +24,10 @@ explore: events_NoBrothers {
     sql_on: ${client.name}="No Brothers" and ${client._fivetran_deleted}=false ;;
     type: inner
   }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
