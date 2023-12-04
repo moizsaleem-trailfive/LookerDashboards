@@ -47,7 +47,7 @@ explore: events_NoBrothers {
   join: job_board_budget_amount {
     relationship: many_to_many
     sql_on:
-          (${events_NoBrothers.campaign_name} is not null and ${events_NoBrothers.Jobboard_name} is not null)
+          (${events_NoBrothers.campaign_name} is not null and ${events_NoBrothers.Jobboard_name} is not null) And ${events_NoBrothers.user_pseudo_id} is not null and ${events_NoBrothers.session_id} is not null
           AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
           AND ${job_board_budget_amount.month}=cast(${events_NoBrothers.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_NoBrothers.event_year} and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner

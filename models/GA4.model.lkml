@@ -581,7 +581,7 @@ explore: events_luba {
   join: job_board_budget_amount {
     relationship: one_to_one
     sql_on:
-          (${events_luba.campaign_name} is not null and ${events_luba.Jobboard_name} is not null)
+          (${events_luba.campaign_name} is not null and ${events_luba.Jobboard_name} is not null) and ${events_luba.user_pseudo_id} is not null and ${events_luba.session_id} is not null
     AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year} and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner

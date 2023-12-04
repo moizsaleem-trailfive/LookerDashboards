@@ -95,6 +95,10 @@ view: cpa {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
+  dimension: customer_id {
+    type: number
+    sql: ${TABLE}.customerid ;;
+  }
   measure: sollicitatie {
     type: sum
     sql: case

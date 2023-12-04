@@ -478,7 +478,7 @@ view: events_luba {
 
     label: "Clicks"
     type: string
-    sql: (SELECT ${user_pseudo_id}
+    sql: (SELECT value.string_value
             FROM UNNEST(${event_params})
             WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
@@ -533,12 +533,12 @@ view: events_luba {
             WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
 
-  dimension: UTM_SOURCE_Clicks {
+   dimension: UTM_SOURCE_Clicks {
     label: "UTM_SOURCE_Clicks"
     type: string
-    sql:CASE when REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') is not null
-       THEN INITCAP(REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)'))
-      WHEN (lower(${jobboard.name}) like lower(${events_luba.traffic_source__source} )) THEN ${jobboard.name}
+    sql:CASE when lower(${jobboard.name})=REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
       END;;
   }
   dimension: UTM_Clicks {
@@ -556,8 +556,8 @@ view: events_luba {
     type: string
     sql: CASE
           WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True THEN ${campaign.name}
-          WHEN lower(${traffic_source__name})=lower(${campaign.name})
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
 
       END;;
@@ -575,7 +575,9 @@ view: events_luba {
     type: string
     sql: CASE
           WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="click"
+          THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="click"
           THEN ${campaign.name}
         END;;
 
@@ -594,8 +596,8 @@ view: events_luba {
     type: string
     sql: CASE
         WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
         END;;
   }
   dimension: primary_key {
