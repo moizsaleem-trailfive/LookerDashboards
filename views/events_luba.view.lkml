@@ -609,10 +609,19 @@ view: events_luba {
     type: count
     drill_fields: [detail*]
   }
+  # measure: sollitatie {
+  #   type: count_distinct
+  #   sql: CASE
+  #         WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
+  #         AND ${event_name}="sollicitatie"
+  #         THEN CONCAT(${session_id},${user_pseudo_id})
+
+  #     END;;
+  # }
   measure: sollitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
