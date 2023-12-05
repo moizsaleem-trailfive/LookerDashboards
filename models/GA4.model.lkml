@@ -533,7 +533,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: many_to_many
-    sql_on: ${client.id}=${campaign.clientid} and  ${campaign.name}=${cpa.campaign_name} ;;
+    sql_on: ${campaign.name}=${cpa.campaign_name} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -542,12 +542,12 @@ explore: cpa {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and REGEXP_CONTAINS((lower(${cpa.utmsource})), (lower(${jobboard.name}))) = True and lower(${cpa.utmsource}) not like "%recruitnow%"  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${cpa.jobboard_name} is not null  ;;
     type: inner
   }
   join: job_board_budget_amount {
     relationship: many_to_many
-    sql_on: ${campaign.name}=${cpa.campaign_name} AND lower(${jobboard.name})=${cpa.source}  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+    sql_on: ${cpa.campaign_name} is not null AND ${cpa.source} is not null AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND (${job_board_budget_amount.month}=${cpa.event_month_int} OR ${job_board_budget_amount.month}=${cph.event_month_int}) AND (${job_board_budget_amount.year}=${cpa.event_year} OR ${job_board_budget_amount.year}=${cph.event_year});;
     type: inner
   }

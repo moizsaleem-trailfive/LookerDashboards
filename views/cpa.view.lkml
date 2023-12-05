@@ -99,11 +99,17 @@ view: cpa {
     type: number
     sql: ${TABLE}.customerid ;;
   }
+  dimension: jobboard_name {
+    type: string
+    sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
+    then ${jobboard.name}
+    end;;
+  }
   measure: sollicitatie {
     type: sum
     sql: case
-         when ${userpseudoid} is not null and ${campaign.name}=${campaign_name} and REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True
-        and lower(${utmsource}) not like "%recruitnow%"
+         when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null
+
         then 1
         else 0
         end;;
