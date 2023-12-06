@@ -34,6 +34,10 @@ explore: events_NoBrothers {
     type: inner
 
   }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+  }
   join: campaign_job_board {
     relationship: many_to_many
     sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False;;

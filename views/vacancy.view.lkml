@@ -251,4 +251,11 @@ view: vacancy {
     type: count
     drill_fields: [vacancyid, functionname, contactname, contactcompanyname]
   }
+  measure: vacancy_count {
+    type: count_distinct
+    sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid}
+    and ${_fivetran_deleted} = False and ${campaignvacancy._fivetran_deleted} = False and ${campaign._fivetran_deleted} = False
+    then ${id}
+    end;;
+  }
 }

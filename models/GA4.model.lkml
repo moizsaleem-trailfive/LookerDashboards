@@ -564,9 +564,14 @@ explore: events_luba {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
+
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -630,4 +635,18 @@ explore: events_Jopp {
     type: inner
   }
 
+}
+explore: vacancy {
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.id}=${vacancy.clientid} and ${client._fivetran_deleted} = False ;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${campaign.id}=${campaignvacancy.campaignid} and ${campaign._fivetran_deleted}=False ;;
+  }
 }
