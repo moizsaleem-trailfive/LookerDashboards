@@ -665,14 +665,7 @@ view: events_luba {
         END;;
 
   }
-  measure: total_page {
-    type: sum
-    sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
 
-  }
 
   # measure: total_clicks {
   #   type: sum
