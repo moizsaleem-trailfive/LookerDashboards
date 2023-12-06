@@ -533,12 +533,20 @@ view: events_luba {
             WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
 
-   dimension: UTM_SOURCE_Clicks {
+  # dimension: UTM_SOURCE_Clicks {
+  #   label: "UTM_SOURCE_Clicks"
+  #   type: string
+  #   sql:CASE when lower(${jobboard.name})=REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') THEN ${jobboard.name}
+  #     WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+  #     WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+  #     END;;
+  # }
+  dimension: UTM_SOURCE_Clicks {
     label: "UTM_SOURCE_Clicks"
     type: string
-    sql:CASE when lower(${jobboard.name})=REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') THEN ${jobboard.name}
-      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
-      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+    sql:CASE
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
       END;;
   }
   dimension: UTM_Clicks {
@@ -571,17 +579,28 @@ view: events_luba {
         END;;
 
   }
+  # dimension: campaign_name_clicks {
+  #   type: string
+  #   sql: CASE
+  #         WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
+  #         WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="click"
+  #         THEN ${campaign.name}
+  #         WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="click"
+  #         THEN ${campaign.name}
+  #       END;;
+
+  # }
   dimension: campaign_name_clicks {
     type: string
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="click"
+
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie"
           THEN ${campaign.name}
-          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="click"
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
         END;;
 
-  }
+    }
   dimension: session_id{
 
     label: "Session ID"
