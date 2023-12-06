@@ -630,7 +630,7 @@ view: events_luba {
   measure: all_sollitatie {
     type: count_distinct
     sql:  CASE
-          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
@@ -647,12 +647,22 @@ view: events_luba {
 
   }
 
-  measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} is not null THEN 1
-        END;;
+  # measure: total_clicks {
+  #   type: sum
+  #   sql: CASE
+  #         WHEN ${Clicks} is not null THEN 1
+  #       END;;
 
+  # }
+  measure: total_clicks {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
   }
 
   # ----- Sets of fields for drilling ------

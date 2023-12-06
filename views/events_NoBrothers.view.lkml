@@ -648,13 +648,23 @@ view: events_NoBrothers {
 
   }
 
-  measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
+  # measure: total_clicks {
+  #   type: sum
+  #   sql: CASE
+  #         WHEN ${Clicks} IS NOT NULL THEN 1
+  #         ELSE 0
+  #       END;;
 
+  # }
+  measure: total_clicks {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
   }
   measure: total_hired{
     type: number
