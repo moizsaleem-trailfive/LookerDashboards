@@ -649,4 +649,12 @@ explore: vacancy {
     relationship: one_to_one
     sql_on: ${campaign.id}=${campaignvacancy.campaignid} and ${campaign._fivetran_deleted}=False ;;
   }
+  join: campaign_job_board {
+    relationship: one_to_one
+    sql_on: ${campaign.id}=${campaign_job_board.campaignid} and ${campaign_job_board._fivetran_deleted} = False ;;
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False ;;
+  }
 }

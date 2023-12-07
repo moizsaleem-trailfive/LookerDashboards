@@ -253,8 +253,9 @@ view: vacancy {
   }
   measure: vacancy_count {
     type: count_distinct
-    sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid}
+    sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
     and ${_fivetran_deleted} = False and ${campaignvacancy._fivetran_deleted} = False and ${campaign._fivetran_deleted} = False
+    and ${campaign.id}=${campaign_job_board.campaignid} and ${jobboard.id}=${campaign_job_board.jobboardid}
     then ${id}
     end;;
   }
