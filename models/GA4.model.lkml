@@ -522,7 +522,11 @@ explore: cpa {
     relationship: many_to_many
     sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} and ${cph._fivetran_deleted}=False ;;
   }
-
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.userpseudoid} is not null and ${cpqa.campaign_name} is not null and ${cpqa.jobboard_name} is not null
+    and  ${cpqa._fivetran_deleted}=False;;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name} is not null and ${client._fivetran_deleted} = false;;
@@ -550,34 +554,7 @@ explore: cpa {
     type: inner
   }
 }
-explore: cpqa {
-  join: client {
-    relationship: one_to_one
-    sql_on: ${client.name} is not null and ${client._fivetran_deleted} = false;;
-    type: inner
-  }
-  join: campaign {
-    relationship: one_to_one
-    sql_on:  ${campaign.name} is not null and ${campaign.name} =${cpqa.campaign_name} and ${campaign._fivetran_deleted}=False ;;
-  }
-  join: campaign_job_board {
-    relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
-    type: inner
-  }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name}=${cpqa.jobboard_name} and ${jobboard._fivetran_deleted}=False ;;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND (${job_board_budget_amount.month}=${cpqa.event_month_int}) AND (${job_board_budget_amount.year}=${cpqa.event_year})
-      AND ${job_board_budget_amount._fivetran_deleted}=False;;
-    type: inner
-  }
-}
+
 explore: events_luba {
 
   join: client {
