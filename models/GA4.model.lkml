@@ -558,7 +558,7 @@ explore: cpqa {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${campaign.name} =${cpqa.campaign_name} and ${campaign._fivetran_deleted}=False ;;
+    sql_on:  ${campaign.name} is not null and ${campaign.name} =${cpqa.campaign_name} and ${campaign._fivetran_deleted}=False ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
