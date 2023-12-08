@@ -520,7 +520,7 @@ explore: events_Salland {
 explore: cpa {
   join: cph {
     relationship: many_to_many
-    sql_on: ${cpa.userpseudoid}=${cph.userpseudoid} and ${cph._fivetran_deleted}=False ;;
+    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cph._fivetran_deleted}=False ;;
   }
   join: cpqa {
     relationship: one_to_one
@@ -534,7 +534,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${campaign.name} is not null  and ${campaign._fivetran_deleted}=False ;;
+    sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
   }
   join: campaign_job_board {
     relationship: many_to_many

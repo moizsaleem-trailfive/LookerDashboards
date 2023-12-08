@@ -3,7 +3,6 @@ view: cph {
   drill_fields: [id]
 
   dimension: id {
-    primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
   }
@@ -73,13 +72,16 @@ view: cph {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
-
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${date_date}, ${userpseudoid},${hired}) ;;
+  }
 
   measure: total_hired {
     type: sum
     sql: CASE
           WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True
-          and ${campaign.name} is not null and ${jobboard.name} is not null
+
           THEN 1
           ELSE 0
         END;;

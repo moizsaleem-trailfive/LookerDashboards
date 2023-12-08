@@ -79,6 +79,10 @@ view: cpa {
       end
       ;;
     }
+    dimension: campaign {
+      type: string
+      sql: ${campaign_name} ;;
+    }
   dimension: utmid {
     type: string
     sql: ${TABLE}.utmid ;;
@@ -105,6 +109,10 @@ view: cpa {
     sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
     then ${jobboard.name}
     end;;
+  }
+  dimension: jobboard {
+    type: string
+    sql: ${jobboard_name} ;;
   }
   measure: sollicitatie {
     type: sum
