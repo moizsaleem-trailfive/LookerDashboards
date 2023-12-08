@@ -524,7 +524,7 @@ explore: cpa {
   }
   join: cpqa {
     relationship: one_to_one
-    sql_on: ${cpqa.userpseudoid} is not null and ${cpqa.campaign_name} is not null and ${cpqa.jobboard_name} is not null
+    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid}  and ${cpqa.campaign_name} is not null and ${cpqa.jobboard_name} is not null
     and  ${cpqa._fivetran_deleted}=False;;
   }
   join: client {
@@ -534,7 +534,7 @@ explore: cpa {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${campaign.name} is not null and ${campaign.name} =${cpa.campaign_name} and ${campaign._fivetran_deleted}=False ;;
+    sql_on: ${campaign.name} is not null  and ${campaign._fivetran_deleted}=False ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -543,7 +543,7 @@ explore: cpa {
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name}=${cpa.jobboard_name} and ${jobboard._fivetran_deleted}=False ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
     type: inner
   }
   join: job_board_budget_amount {

@@ -118,4 +118,10 @@ view: job_board_budget_amount {
 
   }
 
+  # measure: fill_budget {
+  #   type: number
+  #   sql: CASE when ${budget} is null and ${cpa.event_month}=${job_board_budget_amount.month} then ${budget}
+  #   end;;
+  # }
+
 }

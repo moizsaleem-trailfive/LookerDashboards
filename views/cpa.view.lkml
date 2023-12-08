@@ -1,3 +1,4 @@
+
 view: cpa {
   sql_table_name: `evident-catcher-381918.luba_etl_dbo.cpa` ;;
   drill_fields: [id]
@@ -118,4 +119,5 @@ view: cpa {
     type: count
     drill_fields: [id, eventname]
   }
+
 }
