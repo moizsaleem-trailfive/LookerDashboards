@@ -25,14 +25,15 @@ view: job_board_budget_amount {
     sql: safe_cast(${amount_string} as INTEGER) ;;
 
   }
+
+  dimension: budgetsp {
+    type: string
+    sql: ${TABLE}.budgetsp ;;
+  }
   dimension: budgetsp_int {
     type: number
     sql: safe_cast(${budgetsp} as INTEGER) ;;
 
-  }
-  dimension: budgetsp {
-    type: string
-    sql: ${TABLE}.budgetsp ;;
   }
   measure: perday {
     type: number
