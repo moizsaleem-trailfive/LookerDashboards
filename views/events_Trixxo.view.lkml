@@ -642,9 +642,6 @@ view: events_Trixxo {
       ;;
   }
 
-
-
-
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
