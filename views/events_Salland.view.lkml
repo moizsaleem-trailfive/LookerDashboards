@@ -461,7 +461,7 @@ view: events_Salland {
 
     label: "Clicks"
     type: string
-    sql: (SELECT ${user_pseudo_id}
+    sql: (SELECT value.string_value
             FROM UNNEST(${event_params})
             WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
@@ -483,6 +483,7 @@ view: events_Salland {
   }
 
 
+
   dimension: Page_views_params{
 
     label: "Page Views Params"
@@ -491,6 +492,7 @@ view: events_Salland {
              FROM UNNEST(${event_params})
              WHERE event_name="page_view" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
+
   dimension: UTM_SOURCE_Page_views {
     label: "UTM_SOURCE_Page_views"
     type: string
@@ -518,7 +520,10 @@ view: events_Salland {
   dimension: UTM_SOURCE_Clicks {
     label: "UTM_SOURCE_Clicks"
     type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)'));;
+    sql:CASE
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_definitief" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_definitief" THEN ${jobboard.name}
+      END;;
   }
   dimension: UTM_Clicks {
     label: "UTM_Clicks"
@@ -534,9 +539,12 @@ view: events_Salland {
   dimension: campaign_name {
     type: string
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
-          ELSE ''
-        END;;
+          WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_definitief" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_definitief"
+          THEN ${campaign.name}
+
+      END;;
 
   }
   dimension: campaign_name_page_views {
@@ -550,9 +558,12 @@ view: events_Salland {
   dimension: campaign_name_clicks {
     type: string
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-          ELSE ''
-        END;;
+
+                WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_definitief"
+                THEN ${campaign.name}
+                WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_definitief"
+                THEN ${campaign.name}
+              END;;
 
   }
   dimension: session_id{
@@ -564,6 +575,15 @@ view: events_Salland {
            WHERE event_name="Sollicitatie_definitief" AND key = 'ga_session_id');;
 
   }
+  dimension: Jobboard_name {
+    label: "Jobboard Name"
+    type: string
+    sql: CASE
+        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_definitief" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_definitief" THEN ${jobboard.name}
+        END;;
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
@@ -573,19 +593,19 @@ view: events_Salland {
     type: count
     drill_fields: [detail*]
   }
-  measure: sollicitatie {
+  measure: sollitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_Salland.traffic_source__source} ) ) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_definitief"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
       END;;
   }
-  measure: all_sollicitatie {
+  measure: all_sollitatie {
     type: count_distinct
     sql:  CASE
-          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_definitief"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
@@ -603,14 +623,15 @@ view: events_Salland {
   }
 
   measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_definitief"
+          THEN CONCAT(${session_id},${user_pseudo_id})
 
+      END
+      ;;
   }
-
 
   # ----- Sets of fields for drilling ------
   set: detail {
