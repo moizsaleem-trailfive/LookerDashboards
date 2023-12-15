@@ -382,8 +382,8 @@ view: events_Apics {
     label: "Page Referrer"
     type: string
     sql: (SELECT value.string_value
-             FROM UNNEST(${event_params})
-             WHERE event_name="Sollicitatie_succesvol" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+    FROM UNNEST(${event_params})
+    WHERE event_name="Sollicitatie_succesvol" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
   dimension: Page_views{
 
@@ -404,13 +404,30 @@ view: events_Apics {
     sql: safe_cast(${UTM} AS INTEGER);;
 
   }
-
+  dimension: UTM_SOURCE_Clicks {
+    label: "UTM_SOURCE_Clicks"
+    type: string
+    sql:CASE
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
+      END;;
+  }
   dimension: UTM_SOURCE {
     label: "UTM_SOURCE"
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
     can_filter: yes
   }
+  dimension: Clicks_params{
+
+    label: "Clicks Params"
+    type: string
+    sql: (SELECT value.string_value
+            FROM UNNEST(${event_params})
+            WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+
+
   dimension: Page_views_params{
 
     label: "Page Views Params"
@@ -434,6 +451,17 @@ view: events_Apics {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
   }
+  dimension: utm_id_integer_Clicks {
+    label: "utm_id_integer_Clicks"
+    type: number
+    sql: safe_cast(${UTM_Clicks} AS INTEGER);;
+
+  }
+  dimension: UTM_Clicks {
+    label: "UTM_Clicks"
+    type: number
+    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
+  }
   dimension: utm_id_integer_Page_views {
     label: "utm_id_integer_Page_views"
     type: number
@@ -444,12 +472,16 @@ view: events_Apics {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
   }
+
   dimension: campaign_name {
     type: string
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
-          ELSE ''
-        END;;
+          WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_succesvol" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_succesvol"
+          THEN ${campaign.name}
+
+      END;;
 
   }
   dimension: campaign_name_page_views {
@@ -465,6 +497,15 @@ view: events_Apics {
     type: count
     drill_fields: [detail*]
   }
+  dimension: Jobboard_name {
+    label: "Jobboard Name"
+    type: string
+    sql: CASE
+        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
+        END;;
+  }
   dimension: session_id{
 
     label: "Session ID"
@@ -477,23 +518,40 @@ view: events_Apics {
   measure: sollitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_Apics.traffic_source__source} )) )  and   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
           THEN CONCAT(${session_id},${user_pseudo_id})
-        END;;
+
+      END;;
+  }
+  dimension: campaign_name_clicks {
+    type: string
+    sql: CASE
+             WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_succesvol"
+                      THEN ${campaign.name}
+                      WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_succesvol"
+                      THEN ${campaign.name}
+                    END;;
+
+  }
+
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
+    label: "Event Year"
   }
   dimension: Clicks{
 
     label: "Clicks"
     type: string
-    sql: (SELECT ${user_pseudo_id}
+    sql: (SELECT value.string_value
             FROM UNNEST(${event_params})
             WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
   measure: all_sollitatie {
     type: count_distinct
     sql:  CASE
-          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
@@ -501,17 +559,20 @@ view: events_Apics {
       ;;
   }
   measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} IS NOT NULL THEN 1
-          ELSE 0
-        END;;
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_succesvol"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
 
   }
   measure: total_page_views {
     type: sum
     sql: CASE
-          WHEN ${campaign.id_str}=${UTM_Page_views} AND ${user_pseudo_id} IS NOT NULL AND ${Page_views} IS NOT NULL THEN 1
+          WHEN ${Page_views} IS NOT NULL THEN 1
           ELSE 0
         END;;
 
