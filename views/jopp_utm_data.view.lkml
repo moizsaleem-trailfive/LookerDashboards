@@ -69,6 +69,7 @@ view: jopp_utm_data {
   measure: count {
     type: count
   }
+
   measure: sollitatie {
     type: sum
     sql: CASE

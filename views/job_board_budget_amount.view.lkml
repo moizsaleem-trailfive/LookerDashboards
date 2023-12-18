@@ -67,6 +67,34 @@ view: job_board_budget_amount {
     type: string
     sql: ${TABLE}.createddate ;;
   }
+#   dimension: min_date {
+#     type: date
+#     sql: min(${create_date_date}) ;;
+#   }
+#   dimension: max_date {
+#     type: date
+#     sql: max(${create_date_date}) ;;
+#   }
+#   dimension: date_added {
+#     type: string
+#     sql: (SELECT
+#   date
+# FROM UNNEST(GENERATE_DATE_ARRAY('2015-12-23', '2016-01-09')) AS date);;
+#   }
+#   dimension_group: create_date {
+#     type: time
+#     timeframes: [
+#       raw,
+#       date,
+#       week,
+#       month,
+#       quarter,
+#       year
+#     ]
+#     convert_tz: no
+#     datatype: date
+#     sql: PARSE_DATE( "%Y-%m",concat(${year},"-",${month}));;
+#   }
   dimension: date {
     type: string
     sql: ${TABLE}.date ;;

@@ -673,34 +673,45 @@ explore: events_luba {
 explore: events_Jopp {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Jopp" ;;
+    sql_on: ${client.name}="Jopp" and ${client._fivetran_deleted} = False;;
     type: inner
   }
+
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
+
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
-    type: inner
-
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%'  and ${campaign._fivetran_deleted}=False;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
   }
   join: campaign_job_board {
-    relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    relationship: one_to_one
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
     type: inner
   }
   join: jobboard {
-    relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    relationship: one_to_one
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on:
+    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Jopp.event_month_int} as string)
+      AND ${job_board_budget_amount.year}=${events_Jopp.event_year}
+      and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
   join: jopp_utm_data {
     relationship: one_to_one
     sql_on: ${jopp_utm_data.user_pseudo_id} is not null OR ${jopp_utm_data.user_pseudo_id} is null;;
-  }
-  join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ((${campaign.id}=${jopp_utm_data.utm_id_integer} OR lower(${jobboard.name})=${jopp_utm_data.utm_source}) OR (lower(${campaign.name}) like lower(${events_Jopp.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_Jopp.traffic_source__source})) )  AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=cast(${events_Jopp.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_Jopp.event_year};;
-    type: inner
   }
 
 }
