@@ -446,7 +446,7 @@ view: events_Jopp {
     type: number
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
-           WHERE event_name="page_view" AND key = 'ga_session_id');;
+           WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
 
   }
   dimension: campaign_name {
@@ -539,23 +539,23 @@ view: events_Jopp {
   }
 
 
-  measure: total_clicks {
-    type: sum
-    sql: CASE
-          WHEN ${Clicks} is not null THEN 1
-        END;;
-
-  }
   # measure: total_clicks {
-  #   type: count_distinct
-  #   sql:  CASE
-  #         WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-  #         AND ${event_name}="sollicitatie"
-  #         THEN CONCAT(${session_id},${user_pseudo_id})
+  #   type: sum
+  #   sql: CASE
+  #         WHEN ${Clicks} is not null THEN 1
+  #       END;;
 
-  #     END
-  #     ;;
   # }
+  measure: total_clicks {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+      END
+      ;;
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date},${user_pseudo_id},${event_bundle_sequence_id},${event_name}) ;;
@@ -569,6 +569,16 @@ view: events_Jopp {
 
       END;;
   }
+  measure: all_sollicitatie {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+      END
+      ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [detail*]

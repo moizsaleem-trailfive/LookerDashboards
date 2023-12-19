@@ -439,178 +439,233 @@ view: events_Djopzz {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-  dimension: Page_location{
+ dimension: Page_location{
 
-    label: "Page Referrer"
-    type: string
-    sql: (SELECT value.string_value
+  label: "Page Referrer"
+  type: string
+  sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE event_name="solliciteren" AND key = 'page_location' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
+             WHERE event_name="solliciteren" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+}
 
+dimension: Page_views{
 
-  dimension: Page_views{
-
-    label: "Page Views"
-    type: string
-    sql: (SELECT ${user_pseudo_id}
+  label: "Page Views"
+  type: string
+  sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-  dimension: Clicks{
+             WHERE event_name = 'solliciteren' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+}
+dimension: Clicks{
 
-    label: "Clicks"
-    type: string
-    sql: (SELECT ${user_pseudo_id}
+  label: "Clicks"
+  type: string
+  sql: (SELECT value.string_value
             FROM UNNEST(${event_params})
             WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
-  }
-  dimension: UTM {
-    label: "UTM"
-    type: number
-    sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer {
-    label: "utm_id_integer"
-    type: number
-    sql: safe_cast(${UTM} AS INTEGER);;
+}
+dimension: UTM {
+  label: "UTM"
+  type: number
+  sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
+}
+dimension: utm_id_integer {
+  label: "utm_id_integer"
+  type: number
+  sql: safe_cast(${UTM} AS INTEGER);;
 
-  }
-  dimension: UTM_SOURCE {
-    label: "UTM_SOURCE"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
-  }
+}
+dimension: UTM_SOURCE {
+  label: "UTM_SOURCE"
+  type: string
+  sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
+}
 
 
-  dimension: Page_views_params{
+dimension: Page_views_params{
 
-    label: "Page Views Params"
-    type: string
-    sql: (SELECT value.string_value
+  label: "Page Views Params"
+  type: string
+  sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE event_name="page_view" AND (key = 'page_referrer' OR key = 'page_location') AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-  dimension: UTM_SOURCE_Page_views {
-    label: "UTM_SOURCE_Page_views"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
-  }
-  dimension: UTM_Page_views {
-    label: "UTM_Page_views"
-    type: number
-    sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer_Page_views {
-    label: "utm_id_integer_Page_views"
-    type: number
-    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
+             WHERE event_name="page_view" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+}
+dimension: UTM_SOURCE_Page_views {
+  label: "UTM_SOURCE_Page_views"
+  type: string
+  sql:INITCAP(REGEXP_EXTRACT(${Page_views_params}, 'utm_source=([^&]+)'));;
+}
+dimension: UTM_Page_views {
+  label: "UTM_Page_views"
+  type: number
+  sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
+}
+dimension: utm_id_integer_Page_views {
+  label: "utm_id_integer_Page_views"
+  type: number
+  sql: safe_cast(${UTM_Page_views} AS INTEGER);;
 
-  }
-  dimension: Clicks_params{
+}
+dimension: Clicks_params{
 
-    label: "Clicks Params"
-    type: string
-    sql: (SELECT value.string_value
+  label: "Clicks Params"
+  type: string
+  sql: (SELECT value.string_value
             FROM UNNEST(${event_params})
             WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-  dimension: UTM_SOURCE_Clicks {
-    label: "UTM_SOURCE_Clicks"
-    type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)'));;
-  }
-  dimension: UTM_Clicks {
-    label: "UTM_Clicks"
-    type: number
-    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer_Clicks {
-    label: "utm_id_integer_Clicks"
-    type: number
-    sql: safe_cast(${UTM_Clicks} AS INTEGER);;
+}
 
-  }
-  dimension: campaign_name {
-    type: string
-    sql: CASE
-          WHEN ${campaign.id_str}=${UTM} THEN ${campaign.name}
+# dimension: UTM_SOURCE_Clicks {
+#   label: "UTM_SOURCE_Clicks"
+#   type: string
+#   sql:CASE when lower(${jobboard.name})=REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') THEN ${jobboard.name}
+#     WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+#     WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
+#     END;;
+# }
+dimension: UTM_SOURCE_Clicks {
+  label: "UTM_SOURCE_Clicks"
+  type: string
+  sql:CASE
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      END;;
+}
+dimension: UTM_Clicks {
+  label: "UTM_Clicks"
+  type: number
+  sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
+}
+dimension: utm_id_integer_Clicks {
+  label: "utm_id_integer_Clicks"
+  type: number
+  sql: safe_cast(${UTM_Clicks} AS INTEGER);;
+
+}
+dimension: campaign_name {
+  type: string
+  sql: CASE
+          WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
+          THEN ${campaign.name}
+
+    END;;
+
+}
+dimension: campaign_name_page_views {
+  type: string
+  sql: CASE
+          WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
           ELSE ''
         END;;
 
-    }
-  dimension: campaign_name_page_views {
+}
+# dimension: campaign_name_clicks {
+#   type: string
+#   sql: CASE
+#         WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
+#         WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="click"
+#         THEN ${campaign.name}
+#         WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="click"
+#         THEN ${campaign.name}
+#       END;;
+
+# }
+dimension: campaign_name_clicks {
   type: string
   sql: CASE
-  WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
-  ELSE ''
-  END;;
 
-  }
-  dimension: campaign_name_clicks {
-  type: string
-  sql: CASE
-  WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-  ELSE ''
-  END;;
+              WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie"
+              THEN ${campaign.name}
+              WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
+              THEN ${campaign.name}
+            END;;
 
-  }
-  dimension: session_id{
+}
+dimension: session_id{
 
   label: "Session ID"
   type: number
   sql: (SELECT value.int_value
-             FROM UNNEST(${event_params})
-             WHERE event_name="solliciteren" AND key = 'ga_session_id');;
+           FROM UNNEST(${event_params})
+           WHERE event_name="solliciteren" AND key = 'ga_session_id');;
 
-  }
-  dimension: primary_key {
+}
+dimension: Jobboard_name {
+  label: "Jobboard Name"
+  type: string
+  sql: CASE
+        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        END;;
+}
+dimension: primary_key {
   primary_key: yes
   sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
-  }
+}
 
-  measure: count {
+measure: count {
   type: count
   drill_fields: [detail*]
-  }
-  measure: sollicitatie {
+}
+# measure: sollitatie {
+#   type: count_distinct
+#   sql: CASE
+#         WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
+#         AND ${event_name}="sollicitatie"
+#         THEN CONCAT(${session_id},${user_pseudo_id})
+
+#     END;;
+# }
+measure: sollitatie {
   type: count_distinct
   sql: CASE
-              WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${jobboard.name}) like lower(${events_Djopzz.traffic_source__source} )) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
-              AND ${event_name}="solliciteren"
-              THEN CONCAT(${session_id},${user_pseudo_id})
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="solliciteren"
+          THEN CONCAT(${session_id},${user_pseudo_id})
 
-          END;;
-  }
-  measure: all_sollicitatie {
+    END;;
+}
+measure: all_sollitatie {
   type: count_distinct
   sql:  CASE
-              WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
-              AND ${event_name}="solliciteren" and ${traffic_source__medium}  ="cpc"
-              THEN CONCAT(${session_id},${user_pseudo_id})
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="solliciteren"
+          THEN CONCAT(${session_id},${user_pseudo_id})
 
-          END
-          ;;
-  }
+    END
+    ;;
+}
 
-  measure: total_page_views {
+measure: total_page_views {
   type: sum
   sql: CASE
-              WHEN ${Page_views} IS NOT NULL THEN 1
-              ELSE 0
-            END;;
+          WHEN ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
 
-  }
+}
 
-  measure: total_clicks {
-    type: sum
-    sql: CASE
-                WHEN ${Clicks} IS NOT NULL THEN 1
-                ELSE 0
-              END;;
 
-    }
+# measure: total_clicks {
+#   type: sum
+#   sql: CASE
+#         WHEN ${Clicks} is not null THEN 1
+#       END;;
 
+# }
+measure: total_clicks {
+  type: count_distinct
+  sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="solliciteren"
+          THEN CONCAT(${session_id},${user_pseudo_id})
+
+    END
+    ;;
+}
 
   # ----- Sets of fields for drilling ------
   set: detail {

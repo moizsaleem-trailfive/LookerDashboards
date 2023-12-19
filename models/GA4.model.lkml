@@ -242,80 +242,79 @@ explore: events_BDE{
 explore: events_Djopzz {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Djopzz" ;;
+    sql_on: ${client.name}="Djopzz" and ${client._fivetran_deleted} = False ;;
     type: inner
   }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
+
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
-    type: inner
-
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${campaign.id} ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
     type: inner
   }
   join: job_board_budget_amount {
     relationship: one_to_one
-    sql_on: ((${campaign.id}=${events_Djopzz.utm_id_integer} OR lower(${jobboard.name})=${events_Djopzz.UTM_SOURCE}) OR (lower(${campaign.name}) like lower(${events_Djopzz.traffic_source__name}) OR lower(${jobboard.name}) like lower(${events_Djopzz.traffic_source__source})) )
-    AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=cast(${events_Djopzz.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_Djopzz.event_year};;
+    sql_on:
+    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Djopzz.event_month_int} as string)
+      AND ${job_board_budget_amount.year}=${events_Djopzz.event_year}
+      and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
-    # join: jobboard {
-    #   relationship: one_to_one
-    #   sql_on:  ${jobboard.name}=${events_Djopzz.source} OR (${jobboard.name}=${events_Djopzz.UTM_SOURCE_Page_views}) ;;
-    #   type: inner
-    # }
-    # join: unique_campaignjobboards {
-    #   relationship: many_to_many
-    #   sql_on:   ${unique_campaignjobboards.campaignid}=${events_Djopzz.utm_id_integer} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-    #   type: inner
-    # }
-    # # join:jobboard  {
-    # #   relationship: many_to_many
-    # #   sql_on:( ${jobboard.id}=${unique_campaignjobboards.jobboardid}) AND (${jobboard.name}=${events_Djopzz.source});;
-    # #   type: inner
-    # # }
-    # join: job_board_budget_amount {
-    #   relationship: many_to_many
-    #   sql_on:  ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid} AND ${job_board_budget_amount.month}=${events_Djopzz.event_month};;
-    #   type: inner
-    # }
 }
 
 explore: djopzz_solliciteren_per_sessie {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Djopzz" ;;
+    sql_on: ${client.name}="Djopzz" and ${client._fivetran_deleted} = False ;;
     type: inner
   }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
+
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True ;;
-    type: inner
-
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on:   ${campaign_job_board.campaignid}=${campaign.id} ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
     type: inner
   }
   join: job_board_budget_amount {
-    relationship: many_to_many
-    sql_on: ${campaign.id}=${djopzz_solliciteren_per_sessie.utm_id_integer} AND ${jobboard.name}=${djopzz_solliciteren_per_sessie.source} AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=${djopzz_solliciteren_per_sessie.event_month};;
+    relationship: one_to_one
+    sql_on:
+    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${djopzz_solliciteren_per_sessie.event_month_int} as string)
+      AND ${job_board_budget_amount.year}=${djopzz_solliciteren_per_sessie.event_year}
+      and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
   }
