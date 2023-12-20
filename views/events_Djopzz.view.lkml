@@ -622,8 +622,8 @@ measure: count {
 measure: sollitatie {
   type: count_distinct
   sql: CASE
-          WHEN (lower(${traffic_source__medium})="cpc") and (${user_pseudo_id} not in (${djopzz_solliciteren_per_sessie.user_pseudo_id})) and ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="solliciteren_per_sessie"
+          WHEN (lower(${traffic_source__medium})="cpc") and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="solliciteren_per_sessie" and (${user_pseudo_id} not in ((select user_pseudo_id from `evident-catcher-381918.analytics_319743464.Djopzz_solliciteren_per_sessie`)))
           THEN CONCAT(${session_id},${user_pseudo_id})
 
     END;;
@@ -632,7 +632,7 @@ measure: all_sollitatie {
   type: count_distinct
   sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="solliciteren"
+          AND ${event_name}="solliciteren_per_sessie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
     END
@@ -660,7 +660,7 @@ measure: total_clicks {
   type: count_distinct
   sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="solliciteren"
+          AND ${event_name}="solliciteren_per_sessie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
     END
