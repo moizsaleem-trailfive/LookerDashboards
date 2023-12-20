@@ -277,6 +277,10 @@ explore: events_Djopzz {
       and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
+  join: djopzz_solliciteren_per_sessie {
+    relationship: one_to_one
+    sql_on: ${djopzz_solliciteren_per_sessie.user_pseudo_id} is not null OR ${djopzz_solliciteren_per_sessie.user_pseudo_id} is null;;
+  }
 }
 
 explore: djopzz_solliciteren_per_sessie {

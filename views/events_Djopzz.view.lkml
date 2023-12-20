@@ -445,7 +445,7 @@ view: events_Djopzz {
   type: string
   sql: (SELECT value.string_value
              FROM UNNEST(${event_params})
-             WHERE event_name="solliciteren" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name="solliciteren_per_sessie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
 }
 
 dimension: Page_views{
@@ -454,7 +454,7 @@ dimension: Page_views{
   type: string
   sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE event_name = 'solliciteren' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
 }
 dimension: Clicks{
 
@@ -527,8 +527,8 @@ dimension: UTM_SOURCE_Clicks {
   label: "UTM_SOURCE_Clicks"
   type: string
   sql:CASE
-      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
-      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="solliciteren_per_sessie" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="solliciteren_per_sessie" THEN ${jobboard.name}
       END;;
 }
 dimension: UTM_Clicks {
@@ -546,8 +546,8 @@ dimension: campaign_name {
   type: string
   sql: CASE
           WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
-          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="solliciteren_per_sessie" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="solliciteren_per_sessie"
           THEN ${campaign.name}
 
     END;;
@@ -576,9 +576,9 @@ dimension: campaign_name_clicks {
   type: string
   sql: CASE
 
-              WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie"
+              WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="solliciteren_per_sessie"
               THEN ${campaign.name}
-              WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
+              WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="solliciteren_per_sessie"
               THEN ${campaign.name}
             END;;
 
@@ -589,7 +589,7 @@ dimension: session_id{
   type: number
   sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
-           WHERE event_name="solliciteren" AND key = 'ga_session_id');;
+           WHERE event_name="solliciteren_per_sessie" AND key = 'ga_session_id');;
 
 }
 dimension: Jobboard_name {
@@ -597,8 +597,8 @@ dimension: Jobboard_name {
   type: string
   sql: CASE
         WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="solliciteren_per_sessie" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="solliciteren_per_sessie" THEN ${jobboard.name}
         END;;
 }
 dimension: primary_key {
@@ -622,8 +622,8 @@ measure: count {
 measure: sollitatie {
   type: count_distinct
   sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="solliciteren"
+          WHEN (lower(${traffic_source__medium})="cpc") and (${user_pseudo_id} not in (${djopzz_solliciteren_per_sessie.user_pseudo_id})) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="solliciteren_per_sessie"
           THEN CONCAT(${session_id},${user_pseudo_id})
 
     END;;
