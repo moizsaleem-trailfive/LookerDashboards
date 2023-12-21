@@ -20,6 +20,15 @@ view: cpqa_indeed {
     type: yesno
     sql: ${TABLE}.calledforinterview ;;
   }
+  dimension: customer_id {
+    type: number
+    sql: ${TABLE}.customerid ;;
+  }
+
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
+  }
   dimension_group: date {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
@@ -57,14 +66,14 @@ view: cpqa_indeed {
     type: string
     sql: ${TABLE}.utmid ;;
   }
-  dimension: campaign_name {
-    type: string
-    sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
-          when lower(${utmcampaign}) like lower(${campaign.name}) then ${campaign.name}
-          when REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_') = ${campaign.name} then ${campaign.name}
-            end
-            ;;
-  }
+  # dimension: campaign_name {
+  #   type: string
+  #   sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
+  #         when lower(${utmcampaign}) like lower(${campaign.name}) then ${campaign.name}
+  #         when REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_') = ${campaign.name} then ${campaign.name}
+  #           end
+  #           ;;
+  # }
   dimension: utmmedium {
     type: string
     sql: ${TABLE}.utmmedium ;;
@@ -77,16 +86,16 @@ view: cpqa_indeed {
     type: string
     sql: ${TABLE}.utmterm ;;
   }
-  dimension: jobboard_name {
-    type: string
-    sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
-          then ${jobboard.name}
-          end;;
-  }
+  # dimension: jobboard_name {
+  #   type: string
+  #   sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
+  #         then ${jobboard.name}
+  #         end;;
+  # }
   measure: total_call_for_interview {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${campaign_name} is not null and ${jobboard_name} is not null
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True
           THEN 1
           ELSE 0
         END;;
