@@ -105,6 +105,7 @@ view: cpa_indeed {
   measure: sollicitatie {
     type: sum
     sql: CASE WHEN ${userpseudoid} is not null and ${application_origin_id} is not null
+    and ${eventname}="Sollicitant"
     then 1
     else 0 end;;
   }
