@@ -73,16 +73,8 @@ view: cpa_indeed {
   #   type: string
   #   sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
   # }
-  dimension: campaign_name {
-    type: string
-    sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
-      end
-      ;;
-  }
-  dimension: campaign {
-    type: string
-    sql: ${campaign_name} ;;
-  }
+
+
   dimension: utmid {
     type: string
     sql: ${TABLE}.utmid ;;
@@ -104,25 +96,13 @@ view: cpa_indeed {
     type: number
     sql: ${TABLE}.customerid ;;
   }
-  dimension: jobboard_name {
-    type: string
-    sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
-          then ${jobboard.name}
-          end;;
-  }
-  dimension: jobboard {
-    type: string
-    sql: ${jobboard_name} ;;
-  }
-  measure: sollicitatie {
-    type: sum
-    sql: case
-         when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null
 
-      then 1
-      else 0
-      end;;
+
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
   }
+
   measure: count {
     type: count
     drill_fields: [id, eventname]

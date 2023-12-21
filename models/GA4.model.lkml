@@ -740,3 +740,26 @@ explore: vacancy {
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False ;;
   }
 }
+explore: map_applicationoriginid {}
+explore: cpa_indeed {
+  join: customers {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${cpa_indeed.customer_id} and  ${customers._fivetran_deleted}=False ;;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and ${client._fivetran_deleted} = False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  join: budget_planning  {
+    relationship: one_to_one
+    sql_on: ${budget_planning.clientid}=${client.id}
+    and cast(${budget_planning.month} as string) = cast( ${cpa_indeed.event_month_int} as string)
+    and ${budget_planning.year}=${cpa_indeed.eventdate_year}
+    and ${budget_planning._fivetran_deleted}=False;;
+
+  }
+}
