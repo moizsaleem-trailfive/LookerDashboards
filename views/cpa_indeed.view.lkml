@@ -102,7 +102,12 @@ view: cpa_indeed {
     type: string
     sql: ${TABLE}.applicationoriginid ;;
   }
-
+  measure: sollicitatie {
+    type: sum
+    sql: CASE WHEN ${userpseudoid} is not null and ${application_origin_id} is not null
+    then 1
+    else 0 end;;
+  }
   measure: count {
     type: count
     drill_fields: [id, eventname]
