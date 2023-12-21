@@ -196,6 +196,22 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #     sql_on: ${campaign.id}=${applied_views.utm_id} ;;
 #   }
 # }
+explore: cph_indeed {
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Luba" and ${client._fivetran_deleted} = False ;;
+    type: inner
+  }
+  join: customers {
+    relationship: one_to_one
+    sql: ${customers.customerid}=${cph_indeed.customer_id} and ${client._fivetran_deleted} = False;;
+  }
+  join: budget_planning {
+
+    relationship: one_to_one
+    sql_on: ${budget_planning.month}=${cph_indeed.event_month_int} and ${budget_planning.year}=${cph_indeed.event_year_int} ${client._fivetran_deleted} = False;;
+  }
+}
 
 explore: events_BDE{
 
