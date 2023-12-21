@@ -6,7 +6,6 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 # explore: cph {}
 # explore: events {
-#   # access_filter: {
 #   #   user_attribute: event_name
 #   #   field: events.event_name
 #   # }
@@ -740,7 +739,7 @@ explore: vacancy {
     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False ;;
   }
 }
-explore: map_applicationoriginid {}
+
 explore: cpa_indeed {
   join: customers {
     relationship: one_to_one
@@ -750,6 +749,7 @@ explore: cpa_indeed {
     relationship: one_to_one
     sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and ${client._fivetran_deleted} = False ;;
   }
+
   join: map_applicationoriginid {
     relationship: one_to_one
     sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
