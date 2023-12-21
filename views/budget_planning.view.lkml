@@ -1,5 +1,5 @@
 view: budget_planning {
-  sql_table_name: `evident-catcher-381918.onlineResult_Sql_DB.BudgetPlanning` ;;
+  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.budgetplanning` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -60,8 +60,20 @@ view: budget_planning {
     sql: ${TABLE}.googlebudget ;;
   }
   dimension: indeedbudget {
-    type: number
+    type: string
     sql: ${TABLE}.indeedbudget ;;
+  }
+  dimension: indeed_budget_int {
+    type: number
+    sql: cast(${TABLE}.indeedbudget as int);;
+  }
+  dimension: indeed_sp {
+    type: string
+    sql: ${TABLE}.indeedsp ;;
+  }
+  dimension: indeed_sp_int {
+    type: number
+    sql: cast(${TABLE}.indeedsp as int);;
   }
   dimension: linkedinbudget {
     type: number
@@ -103,6 +115,14 @@ view: budget_planning {
   dimension: year {
     type: number
     sql: ${TABLE}.year ;;
+  }
+  measure: budget {
+    type: sum_distinct
+    sql: CASE
+          WHEN ${indeed_sp_int} is not null and  ${indeed_sp_int}!=0 THEN ${indeed_sp_int}
+          ELSE ${indeed_budget_int}
+        END;;
+
   }
   measure: count {
     type: count
