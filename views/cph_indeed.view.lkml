@@ -6,7 +6,7 @@ view: cph_indeed {
     type: number
     sql: ${TABLE}.id ;;
   }
-  dimension: applicati_onorigin_id {
+  dimension: application_origin_id {
     type: string
     sql: ${TABLE}.applicationoriginid ;;
   }
