@@ -587,12 +587,12 @@ explore: events_Salland {
 
 explore: cpa {
   join: cph {
-    relationship: many_to_many
-    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cph._fivetran_deleted}=False ;;
+    relationship: one_to_one
+    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null and ${cph._fivetran_deleted}=False ;;
   }
   join: cpqa {
     relationship: one_to_one
-    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid}  and ${cpqa.campaign_name} is not null and ${cpqa.jobboard_name} is not null
+    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
     and  ${cpqa._fivetran_deleted}=False;;
   }
   join: client {
@@ -605,7 +605,7 @@ explore: cpa {
     sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
   }
   join: campaign_job_board {
-    relationship: many_to_many
+    relationship: one_to_one
     sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
     type: inner
   }

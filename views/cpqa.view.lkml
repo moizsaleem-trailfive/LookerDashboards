@@ -62,6 +62,7 @@ view: cpqa {
     sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
     when lower(${utmcampaign}) like lower(${campaign.name}) then ${campaign.name}
     when REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_') = ${campaign.name} then ${campaign.name}
+    else null
       end
       ;;
   }
@@ -81,12 +82,17 @@ view: cpqa {
     type: string
     sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
           then ${jobboard.name}
+          else null
           end;;
+  }
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
   }
   measure: total_call_for_interview {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${campaign_name} is not null and ${jobboard_name} is not null
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
           THEN 1
           ELSE 0
         END;;

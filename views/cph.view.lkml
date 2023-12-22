@@ -73,17 +73,19 @@ view: cph {
     sql: ${TABLE}.utmterm ;;
   }
   dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${date_date}, ${userpseudoid},${hired}) ;;
+     primary_key: yes
+    sql: CONCAT(${date_date}, ${userpseudoid},${hired},${id}) ;;
+    }
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
   }
-
   measure: total_hired {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True
-
+          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
           THEN 1
-          ELSE 0
+          else 0
         END;;
   }
 
