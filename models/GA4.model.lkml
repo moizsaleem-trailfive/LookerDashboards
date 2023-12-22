@@ -742,6 +742,8 @@ explore: vacancy {
 }
 explore: map_applicationoriginid {}
 explore: cpa_indeed {
+
+
   join: customers {
     relationship: one_to_one
     sql_on: ${customers.customerid}=${cpa_indeed.customer_id} and  ${customers._fivetran_deleted}=False ;;
