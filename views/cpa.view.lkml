@@ -120,14 +120,38 @@ view: cpa {
     type: string
     sql: ${jobboard_name} ;;
   }
-  measure: sollicitatie {
-    type: sum
-    sql: case
-         when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null
+  dimension: rn_id {
+    type: number
+    sql: ${TABLE}.rnid ;;
+  }
+  dimension: match_id {
+    type: number
+    sql: ${TABLE}.matchid ;;
+  }
+  # measure: sollicitatie {
+  #   type: sum
+  #   sql: case
+  #       when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null
 
-        then 1
-        else 0
-        end;;
+  #       then 1
+  #       else 0
+  #       end;;
+  # }
+  # measure: sollicitatie {
+  #   type: sum
+  #   sql: case
+  #       when ${userpseudoid} is not null
+
+  #     then 1
+  #     else 0
+  #     end;;
+  # }
+  measure: sollicitatie {
+    type: count_distinct
+    sql: case
+         when ${userpseudoid} is not null and ${rn_id} is not null
+      then concat(${userpseudoid},${rn_id},${match_id},${eventdate_date})
+      end;;
   }
   measure: count {
     type: count

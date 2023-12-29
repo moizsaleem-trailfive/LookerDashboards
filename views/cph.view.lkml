@@ -80,12 +80,27 @@ view: cph {
     type: string
     sql: ${TABLE}.applicationoriginid ;;
   }
+  dimension: customer_id {
+    type: number
+    sql: ${TABLE}.customerid ;;
+  }
+  dimension: rn_id {
+    type: number
+    sql: ${TABLE}.rnid ;;
+  }
+  # measure: total_hired {
+  #   type: sum
+  #   sql: CASE
+  #         WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
+  #         THEN 1
+  #         else 0
+  #       END;;
+  # }
   measure: total_hired {
-    type: sum
+    type: count_distinct
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
-          THEN 1
-          else 0
+          WHEN  ${userpseudoid} IS NOT NULL and ${rn_id} is not null AND ${hired}=True
+          THEN concat(${userpseudoid},${rn_id})
         END;;
   }
 

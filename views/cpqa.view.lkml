@@ -89,14 +89,29 @@ view: cpqa {
     type: string
     sql: ${TABLE}.applicationoriginid ;;
   }
-  measure: total_call_for_interview {
-    type: sum
-    sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
-          THEN 1
-          ELSE 0
-        END;;
+  dimension: customer_id {
+    type: number
+    sql: ${TABLE}.customerid ;;
   }
+  dimension: rn_id {
+    type: number
+    sql: ${TABLE}.rnid ;;
+  }
+  # measure: total_call_for_interview {
+  #   type: sum
+  #   sql: CASE
+  #         WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
+  #         THEN 1
+  #         ELSE 0
+  #       END;;
+  # }
+measure: total_call_for_interview {
+  type: count_distinct
+  sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${rn_id} is not null
+          THEN concat(${userpseudoid},${rn_id})
+        END;;
+}
   measure: count {
     type: count
     drill_fields: [id]

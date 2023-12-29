@@ -588,7 +588,7 @@ explore: events_Salland {
 explore: cpa {
   join: cph {
     relationship: one_to_one
-    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null and ${cph._fivetran_deleted}=False ;;
+    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.rn_id} =${cph.rn_id} and ${cph._fivetran_deleted}=False ;;
   }
   join: cpqa {
     relationship: one_to_one
@@ -624,7 +624,6 @@ explore: cpa {
 }
 
 explore: events_luba {
-
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Luba" and ${client._fivetran_deleted} = False;;
@@ -634,7 +633,25 @@ explore: events_luba {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
-
+  join: customers {
+    relationship: one_to_one
+    sql_on: trim(${customers.name})="Luba" and ${customers._fivetran_deleted}=False ;;
+  }
+  join: cpa {
+    relationship: one_to_one
+    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
+    and ${cpa.application_origin_id} != "MetaDataFields-2-B" and ${cpa._fivetran_deleted} = False;;
+  }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba.rn_id}
+    and ${cph.application_origin_id} != "MetaDataFields-2-B" and ${cph._fivetran_deleted} = False;;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_luba.rn_id}
+      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False;;
+  }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;

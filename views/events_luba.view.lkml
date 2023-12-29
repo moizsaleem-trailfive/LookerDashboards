@@ -419,13 +419,13 @@ view: events_luba {
   }
   dimension: traffic_source__name {
     type: string
-    sql: Replace(${TABLE}.traffic_source.name,"/","_") ;;
+    sql: ${TABLE}.traffic_source.name ;;
     group_label: "Traffic Source"
     group_item_label: "Name"
   }
   dimension: traffic_source__source {
     type: string
-    sql: INITCAP(${TABLE}.traffic_source.source) ;;
+    sql: ${TABLE}.traffic_source.source ;;
     group_label: "Traffic Source"
     group_item_label: "Source"
   }
@@ -608,6 +608,15 @@ view: events_luba {
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
+
+  }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'rn_id');;
 
   }
   dimension: Jobboard_name {
