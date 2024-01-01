@@ -645,12 +645,12 @@ explore: events_luba {
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba.rn_id}
-    and ${cph.application_origin_id} != "MetaDataFields-2-B" and ${cph._fivetran_deleted} = False;;
+    and ${cph.application_origin_id} != "MetaDataFields-2-B" and ${cph._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_luba.rn_id}
-      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False;;
+      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
