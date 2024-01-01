@@ -640,7 +640,7 @@ explore: events_luba {
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
-    and ${cpa.application_origin_id} != "MetaDataFields-2-B" and ${cpa._fivetran_deleted} = False;;
+    and ${cpa.application_origin_id} != "MetaDataFields-2-B" and ${cpa._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
