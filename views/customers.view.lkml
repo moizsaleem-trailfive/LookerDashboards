@@ -5,7 +5,7 @@ view: customers {
   dimension: customerid {
     primary_key: yes
     type: number
-    sql: ${TABLE}.customerid ;;
+    sql: ${TABLE}.id ;;
   }
   dimension: _fivetran_deleted {
     type: yesno
@@ -18,11 +18,11 @@ view: customers {
   }
   dimension: name {
     type: string
-    sql: ${TABLE}.name ;;
+    sql: ${TABLE}.customername ;;
   }
   dimension: preffix {
     type: string
-    sql: ${TABLE}.preffix ;;
+    sql: ${TABLE}.customerprefix ;;
   }
   measure: count {
     type: count

@@ -73,21 +73,21 @@ view: cpa {
   #   type: string
   #   sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
   # }
-  dimension: campaign_name {
-      type: string
-      sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
-      else null
-      end
-      ;;
-    }
+  # dimension: campaign_name {
+  #     type: string
+  #     sql:  CASE when REGEXP_CONTAINS((lower(${utmcampaign})), (lower(${campaign.name}))) = True then ${campaign.name}
+  #     else null
+  #     end
+  #     ;;
+  #   }
   dimension: application_origin_id {
     type: string
     sql: ${TABLE}.applicationoriginid ;;
   }
-    dimension: campaign {
-      type: string
-      sql: ${campaign_name} ;;
-    }
+    # dimension: campaign {
+    #   type: string
+    #   sql: ${campaign_name} ;;
+    # }
   dimension: utmid {
     type: string
     sql: ${TABLE}.utmid ;;
@@ -109,17 +109,17 @@ view: cpa {
     type: number
     sql: ${TABLE}.customerid ;;
   }
-  dimension: jobboard_name {
-    type: string
-    sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
-    then ${jobboard.name}
-    else null
-    end;;
-  }
-  dimension: jobboard {
-    type: string
-    sql: ${jobboard_name} ;;
-  }
+  # dimension: jobboard_name {
+  #   type: string
+  #   sql:  CASE when REGEXP_CONTAINS((lower(${utmsource})), (lower(${jobboard.name}))) = True and lower(${utmsource}) not like "%recruitnow%"
+  #   then ${jobboard.name}
+  #   else null
+  #   end;;
+  # }
+  # dimension: jobboard {
+  #   type: string
+  #   sql: ${jobboard_name} ;;
+  # }
   dimension: rn_id {
     type: number
     sql: ${TABLE}.rnid ;;

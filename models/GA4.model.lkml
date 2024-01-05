@@ -3,7 +3,7 @@ connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
 
-
+explore: my_dates {}
 # explore: cph {}
 # explore: events {
 #   #   user_attribute: event_name
@@ -583,46 +583,118 @@ explore: events_Salland {
 
 
 }
+explore: cph{
 
+  join: customers {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
 
-explore: cpa {
-  join: cph {
+}
+explore: cpqa {
+  join: customers {
     relationship: one_to_one
-    sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.rn_id} =${cph.rn_id} and ${cph._fivetran_deleted}=False ;;
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
   }
-  join: cpqa {
+  join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
-    and  ${cpqa._fivetran_deleted}=False;;
-  }
-  join: client {
-    relationship: one_to_one
-    sql_on: ${client.name} is not null and ${client._fivetran_deleted} = false;;
-    type: inner
-  }
-  join: campaign {
-    relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
-  }
-  join: campaign_job_board {
-    relationship: one_to_one
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
-    type: inner
-  }
-  join: jobboard {
-    relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
-    type: inner
-  }
-  join: job_board_budget_amount {
-    relationship: one_to_one
-    sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND (${job_board_budget_amount.month}=${cpa.event_month_int}) AND (${job_board_budget_amount.year}=${cpa.event_year})
-      AND ${job_board_budget_amount._fivetran_deleted}=False;;
-    type: inner
+    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
 }
 
+explore: cpa {
+  # join: cph {
+  #   relationship: one_to_one
+  #   sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.rn_id} =${cph.rn_id} and ${cph._fivetran_deleted}=False ;;
+  # }
+  # join: cpqa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
+  #   and  ${cpqa._fivetran_deleted}=False;;
+  # }
+  # join: client {
+  #   relationship: one_to_one
+  #   sql_on: ${client.name} is not null and ${client._fivetran_deleted} = false;;
+  #   type: inner
+  # }
+  # join: campaign {
+  #   relationship: one_to_one
+  #   sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
+  # }
+  # join: campaign_job_board {
+  #   relationship: one_to_one
+  #   sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+  #   type: inner
+  # }
+  # join: jobboard {
+  #   relationship: one_to_one
+  #   sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
+  #   type: inner
+  # }
+  # join: job_board_budget_amount {
+  #   relationship: one_to_one
+  #   sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+  #     AND (${job_board_budget_amount.month}=${cpa.event_month_int}) AND (${job_board_budget_amount.year}=${cpa.event_year})
+  #     AND ${job_board_budget_amount._fivetran_deleted}=False;;
+  #   type: inner
+  # }
+  join: customers {
+    relationship: one_to_one
+    sql_on: ${cpa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  # join: cph {
+  #   relationship: one_to_one
+  #   sql_on: ${cph.customer_id}=${customers.customerid}
+  #     and ${cph.application_origin_id} = ${map_applicationoriginid.value} and ${cph._fivetran_deleted} = False ;;
+  # }
+  # join: cpqa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpqa.customer_id}=${customers.customerid}
+  #     and ${cpqa.application_origin_id} = ${map_applicationoriginid.value} and ${cpqa._fivetran_deleted} = False ;;
+  # }
+}
+explore : client {
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
+  join: campaign {
+      relationship: one_to_one
+      sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
+    }
+    join: campaign_job_board {
+      relationship: one_to_one
+      sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+      type: inner
+    }
+    join: jobboard {
+      relationship: one_to_one
+      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
+      type: inner
+    }
+    join: job_board_budget_amount {
+      relationship: one_to_one
+      sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+        AND ${job_board_budget_amount._fivetran_deleted}=False;;
+      type: inner
+    }
+    join: my_dates {
+      relationship: one_to_one
+      sql_on: cast(${job_board_budget_amount.month} as string)=cast(${my_dates.month} as string) and cast(${job_board_budget_amount.year} as string)=cast(${my_dates.year} as string) ;;
+    }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+  }
+}
 explore: events_luba {
   join: client {
     relationship: one_to_one
