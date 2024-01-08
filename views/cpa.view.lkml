@@ -156,7 +156,7 @@ view: cpa {
   measure: sollicitatie_1 {
     type: count_distinct
     sql: case
-         when ${userpseudoid} is not null and ${match_id} is not null and ${_fivetran_deleted}=False
+         when ${userpseudoid} is not null and ${match_id} is not null and ${_fivetran_deleted}=False and ${eventdate_month}="2024-01"
       then concat(${userpseudoid},${match_id})
       end;;
   }
