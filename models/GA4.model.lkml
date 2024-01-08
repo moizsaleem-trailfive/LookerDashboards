@@ -591,7 +591,7 @@ explore: cph{
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
 
 }
@@ -602,7 +602,7 @@ explore: cpqa {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
 }
 
@@ -648,7 +648,7 @@ explore: cpa {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: lower(${map_applicationoriginid.value})!="indeed apply" and ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
   # join: cph {
   #   relationship: one_to_one

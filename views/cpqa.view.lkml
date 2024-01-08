@@ -97,6 +97,10 @@ view: cpqa {
     type: number
     sql: ${TABLE}.rnid ;;
   }
+  dimension: match_id {
+    type: string
+    sql: ${TABLE}.matchid ;;
+  }
   # measure: total_call_for_interview {
   #   type: sum
   #   sql: CASE
@@ -112,6 +116,13 @@ measure: total_call_for_interview {
           THEN concat(${userpseudoid},${rn_id})
         END;;
 }
+  measure: total_call_for_interview_1 {
+    type: count_distinct
+    sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${match_id} is not null
+          THEN concat(${userpseudoid},${match_id})
+        END;;
+  }
   measure: count {
     type: count
     drill_fields: [id]

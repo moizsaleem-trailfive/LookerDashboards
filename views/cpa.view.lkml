@@ -125,7 +125,7 @@ view: cpa {
     sql: ${TABLE}.rnid ;;
   }
   dimension: match_id {
-    type: number
+    type: string
     sql: ${TABLE}.matchid ;;
   }
   # measure: sollicitatie {
@@ -151,6 +151,13 @@ view: cpa {
     sql: case
          when ${userpseudoid} is not null and ${rn_id} is not null
       then concat(${userpseudoid},${rn_id},${match_id},${eventdate_date})
+      end;;
+  }
+  measure: sollicitatie_1 {
+    type: count_distinct
+    sql: case
+         when ${userpseudoid} is not null and ${match_id} is not null and ${_fivetran_deleted}=False
+      then concat(${userpseudoid},${match_id})
       end;;
   }
   measure: count {

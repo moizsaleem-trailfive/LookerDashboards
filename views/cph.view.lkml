@@ -88,6 +88,10 @@ view: cph {
     type: number
     sql: ${TABLE}.rnid ;;
   }
+  dimension: matchid {
+    type: string
+    sql: ${TABLE}.matchid ;;
+  }
   # measure: total_hired {
   #   type: sum
   #   sql: CASE
@@ -101,6 +105,13 @@ view: cph {
     sql: CASE
           WHEN  ${userpseudoid} IS NOT NULL and ${rn_id} is not null AND ${hired}=True
           THEN concat(${userpseudoid},${rn_id})
+        END;;
+  }
+  measure: total_hired_1 {
+    type: count_distinct
+    sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL and ${matchid} is not null AND ${hired}=True
+          THEN concat(${userpseudoid},${matchid})
         END;;
   }
 
