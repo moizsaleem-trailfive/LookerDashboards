@@ -52,6 +52,10 @@ view: cph {
     type: string
     sql: ${TABLE}.utmcontent ;;
   }
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
+  }
   dimension: utmid {
     type: string
     sql: ${TABLE}.utmid ;;
@@ -80,7 +84,7 @@ view: cph {
   measure: total_hired {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True
+          WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True and ${utmsource} != "Indeed" and ${application_origin_id} is null
 
           THEN 1
           ELSE 0

@@ -110,6 +110,10 @@ view: cpa {
     then ${jobboard.name}
     end;;
   }
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
+  }
   dimension: jobboard {
     type: string
     sql: ${jobboard_name} ;;
@@ -117,7 +121,7 @@ view: cpa {
   measure: sollicitatie {
     type: sum
     sql: case
-         when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null
+         when ${userpseudoid} is not null and ${campaign_name} is not null and ${jobboard_name} is not null and ${utmsource} != "Indeed" and  ${application_origin_id} is null
 
         then 1
         else 0

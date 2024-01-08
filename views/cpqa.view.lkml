@@ -20,6 +20,10 @@ view: cpqa {
     type: yesno
     sql: ${TABLE}.calledforinterview ;;
   }
+  dimension: application_origin_id {
+    type: string
+    sql: ${TABLE}.applicationoriginid ;;
+  }
   dimension_group: date {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
@@ -86,7 +90,8 @@ view: cpqa {
   measure: total_call_for_interview {
     type: sum
     sql: CASE
-          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${campaign_name} is not null and ${jobboard_name} is not null
+          WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${campaign_name} is not null and ${jobboard_name} is not null and ${utmsource} != "Indeed"
+
           THEN 1
           ELSE 0
         END;;
