@@ -128,6 +128,10 @@ view: cpa {
     type: string
     sql: ${TABLE}.matchid ;;
   }
+  dimension: department_id {
+    type: string
+    sql: ${TABLE}.departmentid ;;
+  }
   # measure: sollicitatie {
   #   type: sum
   #   sql: case

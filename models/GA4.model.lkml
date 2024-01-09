@@ -650,6 +650,10 @@ explore: cpa {
     relationship: one_to_one
     sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
+  join: departments_bane_in_het_groen {
+    relationship: one_to_one
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id} ;;
+  }
   # join: cph {
   #   relationship: one_to_one
   #   sql_on: ${cph.customer_id}=${customers.customerid}
