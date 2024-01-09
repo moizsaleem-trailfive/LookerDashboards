@@ -1,203 +1,8 @@
 connection: "googlebigquery"
-
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
-
 explore: my_dates {}
-# explore: cph {}
-# explore: events {
-#   #   user_attribute: event_name
-#   #   field: events.event_name
-#   # }
-#   # join: apics_flexjobs{
-#   #   relationship: many_to_one
-#   #   sql_on: 1=1 ;;
-#   #   type: cross
-#   # }
-#   join:  campaign{
-#     relationship: many_to_many
-#     sql_on: ${events.utm_id_integer}=${campaign.id} ;;
-#     type: inner
-#   }
-#   join: campaign_job_board {
-#     relationship: many_to_many
-#     sql_on: ${events.utm_id_integer}=${campaign_job_board.campaignid} ;;
-#     type: inner
-#   }
-
-#   join: job_board_budget_amount {
-#     relationship: many_to_many
-#     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}   ;;
-#     type: inner
-#   }
-# }
-
-
-# explore: job_board_budget_amount {}
-# explore: p_campaign_stats_6357933521 {
-#   join: p_campaign_6357933521 {
-#     relationship: many_to_one
-#     sql_on: ${p_campaign_stats_6357933521.campaign_id}=${p_campaign_6357933521.campaign_id} ;;
-#   }
-# }
-# explore: p_campaign_6357933521 {
-#   # access_filter: {
-#   #   user_attribute: customer_id
-#   #   field: external_customer_id
-#   # }
-# }
-# explore: p_ads_keyword_stats_6357933521
-# {
-#   join: p_campaign_6357933521 {
-#     relationship: many_to_one
-#     sql_on: ${p_ads_keyword_stats_6357933521.campaign_id}=${p_campaign_6357933521.campaign_id} ;;
-#   }
-# }
-# explore: p_budget_stats_6357933521 {
-#   join: events {
-#     relationship: many_to_many
-#     sql_on: ${p_budget_stats_6357933521.associated_campaign_name} =${events.traffic_source__name};;
-#   }
-# }
-# explore: p_ads_budget_6357933521 {}
-# explore: p_budget_6357933521 {}
-# explore: stats {
-
-# }
-# explore: events_vapro {
-#   join: campaign {
-#     relationship: many_to_many
-#     sql_on: ${campaign.id}=${events_vapro.utm_id} ;;
-
-#   }
-#   join: campaign_job_board {
-#     relationship: many_to_many
-#     sql_on: ${campaign_job_board.campaignid}=${events_vapro.utm_id}  ;;
-#   }
-#   join: job_board_budget_amount {
-#     relationship: many_to_many
-#     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
-#   }
-#   join: utm_id {
-#     relationship: many_to_many
-#     sql_on: ${campaign.id}=${utm_id.utm_id} ;;
-#   }
-# }
-# explore: events_1voud {}
-# explore: apics_flexjobs {
-#   join: events {
-#     relationship: many_to_one
-#     sql_on: 1 = 1 ;; # this sql_on condition is required in some dialects,
-#     type: cross      # but causes problems in other dialects, try adding or
-#   }
-# }
-# explore: apics_flexjobs_test {
-#   join: events {
-#     relationship: many_to_one
-#     sql_on: 1 = 1 ;; # this sql_on condition is required in some dialects,
-#     type: cross      # but causes problems in other dialects, try adding or
-#   }
-# }
-
-# explore: utm_id {
-#   join: campaign {
-#     relationship: many_to_many
-#     sql_on: ${utm_id.utm_id}=${campaign.id} ;;
-#   }
-#   join: campaign_job_board {
-#     relationship: many_to_many
-#     sql_on:   ${campaign_job_board.campaignid}=${utm_id.utm_id} ;;
-#   }
-#   join: job_board_budget_amount {
-#     relationship: many_to_many
-#     sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
-#   }
-#   join: jobboard {
-#     relationship: many_to_many
-#     sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
-
-#   }
-
-#   }
-
-
-
-
-# explore: utm_data {
-#   join: campaign {
-#     relationship: many_to_many
-#     sql_on: ${campaign.id}=${utm_data.utm_id} ;;
-#     type: inner
-#   }
-#   join: jobboard {
-#     relationship: one_to_one
-#     sql_on:  ${jobboard.name}=${utm_data.utm_source}  ;;
-#     type: inner
-#   }
-#   join: unique_campaignjobboards {
-#     relationship: many_to_many
-#     sql_on:   ${unique_campaignjobboards.campaignid}=${utm_data.utm_id} AND ${jobboard.id}=${unique_campaignjobboards.jobboardid};;
-#     type: inner
-#   }
-#   join: job_board_budget_amount {
-#     relationship: one_to_one
-#     sql_on: ${unique_campaignjobboards.id}=${job_board_budget_amount.campaignjobboardid}
-#       AND ${job_board_budget_amount.month}=${utm_data.event_month};;
-#     type: inner
-#   }
-  # join: campaign {
-  #   relationship: many_to_many
-  #   sql_on: ${utm_data.utm_id}=${campaign.id} ;;
-  #   type: inner
-  # }
-  # join: campaign_job_board {
-  #   relationship: many_to_many
-  #   sql_on:   ${campaign_job_board.campaignid}=${utm_data.utm_id} ;;
-  #   type: inner
-  # }
-  # join: job_board_budget_amount {
-  #   relationship: many_to_many
-  #   sql_on: ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid} ;;
-  #   type: inner
-  # }
-  # join: jobboard {
-  #   relationship: many_to_many
-  #   sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
-  #   type: inner
-  # }
-
-# }
-# explore :job_board_budget_amount{}
-
-# explore: gawa_publishing_20230502 {}
-# explore: utm_budget {}
-
-# explore: conv_rate {
-# }
-# explore: page_views {
-#   join: jobboard {
-#     relationship: one_to_one
-#     sql_on: ${jobboard.name}=${page_views.utm_source} ;;
-
-#   }
-#   join: campaign {
-#     relationship: one_to_one
-#     sql_on: ${campaign.id}=${page_views.utm_id} ;;
-#   }
-# }
-# explore : applied_views{
-#   join: jobboard {
-#     relationship: one_to_one
-#     sql_on: ${jobboard.name}=${applied_views.utm_source} ;;
-#   }
-#   join: campaign {
-#     relationship: one_to_one
-#     sql_on: ${campaign.id}=${applied_views.utm_id} ;;
-#   }
-# }
-
 explore: events_BDE{
-
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="BDE PROTEQS" and ${client._fivetran_deleted} = False ;;
@@ -207,7 +12,6 @@ explore: events_BDE{
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
-
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
@@ -235,7 +39,6 @@ explore: events_BDE{
       and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
-
 }
 
 explore: events_Djopzz {
@@ -537,8 +340,6 @@ explore: events_InviteJobs {
   }
 }
 explore: events_Salland {
-
-
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Salland" and ${client._fivetran_deleted} = False;;
@@ -580,11 +381,8 @@ explore: events_Salland {
 
       type: inner
     }
-
-
 }
 explore: cph{
-
   join: customers {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
@@ -593,7 +391,6 @@ explore: cph{
     relationship: one_to_one
     sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
-
 }
 explore: cpqa {
   join: customers {
@@ -605,43 +402,7 @@ explore: cpqa {
     sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
 }
-
 explore: cpa {
-  # join: cph {
-  #   relationship: one_to_one
-  #   sql_on: ${cph.userpseudoid}=${cpa.userpseudoid} and ${cpa.rn_id} =${cph.rn_id} and ${cph._fivetran_deleted}=False ;;
-  # }
-  # join: cpqa {
-  #   relationship: one_to_one
-  #   sql_on: ${cpqa.userpseudoid}=${cpa.userpseudoid} and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
-  #   and  ${cpqa._fivetran_deleted}=False;;
-  # }
-  # join: client {
-  #   relationship: one_to_one
-  #   sql_on: ${client.name} is not null and ${client._fivetran_deleted} = false;;
-  #   type: inner
-  # }
-  # join: campaign {
-  #   relationship: one_to_one
-  #   sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
-  # }
-  # join: campaign_job_board {
-  #   relationship: one_to_one
-  #   sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
-  #   type: inner
-  # }
-  # join: jobboard {
-  #   relationship: one_to_one
-  #   sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
-  #   type: inner
-  # }
-  # join: job_board_budget_amount {
-  #   relationship: one_to_one
-  #   sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-  #     AND (${job_board_budget_amount.month}=${cpa.event_month_int}) AND (${job_board_budget_amount.year}=${cpa.event_year})
-  #     AND ${job_board_budget_amount._fivetran_deleted}=False;;
-  #   type: inner
-  # }
   join: customers {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
@@ -654,16 +415,6 @@ explore: cpa {
     relationship: one_to_one
     sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id} ;;
   }
-  # join: cph {
-  #   relationship: one_to_one
-  #   sql_on: ${cph.customer_id}=${customers.customerid}
-  #     and ${cph.application_origin_id} = ${map_applicationoriginid.value} and ${cph._fivetran_deleted} = False ;;
-  # }
-  # join: cpqa {
-  #   relationship: one_to_one
-  #   sql_on: ${cpqa.customer_id}=${customers.customerid}
-  #     and ${cpqa.application_origin_id} = ${map_applicationoriginid.value} and ${cpqa._fivetran_deleted} = False ;;
-  # }
 }
 explore : client {
   join: vacancy {
@@ -755,14 +506,6 @@ explore: events_luba {
       and ${job_board_budget_amount._fivetran_deleted}=False;;
     type: inner
   }
-  # join: job_board_budget_amount {
-  #   relationship: one_to_one
-  #   sql_on:
-  #         (${events_luba.campaign_name} is not null and ${events_luba.Jobboard_name} is not null) and ${events_luba.user_pseudo_id} is not null and ${events_luba.session_id} is not null
-  #   AND ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-  #     AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string) AND ${job_board_budget_amount.year}=${events_luba.event_year} and ${job_board_budget_amount._fivetran_deleted}=False;;
-  #   type: inner
-  # }
 }
 
 explore: events_Jopp {

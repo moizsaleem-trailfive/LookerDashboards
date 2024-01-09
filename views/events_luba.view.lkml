@@ -446,7 +446,6 @@ view: events_luba {
              FROM UNNEST(${event_params})
              WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
-
   dimension: Page_views{
 
     label: "Page Views"
@@ -479,8 +478,6 @@ view: events_luba {
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
   }
-
-
   dimension: Page_views_params{
 
     label: "Page Views Params"
@@ -513,15 +510,6 @@ view: events_luba {
             FROM UNNEST(${event_params})
             WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
-
-  # dimension: UTM_SOURCE_Clicks {
-  #   label: "UTM_SOURCE_Clicks"
-  #   type: string
-  #   sql:CASE when lower(${jobboard.name})=REGEXP_EXTRACT(${Clicks_params}, 'utm_source=([^&]+)') THEN ${jobboard.name}
-  #     WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
-  #     WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="click" THEN ${jobboard.name}
-  #     END;;
-  # }
   dimension: UTM_SOURCE_Clicks {
     label: "UTM_SOURCE_Clicks"
     type: string
@@ -548,9 +536,7 @@ view: events_luba {
           WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
           WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
-
       END;;
-
   }
   dimension: campaign_name_page_views {
     type: string
@@ -558,32 +544,17 @@ view: events_luba {
           WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
           ELSE ''
         END;;
-
   }
-  # dimension: campaign_name_clicks {
-  #   type: string
-  #   sql: CASE
-  #         WHEN ${campaign.id_str}=${UTM_Clicks} THEN ${campaign.name}
-  #         WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="click"
-  #         THEN ${campaign.name}
-  #         WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="click"
-  #         THEN ${campaign.name}
-  #       END;;
-
-  # }
   dimension: campaign_name_clicks {
     type: string
     sql: CASE
-
           WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie"
           THEN ${campaign.name}
           WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
         END;;
-
     }
   dimension: session_id{
-
     label: "Session ID"
     type: number
     sql: (SELECT value.int_value
@@ -613,20 +584,10 @@ view: events_luba {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
   }
-
   measure: count {
     type: count
     drill_fields: [detail*]
   }
-  # measure: sollitatie {
-  #   type: count_distinct
-  #   sql: CASE
-  #         WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
-  #         AND ${event_name}="sollicitatie"
-  #         THEN CONCAT(${session_id},${user_pseudo_id})
-
-  #     END;;
-  # }
   measure: sollitatie {
     type: count_distinct
     sql: CASE
@@ -646,7 +607,6 @@ view: events_luba {
       END
         ;;
   }
-
   measure: total_page_views {
     type: sum
     sql: CASE
@@ -655,15 +615,6 @@ view: events_luba {
         END;;
 
   }
-
-
-  # measure: total_clicks {
-  #   type: sum
-  #   sql: CASE
-  #         WHEN ${Clicks} is not null THEN 1
-  #       END;;
-
-  # }
   measure: total_clicks {
     type: count_distinct
     sql:  CASE
@@ -688,9 +639,23 @@ view: events_luba {
   collected_traffic_source__manual_campaign_name
   ]
   }
-
 }
+  # measure: total_clicks {
+  #   type: sum
+  #   sql: CASE
+  #         WHEN ${Clicks} is not null THEN 1
+  #       END;;
 
+  # }
+  # measure: sollitatie {
+  #   type: count_distinct
+  #   sql: CASE
+  #         WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
+  #         AND ${event_name}="sollicitatie"
+  #         THEN CONCAT(${session_id},${user_pseudo_id})
+
+  #     END;;
+  # }
 view: events_20230901__items {
   drill_fields: [item_id]
 

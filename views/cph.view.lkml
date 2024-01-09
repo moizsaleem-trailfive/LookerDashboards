@@ -60,10 +60,6 @@ view: cph {
     type: string
     sql: ${TABLE}.utmmedium ;;
   }
-  # dimension: campaign_name {
-  #   type: string
-  #   sql:  INITCAP( REGEXP_EXTRACT(${utmcampaign}, '^(.*?)_'));;
-  # }
   dimension: utmsource {
     type: string
     sql: ${TABLE}.utmsource ;;
@@ -92,14 +88,6 @@ view: cph {
     type: string
     sql: ${TABLE}.matchid ;;
   }
-  # measure: total_hired {
-  #   type: sum
-  #   sql: CASE
-  #         WHEN  ${userpseudoid} IS NOT NULL AND ${hired}=True and ${cpa.campaign_name} is not null and ${cpa.jobboard_name} is not null
-  #         THEN 1
-  #         else 0
-  #       END;;
-  # }
   measure: total_hired {
     type: count_distinct
     sql: CASE
@@ -114,7 +102,6 @@ view: cph {
           THEN concat(${userpseudoid},${matchid})
         END;;
   }
-
   measure: count {
     type: count
     drill_fields: [id]
