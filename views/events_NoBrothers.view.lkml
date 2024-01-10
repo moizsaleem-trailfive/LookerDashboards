@@ -601,6 +601,15 @@ view: events_NoBrothers {
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
 
   }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'rn_id');;
+
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;

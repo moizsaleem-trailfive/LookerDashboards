@@ -11,6 +11,29 @@ explore: events_NoBrothers {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
+  join: customers {
+    relationship: one_to_one
+    sql_on: trim(${customers.name})="NoBrothers" and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${map_applicationoriginid.value} != "Indeed apply" and ${map_applicationoriginid._fivetran_deleted}=False;;
+  }
+  join: cpa {
+    relationship: one_to_one
+    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_NoBrothers.rn_id}
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and ${cpa._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "cpc";;
+  }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_NoBrothers.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and ${cph._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_NoBrothers.rn_id}
+      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "cpc";;
+  }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;

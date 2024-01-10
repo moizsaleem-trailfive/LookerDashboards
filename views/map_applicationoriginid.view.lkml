@@ -29,6 +29,7 @@ view: map_applicationoriginid {
     type: string
     sql: ${TABLE}.value ;;
   }
+
   measure: count {
     type: count
     drill_fields: [id]
