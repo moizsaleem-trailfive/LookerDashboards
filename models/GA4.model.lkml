@@ -459,7 +459,9 @@ explore: cpa {
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id} ;;
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
+    and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
 }
 explore : client {
