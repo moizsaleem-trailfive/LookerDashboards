@@ -435,6 +435,15 @@ view: events_BDE {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE key = 'rn_id');;
+
+  }
   dimension: Page_location{
 
     label: "Page Referrer"
