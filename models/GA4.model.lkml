@@ -453,9 +453,31 @@ explore: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
   }
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name} like ${customers.name} and ${client._fivetran_deleted} = False;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    type: inner
+  }
+
   join: map_applicationoriginid {
     relationship: one_to_one
     sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one

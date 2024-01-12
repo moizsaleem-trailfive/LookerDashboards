@@ -26,7 +26,9 @@ view: departments_bane_in_het_groen{
   }
   dimension: name {
     type: string
-    sql: ${TABLE}.name ;;
+    sql: CASE WHEN ${TABLE}.name !="BanenindeInfra" and ${TABLE}.name!= "Hoofdkantoor"
+    and ${TABLE}.name!= "Systeem" and ${TABLE}.name!= "Ministerie van Arbeid"
+         THEN ${TABLE}.name end ;;
   }
   dimension: parentdepartmentid {
     type: string

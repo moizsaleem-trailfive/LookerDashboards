@@ -48,6 +48,11 @@ view: jobboard {
     sql: CASE WHEN ${campaign.clientid}=${client.id} THEN ${TABLE}.name END;;
 
   }
+  dimension: jobboard_benen {
+    type: string
+    sql: CASE WHEN ${client.name}="Banen in het Groen"
+    THEN ${name} end;;
+  }
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
