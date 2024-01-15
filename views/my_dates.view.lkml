@@ -36,4 +36,5 @@ view: my_dates {
     datatype: date
     sql:  ${day};;
   }
+
 }

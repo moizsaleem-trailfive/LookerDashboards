@@ -22,6 +22,11 @@ view: cpa {
     datatype: datetime
     sql: ${TABLE}.eventdate ;;
   }
+  measure: number_of_days_in_month {
+    type: number
+    sql: datediff(day, date_trunc('MONTH', ${eventdate_date}), dateadd(day, -1, dateadd(month, 1, date_trunc('MONTH', ${eventdate_date})))) ;;
+    description: "Number of days in the month for each event"
+  }
   dimension: event_month_int {
     type: string
     sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${eventdate_date} as string))) AS STRING);;
