@@ -401,7 +401,29 @@ explore: events_InviteJobs {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
-
+  join: customers {
+    relationship: one_to_one
+    sql_on: trim(${customers.name})="InviteJobs" and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+  }
+  join: cpa {
+    relationship: one_to_one
+    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_InviteJobs.rn_id}
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+  }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_InviteJobs.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_InviteJobs.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+  }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;

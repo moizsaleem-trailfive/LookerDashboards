@@ -576,6 +576,15 @@ view: events_InviteJobs {
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
 
   }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'rn_id');;
+
+  }
   dimension: Jobboard_name {
     label: "Jobboard Name"
     type: string
