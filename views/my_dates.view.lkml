@@ -3,7 +3,7 @@ view: my_dates {
     sql:
       SELECT day
       FROM UNNEST(
-        GENERATE_DATE_ARRAY(DATE('2023-01-01'), DATE('2024-01-31'), INTERVAL 1 DAY)
+        GENERATE_DATE_ARRAY(DATE('2023-01-01'), CURRENT_DATE(), INTERVAL 1 DAY)
       ) AS day
     ;;
   }
