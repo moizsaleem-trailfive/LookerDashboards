@@ -515,6 +515,15 @@ view: events_Apics {
            WHERE event_name="Sollicitatie_succesvol" AND key = 'ga_session_id');;
 
   }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_succesvol" AND key = 'rn_id');;
+
+  }
   measure: sollitatie {
     type: count_distinct
     sql: CASE

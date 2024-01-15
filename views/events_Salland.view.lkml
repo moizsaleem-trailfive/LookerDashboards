@@ -1,5 +1,3 @@
-# Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-
 view: events_Salland {
   sql_table_name: `evident-catcher-381918.analytics_275938059.events_*` ;;
 
@@ -588,7 +586,15 @@ view: events_Salland {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
   }
+  dimension: rn_id{
 
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_definitief" AND key = 'rn_id');;
+
+  }
   measure: count {
     type: count
     drill_fields: [detail*]
