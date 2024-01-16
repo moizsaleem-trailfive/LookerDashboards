@@ -586,8 +586,8 @@ explore: cpa {
     sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
   }
   join: jobboard {
-    relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True and ${jobboard._fivetran_deleted}=False  ;;
+    relationship: one_to_one
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
