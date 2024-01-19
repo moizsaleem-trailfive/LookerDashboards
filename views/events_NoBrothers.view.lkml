@@ -610,6 +610,16 @@ view: events_NoBrothers {
            WHERE event_name="sollicitatie" AND key = 'rn_id');;
 
   }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(events_NoBrothers.event_params)
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
+  }
+  dimension: campaign_name_from_or{
+    type: string
+    sql: case when ${vacancy_id}=${combine_data_nb.vacancy_id} and ${Jobboard_name}=${combine_data_nb.jobboard_name} then ${combine_data_nb.campaign_name} end ;;
+  }
   dimension: primary_key {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
@@ -629,6 +639,7 @@ view: events_NoBrothers {
 
           END;;
   }
+
   # measure: sollicitatie {
   #   type: count_distinct
   #   sql: CASE

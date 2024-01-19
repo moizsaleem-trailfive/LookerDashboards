@@ -2,6 +2,10 @@ connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
 explore: events_NoBrothers {
+  join: combine_data_nb {
+    relationship: one_to_one
+    sql_on: lower(${events_NoBrothers.vacancy_id})=lower(${combine_data_nb.vacancy_id}) and ${events_NoBrothers.Jobboard_name}=${combine_data_nb.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="No Brothers" and ${client._fivetran_deleted}=false ;;
