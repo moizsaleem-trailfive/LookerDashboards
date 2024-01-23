@@ -671,7 +671,7 @@ view: events_NoBrothers {
   measure: sollicitatie_campaign_name_not_null{
     type: count_distinct
     sql: case
-         when ${cpa.userpseudoid} is not null and ${cpa.rn_id} is not null and ${combine_data_nb.campaign_name} is not null
+         when ${cpa.userpseudoid} is not null and ${cpa.rn_id} is not null
       then concat(${cpa.userpseudoid},${cpa.rn_id},${cpa.match_id},${cpa.eventdate_date})
       end;;
   }
