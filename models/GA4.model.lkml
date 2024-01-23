@@ -596,6 +596,10 @@ explore: cpa {
     and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
     and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
+  join: departments_nb {
+    relationship: one_to_one
+    sql_on: ${departments_nb.departmentid}=${cpa.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+  }
 }
 explore : client {
   join: vacancy {
@@ -864,6 +868,10 @@ explore: events_Raak {
   join: customers {
     relationship: one_to_one
     sql_on: trim(${customers.name})="Raaak Personeel" and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
   }
   join: cpa {
     relationship: one_to_one

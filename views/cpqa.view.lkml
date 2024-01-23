@@ -99,6 +99,13 @@ measure: total_call_for_interview {
           THEN concat(${userpseudoid},${match_id})
         END;;
   }
+  measure: total_call_for_interview_direct_apply_and_indeed{
+    type: count_distinct
+    sql: case
+         when ${_fivetran_deleted}=False and ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${match_id} is not null and lower(${map_applicationoriginid.value}) != "eigen website"
+      then concat(${userpseudoid},${match_id})
+      end;;
+  }
   measure: count {
     type: count
     drill_fields: [id]
