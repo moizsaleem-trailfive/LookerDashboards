@@ -85,6 +85,10 @@ view: cpqa {
     type: string
     sql: ${TABLE}.matchid ;;
   }
+  dimension: department_id {
+    type: string
+    sql: ${TABLE}.departmentid ;;
+  }
 measure: total_call_for_interview {
   type: count_distinct
   sql: CASE

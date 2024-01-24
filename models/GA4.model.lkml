@@ -540,23 +540,103 @@ explore: events_Salland {
     }
 }
 explore: cph{
+  # join: customers {
+  #   relationship: one_to_one
+  #   sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  # }
+  # join: map_applicationoriginid {
+  #   relationship: one_to_one
+  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  # }
   join: customers {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
   }
+  join: client {
+    relationship: one_to_one
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    type: inner
+  }
+
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cph.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
+  join: departments_bane_in_het_groen {
+    relationship: one_to_one
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cph.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+          and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
+          and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
+  }
+  join: departments_nb {
+    relationship: one_to_one
+    sql_on: ${departments_nb.departmentid}=${cph.department_id} and ${departments_nb._fivetran_deleted}=False ;;
   }
 }
 explore: cpqa {
+  # join: customers {
+  #   relationship: one_to_one
+  #   sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  # }
+  # join: map_applicationoriginid {
+  #   relationship: one_to_one
+  #   sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  # }
   join: customers {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
   }
+  join: client {
+    relationship: one_to_one
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    type: inner
+  }
+
   join: map_applicationoriginid {
     relationship: one_to_one
     sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
+  join: departments_bane_in_het_groen {
+    relationship: one_to_one
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpqa.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+          and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
+          and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
+  }
+  join: departments_nb {
+    relationship: one_to_one
+    sql_on: ${departments_nb.departmentid}=${cpqa.department_id} and ${departments_nb._fivetran_deleted}=False ;;
   }
 }
 explore: cpa {
