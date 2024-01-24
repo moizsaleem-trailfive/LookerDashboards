@@ -566,7 +566,7 @@ explore: cpa {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name} like ${customers.name} and ${client._fivetran_deleted} = False;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
     type: inner
   }
   join: campaign {
@@ -587,7 +587,7 @@ explore: cpa {
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -601,11 +601,12 @@ explore: cpa {
     sql_on: ${departments_nb.departmentid}=${cpa.department_id} and ${departments_nb._fivetran_deleted}=False ;;
   }
 }
-explore : client {
+explore: client {
   join: vacancy {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
   }
+
   join: campaign {
       relationship: one_to_one
       sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
@@ -626,6 +627,11 @@ explore : client {
         AND ${job_board_budget_amount._fivetran_deleted}=False;;
       type: inner
     }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply") and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
     join: my_dates {
       relationship: one_to_one
       sql_on: cast(${job_board_budget_amount.month} as string)=cast(${my_dates.month} as string) and cast(${job_board_budget_amount.year} as string)=cast(${my_dates.year} as string) ;;
@@ -794,12 +800,21 @@ explore: cpa_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
     sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
   }
   join: budget_planning  {
     relationship: one_to_one
@@ -809,7 +824,12 @@ explore: cpa_indeed {
     and ${budget_planning._fivetran_deleted}=False;;
 
   }
+  join: my_dates {
+    relationship: one_to_one
+    sql_on: cast(${budget_planning.month} as string)=cast(${my_dates.month} as string) and cast(${budget_planning.year} as string)=cast(${my_dates.year} as string) ;;
+  }
 }
+
 explore: cph_indeed {
   join: customers {
     relationship: one_to_one
@@ -817,7 +837,7 @@ explore: cph_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and ${client._fivetran_deleted} = False ;;
+    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and  and ${client._fivetran_deleted} = False ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
