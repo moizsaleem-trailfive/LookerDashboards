@@ -663,11 +663,10 @@ view: events_NoBrothers {
     sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
-
   measure: sollicitatie_campaign_name_not_null{
     type: count_distinct
     sql: case
