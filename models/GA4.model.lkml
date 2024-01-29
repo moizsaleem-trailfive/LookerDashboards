@@ -959,7 +959,12 @@ explore: cpqa_indeed {
 
   }
 }
+explore: combine_data_raak {}
 explore: events_Raak {
+  join: combine_data_raak {
+    relationship: one_to_one
+    sql_on: REGEXP_CONTAINS((lower(${events_Raak.vacancy_id})),(lower(${combine_data_raak.vacancy_title}))) = True and ${events_Raak.Jobboard_name}=${combine_data_raak.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Raaak personeel" and ${client._fivetran_deleted} = False;;

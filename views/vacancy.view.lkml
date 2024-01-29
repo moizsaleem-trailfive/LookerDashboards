@@ -259,4 +259,5 @@ view: vacancy {
     then ${id}
     end;;
   }
+
 }

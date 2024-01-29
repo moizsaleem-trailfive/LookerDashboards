@@ -575,6 +575,12 @@ view: events_Raak {
            WHERE event_name="ApplyEvent" AND key = 'rn_id');;
 
   }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT value.string_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="ApplyEvent" AND key = 'Vacancy')));;
+  }
   dimension: Jobboard_name {
     label: "Jobboard Name"
     type: string
@@ -597,7 +603,7 @@ view: events_Raak {
     sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="ApplyEvent"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
@@ -624,12 +630,25 @@ view: events_Raak {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="ApplyEvent"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
   }
-
+  measure: total_hired_campaign_name_not_null{
+    type: count_distinct
+    sql: case
+         when ${cph.userpseudoid} is not null and ${cph.rn_id} is not null and ${combine_data_raak.campaign_name} is not null AND ${cph.hired}=True
+      then concat(${cph.userpseudoid},${cph.rn_id},${cph.matchid})
+      end;;
+  }
+  measure: total_call_for_interview_campaign_name_not_null{
+    type: count_distinct
+    sql: case
+         when ${cpqa.userpseudoid} is not null and ${cpqa.rn_id} is not null and ${combine_data_raak.campaign_name} is not null AND ${cpqa.calledforinterview}=True
+      then concat(${cpqa.userpseudoid},${cpqa.rn_id},${cpqa.match_id})
+      end;;
+  }
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

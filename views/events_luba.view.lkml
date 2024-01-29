@@ -633,7 +633,7 @@ view: events_luba {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
