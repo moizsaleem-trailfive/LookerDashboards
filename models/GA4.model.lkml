@@ -722,6 +722,10 @@ explore: client {
   }
 }
 explore: events_luba {
+  join: combine_data_luba {
+    relationship: one_to_one
+    sql_on: lower(${events_luba.vacancy_id})=lower(${combine_data_luba.vacancy_id}) and ${events_luba.Jobboard_name}=${combine_data_luba.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Luba" and ${client._fivetran_deleted} = False;;

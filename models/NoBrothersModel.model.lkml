@@ -55,13 +55,13 @@ explore: events_NoBrothers {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted} = False ;;
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted} = False ;;
     type: inner
   }
   join: job_board_budget_amount {
     relationship: one_to_one
     sql_on:
-    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_NoBrothers.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_NoBrothers.event_year}
       and ${job_board_budget_amount._fivetran_deleted}=False;;

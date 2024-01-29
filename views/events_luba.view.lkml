@@ -560,7 +560,6 @@ view: events_luba {
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
-
   }
   dimension: rn_id{
 
@@ -569,7 +568,12 @@ view: events_luba {
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
            WHERE event_name="sollicitatie" AND key = 'rn_id');;
-
+  }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
   }
   dimension: Jobboard_name {
     label: "Jobboard Name"
@@ -589,6 +593,15 @@ view: events_luba {
     drill_fields: [detail*]
   }
   measure: sollitatie {
+    type: count_distinct
+    sql: CASE
+          WHEN ((${utm_id_integer} IS NOT NULL and (lower(${traffic_source__medium})="cpc")) or  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
+
+      END;;
+  }
+  measure: sollitatie_distinct {
     type: count_distinct
     sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
