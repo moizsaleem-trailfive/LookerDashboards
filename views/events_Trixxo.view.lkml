@@ -592,7 +592,12 @@ view: events_Trixxo {
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
            WHERE event_name="sollicitatie" AND key = 'rn_id');;
-
+  }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
   }
   dimension: primary_key {
     primary_key: yes
@@ -606,9 +611,9 @@ view: events_Trixxo {
   measure: sollicitatie {
     type: count_distinct
     sql: CASE
-          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ((${utm_id_integer} IS NOT NULL and (lower(${traffic_source__medium}) like "%cpc%")) or  (lower(${traffic_source__medium})like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
@@ -645,8 +650,7 @@ view: events_Trixxo {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
-
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
       END
       ;;
   }

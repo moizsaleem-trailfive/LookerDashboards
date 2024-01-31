@@ -170,6 +170,10 @@ explore: djopzz_solliciteren_per_sessie {
   }
   }
 explore: events_Trixxo {
+  join: combine_data_trixxo {
+    relationship: one_to_one
+    sql_on: lower(${events_Trixxo.vacancy_id})=lower(${combine_data_trixxo.vacancy_id}) and ${events_Trixxo.Jobboard_name}=${combine_data_trixxo.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Trixxo" and ${client._fivetran_deleted} = False;;
