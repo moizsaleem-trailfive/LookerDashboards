@@ -515,8 +515,6 @@ view: events_Trixxo {
             FROM UNNEST(${event_params})
             WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
-
-
   dimension: UTM_SOURCE_Clicks {
     label: "UTM_SOURCE_Clicks"
     type: string
