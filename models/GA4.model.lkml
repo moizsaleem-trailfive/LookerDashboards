@@ -1029,3 +1029,68 @@ explore: events_Raak {
     type: inner
   }
 }
+explore: events_Carriere {
+  join: combine_data_carriere {
+    relationship: one_to_one
+    sql_on: lower(${events_Carriere.vacancy_id})=lower(${combine_data_carriere.vacancy_id}) and ${events_Carriere.Jobboard_name}=${combine_data_carriere.jobboard_name};;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Carriere" and ${client._fivetran_deleted} = False;;
+    type: inner
+  }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+  }
+  join: customers {
+    relationship: one_to_one
+    sql_on: trim(${customers.name})="Carriere" and ${customers._fivetran_deleted}=False ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+  }
+  join: cpa {
+    relationship: one_to_one
+    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Carriere.rn_id}
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+  }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Carriere.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Carriere.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on:
+    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${events_Carriere.event_month_int} as string)
+      AND ${job_board_budget_amount.year}=${events_Carriere.event_year}
+      and ${job_board_budget_amount._fivetran_deleted}=False;;
+    type: inner
+  }
+}
