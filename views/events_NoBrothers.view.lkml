@@ -684,7 +684,7 @@ view: events_NoBrothers {
   measure: total_call_for_interview_campaign_name_not_null{
     type: count_distinct
     sql: case
-         when ${cpqa.userpseudoid} is not null and ${cpqa.rn_id} is not null and ${combine_data_nb.campaign_name} is not null AND ${cpqa.calledforinterview}=True
+         when ${cpqa.userpseudoid} is not null and ${cpqa.rn_id} is not null AND ${cpqa.calledforinterview}=True
       then concat(${cpqa.userpseudoid},${cpqa.rn_id},${cpqa.match_id})
       end;;
   }

@@ -36,7 +36,7 @@ explore: events_NoBrothers {
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_NoBrothers.rn_id}
-      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id}= ${map_applicationoriginid.oldvalue} and ${cpqa._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
