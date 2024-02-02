@@ -612,7 +612,7 @@ view: events_Raak {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="ApplyEvent"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
