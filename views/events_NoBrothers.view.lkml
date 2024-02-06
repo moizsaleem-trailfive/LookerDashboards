@@ -677,7 +677,7 @@ view: events_NoBrothers {
   measure: total_hired_campaign_name_not_null{
     type: count_distinct
     sql: case
-         when ${cph.userpseudoid} is not null and ${cph.rn_id} is not null and ${combine_data_nb.campaign_name} is not null AND ${cph.hired}=True
+         when ${cph.userpseudoid} is not null and ${cph.rn_id} is not null AND ${cph.hired}=True
       then concat(${cph.userpseudoid},${cph.rn_id},${cph.matchid})
       end;;
   }
