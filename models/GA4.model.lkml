@@ -5,7 +5,7 @@ explore: my_dates {}
 explore: events_BDE{
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="BDE PROTEQS" and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.name}="BDETEQS" and ${client._fivetran_deleted} = False ;;
     type: inner
   }
   join: vacancy {
