@@ -21,7 +21,7 @@ explore: events_NoBrothers {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value} != "Indeed apply" and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${map_applicationoriginid.value} = "Eigen website" and ${map_applicationoriginid._fivetran_deleted}=False;;
   }
   join: cpa {
     relationship: one_to_one
@@ -33,10 +33,20 @@ explore: events_NoBrothers {
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_NoBrothers.rn_id}
       and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and ${cph._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "%cpc%";;
   }
+  join: cph_60 {
+    relationship: one_to_one
+    sql_on: ${cph_60.customer_id}=${customers.customerid}
+      and ${cph_60.application_origin_id} = ${map_applicationoriginid.oldvalue} and ${cph_60._fivetran_deleted} = False ;;
+  }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_NoBrothers.rn_id}
       and ${cpqa.application_origin_id}= ${map_applicationoriginid.oldvalue} and ${cpqa._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "%cpc%";;
+  }
+  join: cpqa_60 {
+    relationship: one_to_one
+    sql_on: ${cpqa_60.customer_id}=${customers.customerid} and ${cpqa_60.rn_id}=${events_NoBrothers.rn_id}
+      and ${cpqa_60.application_origin_id}= ${map_applicationoriginid.oldvalue} and ${cpqa_60._fivetran_deleted} = False and lower(${events_NoBrothers.traffic_source__medium}) like "%cpc%";;
   }
   join: campaign {
     relationship: one_to_one

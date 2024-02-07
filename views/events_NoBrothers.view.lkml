@@ -681,11 +681,25 @@ view: events_NoBrothers {
       then concat(${cph.userpseudoid},${cph.rn_id},${cph.matchid})
       end;;
   }
+  measure: total_hired_cph_60{
+    type: count_distinct
+    sql: case
+         when ${cph_60.userpseudoid} is not null and ${cph_60.rn_id} is not null AND ${cph_60.hired}=True
+      then concat(${cph_60.userpseudoid},${cph_60.rn_id},${cph_60.match_id})
+      end;;
+  }
   measure: total_call_for_interview_campaign_name_not_null{
     type: count_distinct
     sql: case
          when ${cpqa.userpseudoid} is not null and ${cpqa.rn_id} is not null AND ${cpqa.calledforinterview}=True
       then concat(${cpqa.userpseudoid},${cpqa.rn_id},${cpqa.match_id})
+      end;;
+  }
+  measure: total_call_for_interview_cpqa_60{
+    type: count_distinct
+    sql: case
+         when ${cpqa_60.userpseudoid} is not null and ${cpqa_60.rn_id} is not null AND ${cpqa_60.calledforinterview}=True
+      then concat(${cpqa_60.userpseudoid},${cpqa_60.rn_id},${cpqa_60.match_id})
       end;;
   }
   measure: all_sollicitatie {
