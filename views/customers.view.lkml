@@ -1,5 +1,5 @@
 view: customers {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.customers` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.customers` ;;
   drill_fields: [customerid]
 
   dimension: customerid {

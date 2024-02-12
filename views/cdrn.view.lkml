@@ -1,5 +1,5 @@
 view: cdrn {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cdrn` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.cdrn` ;;
   drill_fields: [id]
 
   dimension: id {

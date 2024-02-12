@@ -1,6 +1,6 @@
 
 view: cpa_indeed {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cpa` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.cpa` ;;
   drill_fields: [id]
 
   dimension: id {

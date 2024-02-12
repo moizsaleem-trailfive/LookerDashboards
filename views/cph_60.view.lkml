@@ -1,5 +1,5 @@
 view: cph_60 {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.cph_60` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.cph_60` ;;
   drill_fields: [id]
 
   dimension: id {

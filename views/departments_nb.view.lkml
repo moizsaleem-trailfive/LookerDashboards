@@ -1,5 +1,5 @@
 view: departments_nb {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.departments_nb` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.departments_nb` ;;
   drill_fields: [id]
 
   dimension: id {
