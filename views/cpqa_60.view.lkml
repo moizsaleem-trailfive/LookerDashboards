@@ -83,7 +83,7 @@ view: cpqa_60 {
   measure: total_call_for_interview_direct_apply_and_indeed{
     type: count_distinct
     sql: case
-         when ${_fivetran_deleted}=False and ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${match_id} is not null and lower(${map_applicationoriginid.value}) != "eigen website"
+         when ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${match_id} is not null and lower(${map_applicationoriginid.value}) != "eigen website"
       then concat(${userpseudoid},${match_id})
       end;;
   }

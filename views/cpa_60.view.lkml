@@ -103,7 +103,7 @@ view: cpa_60 {
   measure: sollicitatie_direct_apply_and_indeed{
     type: count_distinct
     sql: case
-         when ${_fivetran_deleted}=False and ${userpseudoid} is not null and ${match_id} is not null and lower(${map_applicationoriginid.value}) != "eigen website"
+         when ${userpseudoid} is not null and ${match_id} is not null and lower(${map_applicationoriginid.value}) != "eigen website"
       then concat(${userpseudoid},${match_id})
       end;;
   }

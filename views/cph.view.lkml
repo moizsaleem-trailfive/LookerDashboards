@@ -109,7 +109,7 @@ view: cph {
   measure: total_hired_direct_apply_and_indeed{
     type: count_distinct
     sql: case
-         when ${_fivetran_deleted}=False and ${userpseudoid} IS NOT NULL and ${matchid} is not null AND ${hired}=True and lower(${map_applicationoriginid.value}) != "eigen website"
+         when ${userpseudoid} IS NOT NULL and ${matchid} is not null AND ${hired}=True and lower(${map_applicationoriginid.value}) != "eigen website"
       then concat(${userpseudoid},${matchid})
       end;;
   }

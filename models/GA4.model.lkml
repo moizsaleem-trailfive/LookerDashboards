@@ -5,52 +5,52 @@ explore: my_dates {}
 explore: events_BDE{
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="BDE PROTEQS" and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.name}="BDE PROTEQS"  ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="BDE PROTEQS" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="BDE PROTEQS" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_BDE.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_BDE.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_BDE.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -59,7 +59,7 @@ explore: events_BDE{
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_BDE.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_BDE.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
@@ -67,52 +67,52 @@ explore: events_BDE{
 explore: events_Djopzz {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Djopzz" and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.name}="Djopzz"  ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Djopzz" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Djopzz" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Djopzz.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Djopzz.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Djopzz.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -121,7 +121,7 @@ explore: events_Djopzz {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Djopzz.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Djopzz.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
   join: djopzz_solliciteren_per_sessie {
@@ -133,30 +133,30 @@ explore: events_Djopzz {
 explore: djopzz_solliciteren_per_sessie {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Djopzz" and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.name}="Djopzz"  ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
 
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -165,7 +165,7 @@ explore: djopzz_solliciteren_per_sessie {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${djopzz_solliciteren_per_sessie.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${djopzz_solliciteren_per_sessie.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
   }
@@ -176,20 +176,20 @@ explore: events_Trixxo {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Trixxo" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Trixxo" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Trixxo" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Trixxo" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
@@ -199,30 +199,30 @@ explore: events_Trixxo {
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Trixxo.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Trixxo.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cpqa._fivetran_deleted} = False and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
   }
 
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -231,7 +231,7 @@ explore: events_Trixxo {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Trixxo.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Trixxo.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
@@ -291,54 +291,54 @@ explore: jopp_utm_data {
 explore: events_LabourLink {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Work in holland Labourlink " and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.name}="Work in holland Labourlink "  ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Labourlink" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Labourlink" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_LabourLink.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_LabourLink.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_LabourLink.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
 
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
 
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -347,7 +347,7 @@ explore: events_LabourLink {
       ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_LabourLink.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_LabourLink.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
@@ -355,54 +355,54 @@ explore: events_Apics {
 
     join: client {
       relationship: one_to_one
-      sql_on: ${client.name}="Apics FlexJobs" and ${client._fivetran_deleted} = False;;
+      sql_on: ${client.name}="Apics FlexJobs" ;;
       type: inner
     }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="APICS" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="APICS" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Apics.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Apics.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Apics.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Apics.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Apics.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Apics.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Apics.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Apics.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Apics.traffic_source__medium}) like "cpc";;
   }
     join: campaign {
       relationship: one_to_one
-      sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+      sql_on: ${client.id}=${campaign.clientid};;
       type: inner
 
     }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
     join: campaign_job_board {
       relationship: many_to_many
-      sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+      sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
       type: inner
     }
     join: jobboard {
       relationship: many_to_many
-      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
       type: inner
     }
     join: job_board_budget_amount {
@@ -411,7 +411,7 @@ explore: events_Apics {
       ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Apics.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Apics.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
       type: inner
     }
 
@@ -420,52 +420,52 @@ explore: events_InviteJobs {
 
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Invite" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Invite" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="InviteJobs" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="InviteJobs" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_InviteJobs.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_InviteJobs.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_InviteJobs.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_InviteJobs.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -474,62 +474,62 @@ explore: events_InviteJobs {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_InviteJobs.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_InviteJobs.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
 explore: events_Salland {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Salland" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Salland" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Salland" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Salland" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Salland.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Salland.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Salland.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
 
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -538,7 +538,7 @@ explore: events_Salland {
       ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Salland.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Salland.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
 
       type: inner
     }
@@ -546,40 +546,40 @@ explore: events_Salland {
 explore: cph{
   # join: customers {
   #   relationship: one_to_one
-  #   sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  #   sql_on: ${cph.customer_id}=${customers.customerid} ;;
   # }
   # join: map_applicationoriginid {
   #   relationship: one_to_one
-  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} ;;
   # }
   join: customers {
     relationship: one_to_one
-    sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cph.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cph.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cph.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -596,40 +596,40 @@ explore: cph{
 explore: cph_60{
   # join: customers {
   #   relationship: one_to_one
-  #   sql_on: ${cph.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  #   sql_on: ${cph.customer_id}=${customers.customerid} ;;
   # }
   # join: map_applicationoriginid {
   #   relationship: one_to_one
-  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} ;;
   # }
   join: customers {
     relationship: one_to_one
-    sql_on: ${cph_60.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cph_60.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cph_60.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cph_60.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -646,40 +646,40 @@ explore: cph_60{
 explore: cpqa {
   # join: customers {
   #   relationship: one_to_one
-  #   sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  #   sql_on: ${cpqa.customer_id}=${customers.customerid} ;;
   # }
   # join: map_applicationoriginid {
   #   relationship: one_to_one
-  #   sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  #   sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   # }
   join: customers {
     relationship: one_to_one
-    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cpqa.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -696,40 +696,40 @@ explore: cpqa {
 explore: cpqa_60 {
   # join: customers {
   #   relationship: one_to_one
-  #   sql_on: ${cpqa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+  #   sql_on: ${cpqa.customer_id}=${customers.customerid} ;;
   # }
   # join: map_applicationoriginid {
   #   relationship: one_to_one
-  #   sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+  #   sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   # }
   join: customers {
     relationship: one_to_one
-    sql_on: ${cpqa_60.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cpqa_60.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpqa_60.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpqa_60.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -746,32 +746,32 @@ explore: cpqa_60 {
 explore: cpa {
   join: customers {
     relationship: one_to_one
-    sql_on: ${cpa.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cpa.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: departments_bane_in_het_groen {
@@ -788,32 +788,32 @@ explore: cpa {
 explore: cpa_60 {
   join: customers {
     relationship: one_to_one
-    sql_on: ${cpa_60.customer_id}=${customers.customerid} and ${customers._fivetran_deleted}=False ;;
+    sql_on: ${cpa_60.customer_id}=${customers.customerid} ;;
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
     type: inner
 
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpa_60.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on:  ${cpa_60.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
 
@@ -825,32 +825,32 @@ explore: cpa_60 {
 explore: client {
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
 
   join: campaign {
       relationship: one_to_one
-      sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null and ${campaign._fivetran_deleted}=False ;;
+      sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null ;;
     }
     join: campaign_job_board {
       relationship: one_to_one
-      sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+      sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
       type: inner
     }
     join: jobboard {
       relationship: one_to_one
-      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  and ${jobboard._fivetran_deleted}=False ;;
+      sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
       type: inner
     }
     join: job_board_budget_amount {
       relationship: one_to_one
       sql_on:  ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-        AND ${job_board_budget_amount._fivetran_deleted}=False;;
+        ;;
       type: inner
     }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply") and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply")  ;;
     type: inner
   }
     join: my_dates {
@@ -859,7 +859,7 @@ explore: client {
     }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
 }
 explore: events_luba {
@@ -869,52 +869,52 @@ explore: events_luba {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Luba" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Luba" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Luba" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Luba" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
-    and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
+    and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba.rn_id}
-    and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
+    and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_luba.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_luba.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_luba.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -923,7 +923,7 @@ explore: events_luba {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_luba.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
@@ -931,53 +931,53 @@ explore: events_luba {
 explore: events_Jopp {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Jopp" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Jopp" ;;
     type: inner
   }
 
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Jopp" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Jopp" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Jopp.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Jopp.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Jopp.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%'  and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: one_to_one
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -986,7 +986,7 @@ explore: events_Jopp {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Jopp.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Jopp.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
   join: jopp_utm_data {
@@ -998,15 +998,15 @@ explore: events_Jopp {
 explore: vacancy {
   join: client {
     relationship: one_to_one
-    sql_on: ${client.id}=${vacancy.clientid} and ${client._fivetran_deleted} = False ;;
+    sql_on: ${client.id}=${vacancy.clientid}  ;;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${campaign.id}=${campaignvacancy.campaignid} and ${campaign._fivetran_deleted}=False ;;
+    sql_on: ${campaign.id}=${campaignvacancy.campaignid} ;;
   }
   join: campaign_job_board {
     relationship: one_to_one
@@ -1014,7 +1014,7 @@ explore: vacancy {
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False ;;
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
   }
 }
 
@@ -1025,21 +1025,21 @@ explore: cpa_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', ''))))) and ${client._fivetran_deleted} = False ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
   }
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} ;;
   }
   join: jobboard {
     relationship: one_to_one
-    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True)) and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True))  ;;
     type: inner
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
   }
   join: budget_planning  {
     relationship: one_to_one
@@ -1062,11 +1062,11 @@ explore: cph_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and  and ${client._fivetran_deleted} = False ;;
+    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and   ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cph_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cph_indeed.application_origin_id} ;;
   }
   join: budget_planning  {
     relationship: one_to_one
@@ -1085,11 +1085,11 @@ explore: cpqa_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and ${client._fivetran_deleted} = False ;;
+    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name}))  ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpqa_indeed.application_origin_id} and ${map_applicationoriginid._fivetran_deleted}=False ;;
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpqa_indeed.application_origin_id} ;;
   }
   join: budget_planning  {
     relationship: one_to_one
@@ -1108,20 +1108,20 @@ explore: events_Raak {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Raaak personeel" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Raaak personeel" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Raaak Personeel" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Raaak Personeel" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
@@ -1131,29 +1131,29 @@ explore: events_Raak {
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Raak.rn_id}
-      and ${cph.application_origin_id} != "MetaDataFields-2-B" and ${cph._fivetran_deleted} = False and lower(${events_Raak.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} != "MetaDataFields-2-B" and lower(${events_Raak.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Raak.rn_id}
-      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and ${cpqa._fivetran_deleted} = False and lower(${events_Raak.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} != "MetaDataFields-2-B" and lower(${events_Raak.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -1162,7 +1162,7 @@ explore: events_Raak {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Raak.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Raak.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
@@ -1173,52 +1173,52 @@ explore: events_Carriere {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Carriere" and ${client._fivetran_deleted} = False;;
+    sql_on: ${client.name}="Carriere" ;;
     type: inner
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} and ${vacancy._fivetran_deleted} = False;;
+    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Carriere" and ${customers._fivetran_deleted}=False ;;
+    sql_on: trim(${customers.name})="Carriere" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid._fivetran_deleted}=False;;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Carriere.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpa._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Carriere.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cph._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Carriere.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and ${cpqa._fivetran_deleted} = False and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Carriere.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} and ${campaign._fivetran_deleted}=False;;
+    sql_on: ${client.id}=${campaign.clientid};;
   }
   join: campaignvacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} and ${campaignvacancy._fivetran_deleted}=False and ${vacancy._fivetran_deleted}=False;;
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} and ${campaign_job_board._fivetran_deleted}=False ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard._fivetran_deleted}=False  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -1227,7 +1227,7 @@ explore: events_Carriere {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Carriere.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Carriere.event_year}
-      and ${job_board_budget_amount._fivetran_deleted}=False;;
+      ;;
     type: inner
   }
 }
