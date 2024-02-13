@@ -194,7 +194,7 @@ explore: events_Trixxo {
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Trixxo.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and ${cpa._fivetran_deleted} = False and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Trixxo.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
@@ -590,7 +590,7 @@ explore: cph{
   }
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cph.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cph.department_id} ;;
   }
 }
 explore: cph_60{
@@ -640,7 +640,7 @@ explore: cph_60{
   }
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cph_60.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cph_60.department_id} ;;
   }
 }
 explore: cpqa {
@@ -690,7 +690,7 @@ explore: cpqa {
   }
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cpqa.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cpqa.department_id} ;;
   }
 }
 explore: cpqa_60 {
@@ -740,7 +740,7 @@ explore: cpqa_60 {
   }
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cpqa_60.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cpqa_60.department_id} ;;
   }
 }
 explore: cpa {
@@ -782,7 +782,7 @@ explore: cpa {
   }
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cpa.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cpa.department_id};;
   }
 }
 explore: cpa_60 {
@@ -819,7 +819,7 @@ explore: cpa_60 {
 
   join: departments_nb {
     relationship: one_to_one
-    sql_on: ${departments_nb.departmentid}=${cpa_60.department_id} and ${departments_nb._fivetran_deleted}=False ;;
+    sql_on: ${departments_nb.departmentid}=${cpa_60.department_id};;
   }
 }
 explore: client {
@@ -1010,7 +1010,7 @@ explore: vacancy {
   }
   join: campaign_job_board {
     relationship: one_to_one
-    sql_on: ${campaign.id}=${campaign_job_board.campaignid} and ${campaign_job_board._fivetran_deleted} = False ;;
+    sql_on: ${campaign.id}=${campaign_job_board.campaignid} ;;
   }
   join: jobboard {
     relationship: one_to_one
@@ -1046,7 +1046,7 @@ explore: cpa_indeed {
     sql_on: ${budget_planning.clientid}=${client.id}
     and cast(${budget_planning.month} as string) = cast( ${cpa_indeed.event_month_int} as string)
     and ${budget_planning.year}=${cpa_indeed.eventdate_year}
-    and ${budget_planning._fivetran_deleted}=False;;
+    ;;
 
   }
   join: my_dates {
@@ -1073,7 +1073,7 @@ explore: cph_indeed {
     sql_on: ${budget_planning.clientid}=${client.id}
           and cast(${budget_planning.month} as string) = cast( ${cph_indeed.event_month_int} as string)
           and ${budget_planning.year}=${cph_indeed.date_year}
-          and ${budget_planning._fivetran_deleted}=False;;
+          ;;
 
   }
 }
@@ -1096,7 +1096,7 @@ explore: cpqa_indeed {
     sql_on: ${budget_planning.clientid}=${client.id}
           and cast(${budget_planning.month} as string) = cast( ${cpqa_indeed.event_month_int} as string)
           and ${budget_planning.year}=${cpqa_indeed.date_year}
-          and ${budget_planning._fivetran_deleted}=False;;
+          ;;
 
   }
 }
@@ -1126,7 +1126,7 @@ explore: events_Raak {
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Raak.rn_id}
-      and ${cpa.application_origin_id} != "MetaDataFields-2-B" and ${cpa._fivetran_deleted} = False and lower(${events_Raak.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} != "MetaDataFields-2-B" and lower(${events_Raak.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
