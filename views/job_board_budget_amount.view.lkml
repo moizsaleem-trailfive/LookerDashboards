@@ -1,5 +1,5 @@
 view: job_board_budget_amount {
-  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.jobboardbudgetamount` ;;
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.JobboardBudgetAmount` ;;
   drill_fields: [id]
 
 

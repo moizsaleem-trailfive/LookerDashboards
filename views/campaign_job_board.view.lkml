@@ -1,5 +1,5 @@
 view: campaign_job_board {
-  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.campaignjobboards` ;;
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.CampaignJobBoards` ;;
   drill_fields: [id]
 
   dimension: id {

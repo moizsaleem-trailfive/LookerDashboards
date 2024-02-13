@@ -1,5 +1,5 @@
 view: vacancy {
-  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.vacancy` ;;
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.Vacancy` ;;
   drill_fields: [vacancyid]
 
   dimension: vacancyid {
@@ -94,7 +94,6 @@ view: vacancy {
   dimension_group: createddate {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
-    datatype: datetime
     sql: ${TABLE}.createddate ;;
   }
   dimension: custom1 {
@@ -254,7 +253,6 @@ view: vacancy {
   measure: vacancy_count {
     type: count_distinct
     sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
-    and ${_fivetran_deleted} = False and ${campaignvacancy._fivetran_deleted} = False and ${campaign._fivetran_deleted} = False
     and ${campaign.id}=${campaign_job_board.campaignid} and ${jobboard.id}=${campaign_job_board.jobboardid}
     then ${id}
     end;;

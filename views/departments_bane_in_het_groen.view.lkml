@@ -1,5 +1,5 @@
 view: departments_bane_in_het_groen{
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.departments_bane_in_het_groen` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.Departments_bane_in_het_groen` ;;
   drill_fields: [id]
 
   dimension: id {

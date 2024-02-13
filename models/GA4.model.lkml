@@ -584,7 +584,7 @@ explore: cph{
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cph.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cph.department_id}
           and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
           and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
@@ -634,7 +634,7 @@ explore: cph_60{
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cph_60.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cph_60.department_id}
           and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
           and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
@@ -684,7 +684,7 @@ explore: cpqa {
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpqa.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpqa.department_id}
           and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
           and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
@@ -734,7 +734,7 @@ explore: cpqa_60 {
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpqa_60.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpqa_60.department_id}
           and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
           and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
@@ -776,7 +776,7 @@ explore: cpa {
   }
   join: departments_bane_in_het_groen {
     relationship: one_to_one
-    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id} and ${departments_bane_in_het_groen._fivetran_deleted}=False
+    sql_on: ${departments_bane_in_het_groen.departmentid}=${cpa.department_id}
     and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
     and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }

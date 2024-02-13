@@ -1,5 +1,5 @@
 view: client {
-  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.client` ;;
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.Client` ;;
   drill_fields: [id]
 
   dimension: id {
