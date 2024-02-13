@@ -1021,7 +1021,7 @@ explore: vacancy {
 explore: cpa_indeed {
   join: customers {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${cpa_indeed.customer_id} and  ${customers._fivetran_deleted}=False ;;
+    sql_on: ${customers.customerid}=${cpa_indeed.customer_id} ;;
   }
   join: client {
     relationship: one_to_one
@@ -1058,7 +1058,7 @@ explore: cpa_indeed {
 explore: cph_indeed {
   join: customers {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${cph_indeed.customer_id} and  ${customers._fivetran_deleted}=False ;;
+    sql_on: ${customers.customerid}=${cph_indeed.customer_id} ;;
   }
   join: client {
     relationship: one_to_one
@@ -1081,7 +1081,7 @@ explore: cph_indeed {
 explore: cpqa_indeed {
   join: customers {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${cpqa_indeed.customer_id} and  ${customers._fivetran_deleted}=False ;;
+    sql_on: ${customers.customerid}=${cpqa_indeed.customer_id} ;;
   }
   join: client {
     relationship: one_to_one
