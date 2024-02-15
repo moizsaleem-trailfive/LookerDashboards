@@ -1,5 +1,5 @@
 view: map_applicationoriginid {
-  sql_table_name: `evident-catcher-381918.luba_etl_dbo.map_applicationoriginid` ;;
+  sql_table_name: `evident-catcher-381918.script_ETL_Data.map_applicationoriginid` ;;
   drill_fields: [id]
 
   dimension: id {
