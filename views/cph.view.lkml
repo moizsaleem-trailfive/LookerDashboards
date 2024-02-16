@@ -18,7 +18,6 @@ view: cph {
   dimension_group: date {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
-    datatype: datetime
     sql: ${TABLE}.date ;;
   }
   dimension: event_month_int {

@@ -5,97 +5,93 @@ view: cpqa {
   dimension: id {
     primary_key: yes
     type: number
+    description: "Auto-generated unique identifier for each record"
     sql: ${TABLE}.id ;;
   }
-  dimension: _fivetran_deleted {
-    type: yesno
-    sql: ${TABLE}._fivetran_deleted ;;
-  }
-  dimension_group: _fivetran_synced {
-    type: time
-    timeframes: [raw, time, date, week, month, quarter, year]
-    sql: ${TABLE}._fivetran_synced ;;
+  dimension: application_origin_id {
+    type: string
+    description: "Identifier for the application origin"
+    sql: ${TABLE}.applicationOriginId ;;
   }
   dimension: calledforinterview {
     type: yesno
-    sql: ${TABLE}.calledforinterview ;;
+    description: "Indicator of whether the user was called for an interview"
+    sql: ${TABLE}.calledForInterview ;;
+  }
+  dimension: customer_id {
+    type: number
+    description: "Identifier for the customer"
+    sql: ${TABLE}.customerId ;;
   }
   dimension_group: date {
     type: time
+    description: "Date and time of the event"
     timeframes: [raw, time, date, week, month, quarter, year]
     datatype: datetime
     sql: ${TABLE}.date ;;
   }
-  dimension: event_month_int {
+  dimension: department_id {
     type: string
-    sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) AS STRING);;
-    label: "Event Month Int"
+    description: "Identifier for the department"
+    sql: ${TABLE}.departmentId ;;
   }
-  dimension: event_month {
+  dimension: job_title {
     type: string
-      sql: FORMAT_DATE("%B",  PARSE_DATE("%Y-%m-%d", cast(${date_date} as string))) ;;
-    label: "Event Month"
-  }
-  dimension: event_year {
-    type: string
-    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y-%m-%d",cast(${date_date} as string))) ;;
-    label: "Event Year"
-  }
-  dimension: userpseudoid {
-    type: string
-    sql: ${TABLE}.userpseudoid ;;
-  }
-  dimension: utmcampaign {
-    type: string
-    sql: ${TABLE}.utmcampaign ;;
-  }
-  dimension: utmcontent {
-    type: string
-    sql: ${TABLE}.utmcontent ;;
-  }
-  dimension: utmid {
-    type: string
-    sql: ${TABLE}.utmid ;;
-  }
-  dimension: utmmedium {
-    type: string
-    sql: ${TABLE}.utmmedium ;;
-  }
-  dimension: utmsource {
-    type: string
-    sql: ${TABLE}.utmsource ;;
-  }
-  dimension: utmterm {
-    type: string
-    sql: ${TABLE}.utmterm ;;
-  }
-  dimension: application_origin_id {
-    type: string
-    sql: ${TABLE}.applicationoriginid ;;
-  }
-  dimension: customer_id {
-    type: number
-    sql: ${TABLE}.customerid ;;
-  }
-  dimension: rn_id {
-    type: number
-    sql: ${TABLE}.rnid ;;
+    description: "Job title"
+    sql: ${TABLE}.jobTitle ;;
   }
   dimension: match_id {
     type: string
-    sql: ${TABLE}.matchid ;;
+    description: "Identifier for the match"
+    sql: ${TABLE}.matchId ;;
   }
-  dimension: department_id {
+  dimension: rn_id {
+    type: number
+    description: "RN identifier"
+    sql: ${TABLE}.rnId ;;
+  }
+  dimension: userpseudoid {
     type: string
-    sql: ${TABLE}.departmentid ;;
+    description: "Pseudo identifier for the user"
+    sql: ${TABLE}.userPseudoId ;;
   }
-measure: total_call_for_interview {
-  type: count_distinct
-  sql: CASE
+  dimension: utm_campaign {
+    type: string
+    description: "UTM campaign"
+    sql: ${TABLE}.utmCampaign ;;
+  }
+  dimension: utm_content {
+    type: string
+    description: "UTM content"
+    sql: ${TABLE}.utmContent ;;
+  }
+  dimension: utm_id {
+    type: string
+    description: "UTM identifier"
+    sql: ${TABLE}.utmId ;;
+  }
+  dimension: utm_medium {
+    type: string
+    description: "UTM medium"
+    sql: ${TABLE}.utmMedium ;;
+  }
+  dimension: utm_source {
+    type: string
+    description: "UTM source"
+    sql: ${TABLE}.utmSource ;;
+  }
+  dimension: utm_term {
+    type: string
+    description: "UTM term"
+    sql: ${TABLE}.utmTerm ;;
+  }
+  measure: total_call_for_interview {
+    type: count_distinct
+    sql: CASE
           WHEN  ${userpseudoid} IS NOT NULL AND ${calledforinterview}=True and ${rn_id} is not null
           THEN concat(${userpseudoid},${rn_id})
         END;;
-}
+  }
   measure: total_call_for_interview_1 {
     type: count_distinct
     sql: CASE
