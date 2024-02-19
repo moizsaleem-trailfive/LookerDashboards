@@ -767,7 +767,7 @@ explore: cpa {
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
+    sql_on:  ${cpa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid.customerid}=${customers.customerid} ;;
   }
   join: jobboard {
     relationship: one_to_one

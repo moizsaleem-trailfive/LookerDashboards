@@ -55,17 +55,22 @@ view: jobboard {
   }
   dimension: jobboard_NoBrothersDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="No Brothers") Or ${name}="Indeed"
+    sql: CASE WHEN (${client.name}="No Brothers") Or (${client.name}="No Brothers" and ${name}="Indeed")
       THEN ${name} end;;
   }
   dimension: jobboard_LubaDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Luba") Or ${name}="Indeed") and ${name}!="Monsterboard"
+    sql: CASE WHEN ((${client.name}="Luba") Or (${client.name}="Luba" and ${name}="Indeed")) and ${name}!="Monsterboard"
       THEN ${name} end;;
   }
   dimension: jobboard_RaaakDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Raaak personeel") Or ${name}="Indeed")
+    sql: CASE WHEN ((${client.name}="Raaak personeel") Or (${client.name}="Raaak personeel" and ${name}="Indeed"))
+      THEN ${name} end;;
+  }
+  dimension: jobboard_TrixxoDirectApply {
+    type: string
+    sql: CASE WHEN ((${client.name}="Trixxo") Or (${client.name}="Trixxo" and ${name}="Indeed"))
       THEN ${name} end;;
   }
   dimension: status {
