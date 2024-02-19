@@ -914,7 +914,7 @@ explore: events_luba {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken" and ${jobboard.name} != "Technicus" ;;
     type: inner
   }
   join: job_board_budget_amount {
