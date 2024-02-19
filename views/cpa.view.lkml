@@ -19,6 +19,7 @@ view: cpa {
   dimension_group: eventdate {
     type: time
     timeframes: [raw, time, date, week, month, quarter, year]
+    datatype: datetime
     sql: ${TABLE}.eventdate ;;
   }
   measure: number_of_days_in_month {
