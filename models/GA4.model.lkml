@@ -509,7 +509,7 @@ explore: events_Salland {
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Salland.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue}] and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
