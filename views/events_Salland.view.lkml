@@ -564,6 +564,15 @@ view: events_Salland {
               END;;
 
   }
+  dimension: rn_id{
+
+    label: "RN ID"
+    type: number
+    sql: (SELECT value.int_value
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_definitief" AND key = 'rn_id');;
+
+  }
   dimension: session_id{
 
     label: "Session ID"
@@ -572,6 +581,12 @@ view: events_Salland {
            FROM UNNEST(${event_params})
            WHERE event_name="Sollicitatie_definitief" AND key = 'ga_session_id');;
 
+  }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_definitief" AND key = 'page_referrer')));;
   }
   dimension: Jobboard_name {
     label: "Jobboard Name"
@@ -586,15 +601,6 @@ view: events_Salland {
     primary_key: yes
     sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
   }
-  dimension: rn_id{
-
-    label: "RN ID"
-    type: number
-    sql: (SELECT value.int_value
-           FROM UNNEST(${event_params})
-           WHERE event_name="Sollicitatie_definitief" AND key = 'rn_id');;
-
-  }
   measure: count {
     type: count
     drill_fields: [detail*]
@@ -604,7 +610,7 @@ view: events_Salland {
     sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_definitief"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
@@ -613,7 +619,7 @@ view: events_Salland {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_definitief"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
@@ -633,7 +639,7 @@ view: events_Salland {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_definitief"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;

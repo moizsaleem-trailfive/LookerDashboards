@@ -189,7 +189,7 @@ explore: events_Trixxo {
   }
  join: map_applicationoriginid {
   relationship: one_to_one
-  sql_on: ${map_applicationoriginid.value} = "Eigen website";;
+  sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
 }
   join: cpa {
     relationship: one_to_one
@@ -493,23 +493,23 @@ explore: events_Salland {
     sql_on: trim(${customers.name})="Salland" ;;
   }
   join: map_applicationoriginid {
-    relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
-  }
+   relationship: one_to_one
+   sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+}
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Salland.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Salland.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Salland.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Salland.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue}] and lower(${events_Salland.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
@@ -874,7 +874,7 @@ explore: events_luba {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
+     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
   join: cpa {
     relationship: one_to_one
@@ -1115,7 +1115,7 @@ explore: events_Raak {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value} = "Eigen website";;
+     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
   join: cpa {
     relationship: one_to_one

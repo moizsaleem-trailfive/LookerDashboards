@@ -21,7 +21,7 @@ explore: events_NoBrothers {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value} = "Eigen website";;
+     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
   join: cpa {
     relationship: one_to_one
