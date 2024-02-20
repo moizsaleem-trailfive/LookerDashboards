@@ -544,14 +544,6 @@ explore: events_Salland {
     }
 }
 explore: cph{
-  # join: customers {
-  #   relationship: one_to_one
-  #   sql_on: ${cph.customer_id}=${customers.customerid} ;;
-  # }
-  # join: map_applicationoriginid {
-  #   relationship: one_to_one
-  #   sql_on: ${map_applicationoriginid.oldvalue}=${cph.application_origin_id} ;;
-  # }
   join: customers {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} ;;
@@ -575,7 +567,7 @@ explore: cph{
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cph.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
+    sql_on:  ${cph.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid.customerid}=${customers.customerid} ;;
   }
   join: jobboard {
     relationship: one_to_one
@@ -675,7 +667,7 @@ explore: cpqa {
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} ;;
+    sql_on:  ${cpqa.application_origin_id}=${map_applicationoriginid.oldvalue} and ${map_applicationoriginid.customerid}=${customers.customerid} ;;
   }
   join: jobboard {
     relationship: one_to_one
@@ -1030,7 +1022,8 @@ explore: cpa_indeed {
 
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id} ;;
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cpa_indeed.application_origin_id}
+    and ${map_applicationoriginid.customerid}=${customers.customerid};;
   }
   join: jobboard {
     relationship: one_to_one
@@ -1062,11 +1055,12 @@ explore: cph_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) and   ;;
+    sql_on: lower(trim(${client.name})) = lower(trim(${customers.name})) ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cph_indeed.application_origin_id} ;;
+    sql_on: ${map_applicationoriginid.value}="Indeed apply" and ${map_applicationoriginid.oldvalue}=${cph_indeed.application_origin_id}
+    and ${map_applicationoriginid.customerid}=${customers.customerid} ;;
   }
   join: budget_planning  {
     relationship: one_to_one
