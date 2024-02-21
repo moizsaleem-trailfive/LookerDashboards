@@ -1,5 +1,5 @@
-view: combine_data_trixxo {
-  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.combine_data_trixxo` ;;
+view: combine_data_vapro {
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.combine_data_vapro` ;;
   drill_fields: [id]
 
   dimension: id {
@@ -18,10 +18,6 @@ view: combine_data_trixxo {
   dimension: vacancy_id {
     type: string
     sql: ${TABLE}.vacancy_id ;;
-  }
-  dimension: vacancy_title {
-    type: string
-    sql: ${TABLE}.vacancy_title ;;
   }
   measure: count {
     type: count

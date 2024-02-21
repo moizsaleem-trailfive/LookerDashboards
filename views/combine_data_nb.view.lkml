@@ -1,5 +1,5 @@
 view: combine_data_nb {
-  sql_table_name: `evident-catcher-381918.sql_server_live_dbo.combine_data_nb` ;;
+  sql_table_name: `evident-catcher-381918.script_campaign_tool_data.combine_data_nb` ;;
   drill_fields: [id]
 
   dimension: id {
