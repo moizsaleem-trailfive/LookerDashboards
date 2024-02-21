@@ -1232,7 +1232,7 @@ explore: events_Vapro {
   }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Trixxo" ;;
+    sql_on: ${client.name}="Vapro Recruitment" ;;
     type: inner
   }
   join: vacancy {
@@ -1241,7 +1241,7 @@ explore: events_Vapro {
   }
   join: customers {
     relationship: one_to_one
-    sql_on: trim(${customers.name})="Trixxo" ;;
+    sql_on: trim(${customers.name})="VAPRO" ;;
   }
   join: map_applicationoriginid {
     relationship: one_to_one
