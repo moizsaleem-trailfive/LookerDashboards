@@ -524,12 +524,19 @@ view: events_Apics {
            WHERE event_name="Sollicitatie_succesvol" AND key = 'rn_id');;
 
   }
+
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, r"\/(\d+)",1)
+           FROM UNNEST(${event_params})
+           WHERE event_name="Sollicitatie_succesvol" and key = 'page_referrer')));;
+  }
   measure: sollitatie {
     type: count_distinct
     sql: CASE
           WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
@@ -562,7 +569,7 @@ view: events_Apics {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
@@ -572,7 +579,7 @@ view: events_Apics {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
