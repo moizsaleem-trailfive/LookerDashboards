@@ -1020,7 +1020,10 @@ explore: cpa_indeed {
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
+          OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
+          OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+    type: inner
   }
 
   join: map_applicationoriginid {

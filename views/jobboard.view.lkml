@@ -78,6 +78,11 @@ view: jobboard {
     sql: CASE WHEN ((${client.name}="Vapro Recruitment") Or (${client.name}="Vapro Recruitment" and ${name}="Indeed"))
       THEN ${name} end;;
   }
+  dimension: jobboard_ApicsDirectApply {
+    type: string
+    sql: CASE WHEN ((${client.name}="Apics FlexJobs") Or (${client.name}="Apics FlexJobs" and ${name}="Indeed")) and ${name}!="Monsterboard"
+      THEN ${name} end;;
+  }
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
