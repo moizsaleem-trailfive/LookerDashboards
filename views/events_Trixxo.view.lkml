@@ -470,6 +470,11 @@ view: events_Trixxo {
     type: number
     sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
   }
+  dimension: UTM_Medium {
+    label: "UTM Medium"
+    type: string
+    sql: REGEXP_EXTRACT(${Page_location}, 'utm_medium=([^&]+)');;
+  }
   dimension: utm_id_integer {
     label: "utm_id_integer"
     type: number
@@ -609,7 +614,7 @@ view: events_Trixxo {
   measure: sollicitatie {
     type: count_distinct
     sql: CASE
-          WHEN ((${utm_id_integer} IS NOT NULL and (lower(${traffic_source__medium}) like "%cpc%")) or  (lower(${traffic_source__medium})like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ( (lower(${traffic_source__medium})="cpc") OR (${utm_id_integer} IS NOT NULL and lower(${UTM_Medium}) like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
@@ -620,7 +625,7 @@ view: events_Trixxo {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
