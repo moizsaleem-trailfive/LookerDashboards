@@ -1,6 +1,6 @@
 connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-
+include: "/dashboards/testdashboards.*.*"
 explore: events_NoBrothers {
   join: combine_data_nb {
     relationship: one_to_one
