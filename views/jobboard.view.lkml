@@ -88,6 +88,11 @@ view: jobboard {
     sql: CASE WHEN ((${client.name}="FlexVisie") Or (${client.name}="FlexVisie" and ${name}="Indeed")) and ${name}!="Monsterboard"
       THEN ${name} end;;
   }
+  dimension: jobboard_SallandDirectApply {
+    type: string
+    sql: CASE WHEN (${client.name}="Salland" and ${name}="Indeed")
+      THEN ${name} end;;
+  }
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
