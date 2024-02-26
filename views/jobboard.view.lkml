@@ -70,7 +70,7 @@ view: jobboard {
   }
   dimension: jobboard_TrixxoDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Trixxo") Or (${client.name}="Trixxo" and ${name}="Indeed"))
+    sql: CASE WHEN ((${client.name}="Trixxo") Or (${client.name}="Trixxo" and ${name}="Indeed")) and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_VaproDirectApply {
