@@ -289,6 +289,10 @@ explore: jopp_utm_data {
   }
 
 explore: events_LabourLink {
+  join: combine_data_labourlink {
+    relationship: one_to_one
+    sql_on: lower(${events_LabourLink.vacancy_id})=lower(${combine_data_labourlink.vacancy_id}) and ${events_LabourLink.Jobboard_name}=${combine_data_labourlink.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Work in holland Labourlink "  ;;
@@ -296,7 +300,7 @@ explore: events_LabourLink {
   }
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} ;;
+    sql_on: ${vacancy.clientid}=${client.id};;
   }
   join: customers {
     relationship: one_to_one
@@ -304,41 +308,43 @@ explore: events_LabourLink {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_LabourLink.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_LabourLink.traffic_source__medium}) like "%cpc%";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_LabourLink.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_LabourLink.traffic_source__medium}) like "%cpc%";;
   }
+
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_LabourLink.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_LabourLink.traffic_source__medium}) like "cpc";;
-  }
-  join: campaign {
-    relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid};;
+      and ${cpqa.application_origin_id}= ${map_applicationoriginid.oldvalue} and lower(${events_LabourLink.traffic_source__medium}) like "%cpc%";;
   }
 
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
+    type: inner
+
+  }
   join: campaignvacancy {
     relationship: one_to_one
     sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
-
   join: campaign_job_board {
     relationship: many_to_many
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id};;
     type: inner
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
     type: inner
   }
   join: job_board_budget_amount {
@@ -1153,7 +1159,7 @@ explore: events_Raak {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken"   ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken" and ${jobboard.name} != "Monsterboard"  ;;
     type: inner
   }
   join: job_board_budget_amount {

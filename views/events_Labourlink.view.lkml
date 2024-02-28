@@ -470,6 +470,11 @@ view: events_LabourLink {
     type: number
     sql: REGEXP_EXTRACT(${Page_location}, 'utm_id=([^&]+)');;
   }
+  dimension: UTM_Medium {
+    label: "UTM Medium"
+    type: string
+    sql: REGEXP_EXTRACT(${Page_location}, 'utm_medium=([^&]+)');;
+  }
   dimension: utm_id_integer {
     label: "utm_id_integer"
     type: number
@@ -538,7 +543,7 @@ view: events_LabourLink {
     type: string
     sql: CASE
           WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True THEN ${campaign.name}
           WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
 
@@ -573,15 +578,6 @@ view: events_LabourLink {
            WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
 
   }
-  dimension: Jobboard_name {
-    label: "Jobboard Name"
-    type: string
-    sql: CASE
-        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
-        END;;
-  }
   dimension: rn_id{
 
     label: "RN ID"
@@ -591,36 +587,69 @@ view: events_LabourLink {
            WHERE event_name="sollicitatie" AND key = 'rn_id');;
 
   }
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
   }
+
 
   measure: count {
     type: count
     drill_fields: [detail*]
   }
+  dimension: Jobboard_name {
+    label: "Jobboard Name"
+    type: string
+    sql: CASE
+          WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+          WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+          WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+
+      END;;
+  }
   measure: sollicitatie {
     type: count_distinct
     sql: CASE
-    WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium})="cpc")) and ${session_id} is not null AND ${user_pseudo_id} is not null
-    AND ${event_name}="sollicitatie"
-    THEN CONCAT(${session_id},${user_pseudo_id})
+          WHEN ( (lower(${traffic_source__medium})="cpc") OR (${utm_id_integer} IS NOT NULL and lower(${UTM_Medium}) like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
-    END;;
+      END;;
+  }
+  measure: sollicitatie_campaign_name_not_null{
+    type: count_distinct
+    sql: case
+         when ${cpa.userpseudoid} is not null and ${cpa.rn_id} is not null
+      then concat(${cpa.userpseudoid},${cpa.rn_id},${cpa.match_id},${cpa.eventdate_date})
+      end;;
+  }
+  measure: total_hired_campaign_name_not_null{
+    type: count_distinct
+    sql: case
+         when ${cph.userpseudoid} is not null and ${cph.rn_id} is not null AND ${cph.hired}=True
+      then concat(${cph.userpseudoid},${cph.rn_id},${cph.matchid})
+      end;;
+  }
+  measure: total_call_for_interview_campaign_name_not_null{
+    type: count_distinct
+    sql: case
+         when ${cpqa.userpseudoid} is not null and ${cpqa.rn_id} is not null AND ${cpqa.calledforinterview}=True
+      then concat(${cpqa.userpseudoid},${cpqa.rn_id},${cpqa.match_id})
+      end;;
   }
 
   measure: all_sollicitatie {
     type: count_distinct
     sql:  CASE
-          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN   ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
   }
-
   measure: total_page_views {
     type: sum
     sql: CASE
@@ -629,22 +658,12 @@ view: events_LabourLink {
         END;;
 
   }
-
-  # measure: total_clicks {
-  #   type: sum
-  #   sql: CASE
-  #         WHEN ${Clicks} IS NOT NULL THEN 1
-  #         ELSE 0
-  #       END;;
-
-  # }
   measure: total_clicks {
     type: count_distinct
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
-
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
       END
       ;;
   }
