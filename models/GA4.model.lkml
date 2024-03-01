@@ -16,24 +16,24 @@ explore: events_BDE{
     relationship: one_to_one
     sql_on: trim(${customers.name})="BDE PROTEQS" ;;
   }
-  join: map_applicationoriginid {
-    relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
-  }
+ join: map_applicationoriginid {
+  relationship: one_to_one
+  sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+}
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_BDE.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_BDE.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_BDE.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_BDE.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_BDE.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
@@ -78,24 +78,24 @@ explore: events_Djopzz {
     relationship: one_to_one
     sql_on: trim(${customers.name})="Djopzz" ;;
   }
-  join: map_applicationoriginid {
-    relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
-  }
+ join: map_applicationoriginid {
+  relationship: one_to_one
+  sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+}
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Djopzz.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Djopzz.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Djopzz.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Djopzz.traffic_source__medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one

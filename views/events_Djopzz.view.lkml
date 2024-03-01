@@ -601,6 +601,12 @@ dimension: session_id{
            WHERE event_name="solliciteren_per_sessie" AND key = 'rn_id');;
 
   }
+  dimension: vacancy_id {
+    type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE  key = 'page_location')));;
+  }
 dimension: Jobboard_name {
   label: "Jobboard Name"
   type: string
