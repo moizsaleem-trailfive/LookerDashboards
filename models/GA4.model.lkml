@@ -237,6 +237,10 @@ explore: events_Trixxo {
 }
 
 explore: jopp_utm_data {
+  join: combine_data_jopp {
+    relationship: one_to_one
+    sql_on: (lower(${jopp_utm_data.vacancy_id})=lower(${combine_data_jopp.vacancy_id}) and ${jopp_utm_data.Jobboard_name}=${combine_data_jopp.jobboard_name});;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Jopp" ;;
@@ -930,15 +934,18 @@ explore: events_luba {
 }
 
 explore: events_Jopp {
+  join: combine_data_jopp {
+    relationship: one_to_one
+    sql_on: (lower(${events_Jopp.vacancy_id})=lower(${combine_data_jopp.vacancy_id}) and ${events_Jopp.Jobboard_name}=${combine_data_jopp.jobboard_name});;
+  }
   join: client {
     relationship: one_to_one
-    sql_on: ${client.name}="Jopp" ;;
+    sql_on: ${client.name}="Jopp"  ;;
     type: inner
   }
-
   join: vacancy {
     relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} ;;
+    sql_on: ${vacancy.clientid}=${client.id};;
   }
   join: customers {
     relationship: one_to_one
@@ -946,45 +953,49 @@ explore: events_Jopp {
   }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid};;
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
   join: cpa {
     relationship: one_to_one
     sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Jopp.rn_id}
-      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Jopp.traffic_source__medium}) like "%cpc%";;
   }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Jopp.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_Jopp.traffic_source__medium}) like "%cpc%";;
   }
+
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_Jopp.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_Jopp.traffic_source__medium}) like "cpc";;
+      and ${cpqa.application_origin_id}= ${map_applicationoriginid.oldvalue} and lower(${events_Jopp.traffic_source__medium}) like "%cpc%";;
   }
+
   join: campaign {
     relationship: one_to_one
-    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' ;;
+    sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
+    type: inner
+
   }
   join: campaignvacancy {
     relationship: one_to_one
     sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
-    relationship: one_to_one
-    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id};;
     type: inner
   }
   join: jobboard {
-    relationship: one_to_one
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    relationship: many_to_many
+    sql_on: ${jobboard.id}=${campaign_job_board.jobboardid} ;;
     type: inner
   }
   join: job_board_budget_amount {
     relationship: one_to_one
     sql_on:
-    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Jopp.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Jopp.event_year}
       ;;

@@ -458,6 +458,12 @@ view: events_Jopp {
            WHERE event_name="sollicitatie" AND key = 'rn_id');;
 
   }
+  dimension: vacancy_id {
+     type: string
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
+           FROM UNNEST(${event_params})
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
+  }
   dimension: campaign_name {
     type: string
     sql: CASE
@@ -560,7 +566,7 @@ view: events_Jopp {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
@@ -574,7 +580,7 @@ view: events_Jopp {
     sql: CASE
           WHEN (${user_pseudo_id} != ${jopp_utm_data.user_pseudo_id}) and ${campaign_name} is not null and ${Jobboard_name} is not null and ${session_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
@@ -583,7 +589,7 @@ view: events_Jopp {
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="sollicitatie"
-          THEN CONCAT(${session_id},${user_pseudo_id})
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
       END
       ;;
   }
