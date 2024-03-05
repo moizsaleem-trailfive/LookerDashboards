@@ -413,7 +413,7 @@ explore: events_Apics {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken"  ;;
     type: inner
   }
   join: job_board_budget_amount {
