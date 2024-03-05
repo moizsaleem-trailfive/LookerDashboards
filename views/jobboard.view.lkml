@@ -103,6 +103,11 @@ view: jobboard {
     sql: CASE WHEN ((${client.name}="Djopzz") Or (${client.name}="Djopzz" and ${name}="Indeed")) and ${name}!="Monsterboard"
       THEN ${name} end;;
   }
+  dimension: jobboard_JoppDirectApply {
+    type: string
+    sql: CASE WHEN (${client.name}="Jopp" and ${name}="Indeed")
+      THEN ${name} end;;
+  }
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
