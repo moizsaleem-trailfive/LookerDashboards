@@ -26,7 +26,7 @@ view: dpt {
   dimension: dpt_benen {
     type: string
     sql: CASE WHEN ${customer_id}=${customers.customerid} and ${customers.name}="Banen in het Groen" and ${name} !="BanenindeInfra" and ${name}!= "Hoofdkantoor"
-    and ${name}!= "Systeem" and ${name}!= "Ministerie van Arbeid"
+    and ${name}!= "Systeem" and ${name}!= "Ministerie van Arbeid" and ${name} is not null
     THEN ${name} end ;;
   }
   measure: count {
