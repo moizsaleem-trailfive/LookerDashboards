@@ -785,6 +785,12 @@ explore: cpa {
     and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
     and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
   }
+  join: dpt {
+    relationship: one_to_one
+    sql_on: ${dpt.customer_id}=${customers.customerid} and ${dpt.department_id}=${cpa.department_id}
+    and ${departments_bane_in_het_groen.name}!="BanenindeInfra" and ${departments_bane_in_het_groen.name}!= "Hoofdkantoor"
+    and ${departments_bane_in_het_groen.name}!= "Systeem" and ${departments_bane_in_het_groen.name}!= "Ministerie van Arbeid";;
+  }
   join: departments_nb {
     relationship: one_to_one
     sql_on: ${departments_nb.departmentid}=${cpa.department_id};;
