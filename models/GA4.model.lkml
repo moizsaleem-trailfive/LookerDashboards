@@ -479,7 +479,7 @@ explore: events_InviteJobs {
   }
   join: jobboard {
     relationship: many_to_many
-    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid}  ;;
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Monsterboard"  ;;
     type: inner
   }
   join: job_board_budget_amount {
