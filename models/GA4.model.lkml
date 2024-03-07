@@ -564,7 +564,11 @@ explore: cph{
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
+    OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
+    OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+    OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+
     type: inner
   }
   join: campaign {
@@ -664,7 +668,11 @@ explore: cpqa {
   }
   join: client {
     relationship: one_to_one
-    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name})) OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))  ;;
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
+    OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
+    OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+    OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+
     type: inner
   }
   join: campaign {
@@ -758,8 +766,10 @@ explore: cpa {
     relationship: one_to_one
     sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
     OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
-    OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%");;
-    type: inner
+    OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+    OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+
+     type: inner
   }
   join: campaign {
     relationship: one_to_one
@@ -841,7 +851,15 @@ explore: client {
     relationship: one_to_one
     sql_on: ${vacancy.clientid}=${client.id} ;;
   }
+  join: customers {
+    relationship: one_to_one
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
+          OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
+          OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+          OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
 
+    type: inner
+  }
   join: campaign {
       relationship: one_to_one
       sql_on: ${client.id}=${campaign.clientid} AND  ${campaign.publish}=True and  lower(${campaign.name}) NOT LIKE '%test%' and ${campaign.name} is not null ;;
@@ -864,7 +882,7 @@ explore: client {
     }
   join: map_applicationoriginid {
     relationship: one_to_one
-    sql_on: ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply")  ;;
+    sql_on:  ${map_applicationoriginid.customerid}=${customers.customerid} and ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply")  ;;
     type: inner
   }
     join: my_dates {
@@ -1048,8 +1066,10 @@ explore: cpa_indeed {
     relationship: one_to_one
     sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
           OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
-          OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%");;
-    type: inner
+          OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+          OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+
+   type: inner
   }
 
   join: map_applicationoriginid {
