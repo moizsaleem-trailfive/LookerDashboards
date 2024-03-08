@@ -93,7 +93,11 @@ view: campaign {
     type: yesno
     sql: ${TABLE}.publish ;;
   }
-
+  dimension: feeddays
+  {
+    type: number
+    sql: ${TABLE}.feeddays ;;
+  }
   measure: count {
     type: count
     drill_fields: [detail*]

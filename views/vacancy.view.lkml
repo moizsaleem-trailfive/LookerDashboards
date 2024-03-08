@@ -16,10 +16,40 @@ view: vacancy {
     timeframes: [raw, time, date, week, month, quarter, year]
     sql: ${TABLE}._fivetran_synced ;;
   }
+
   dimension: actual {
     type: string
     sql: ${TABLE}.actual ;;
+
+    }
+  dimension: formatted_date {
+    type: string
+    sql: CASE
+      WHEN REGEXP_CONTAINS(${actual}, r'^\d{2}-\d{2}-\d{4}$') AND ${actual} NOT LIKE "%CET%" THEN FORMAT_DATE("%Y-%m-%d", PARSE_DATE("%d-%m-%Y", ${actual}))
+      WHEN REGEXP_CONTAINS(${actual}, r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$') THEN FORMAT_DATE("%Y-%m-%d", PARSE_TIMESTAMP("%Y-%m-%d %H:%M:%S", ${actual}))
+      WHEN REGEXP_CONTAINS(${actual}, r'^\d{4}-\d{2}-\d{2}$') AND ${actual} NOT LIKE "%CET%" THEN FORMAT_DATE("%Y-%m-%d", CAST(SPLIT(${actual},"T")[SAFE_ORDINAL(1)] AS DATE))
+      WHEN REGEXP_CONTAINS(${actual}, r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$') THEN FORMAT_DATE("%Y-%m-%d", PARSE_TIMESTAMP("%Y-%m-%d %H:%M:%S", ${actual}))
+      WHEN ${actual} like "%CET%" OR ${actual} like "%CEST%" THEN FORMAT_TIMESTAMP('%Y-%m-%d', PARSE_TIMESTAMP('%d %b %Y %H:%M:%S', replace(replace(split(${actual},", ")[safe_ordinal(2)],' CET',''),' CEST','')))
+      WHEN REGEXP_CONTAINS(${actual}, r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\+\d{2}:\d{2})?') IS NOT NULL and ${actual} not like "%CET%" THEN FORMAT_DATE("%Y-%m-%d", CAST(REGEXP_EXTRACT(${actual}, r'^(\d{4}-\d{2}-\d{2})') AS DATE))
+    END ;;
+    description: "Formatted date based on ACTUAL field"
   }
+  dimension_group: actual_formatted {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: PARSE_DATE("%Y-%m-%d", ${formatted_date});;
+  }
+
+
   dimension: applicationprocedure {
     type: string
     sql: ${TABLE}.applicationprocedure ;;
@@ -250,12 +280,20 @@ view: vacancy {
     type: count
     drill_fields: [vacancyid, functionname, contactname, contactcompanyname]
   }
+  # measure: vacancy_count {
+  #   type: count_distinct
+  #   sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
+  #   and ${campaign.id}=${campaign_job_board.campaignid} and ${jobboard.id}=${campaign_job_board.jobboardid}
+  #   then ${id}
+  #   end;;
+  # }
   measure: vacancy_count {
     type: count_distinct
-    sql: CASE when ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
+    sql: CASE WHEN ${campaign.feeddays} is not null and FLOOR(date_diff(CURRENT_DATE(), DATE(${actual_formatted_date}), DAY) / ${campaign.feeddays}) = 0 and ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
+       then ${id}
+      when  ${campaign.feeddays} is null and ${id}=${campaignvacancy.vacancyid} and ${campaign.id}=${campaignvacancy.campaignid} and ${isactive}=True
     and ${campaign.id}=${campaign_job_board.campaignid} and ${jobboard.id}=${campaign_job_board.jobboardid}
     then ${id}
     end;;
-  }
-
+}
 }

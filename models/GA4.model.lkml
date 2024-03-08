@@ -1045,7 +1045,7 @@ explore: vacancy {
   }
   join: campaign {
     relationship: one_to_one
-    sql_on: ${campaign.id}=${campaignvacancy.campaignid} ;;
+    sql_on: ${client.id}=${campaign.clientid} and ${campaign.id}=${campaignvacancy.campaignid} ;;
   }
   join: campaign_job_board {
     relationship: one_to_one
