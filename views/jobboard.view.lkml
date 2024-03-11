@@ -50,22 +50,22 @@ view: jobboard {
   }
   dimension: jobboard_benen {
     type: string
-    sql: CASE WHEN ${client.name}="Banen in het Groen"
+    sql: CASE WHEN ${client.name}="Banen in het Groen" and ${name} is not null
     THEN ${name} end;;
   }
   dimension: jobboard_NoBrothersDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="No Brothers") Or (${client.name}="No Brothers" and ${name}="Indeed")
+    sql: CASE WHEN (${client.name}="No Brothers") Or (${client.name}="No Brothers" and ${name}="Indeed") and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_LubaDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Luba") Or (${client.name}="Luba" and ${name}="Indeed")) and ${name}!="Monsterboard"
+    sql: CASE WHEN ((${client.name}="Luba") Or (${client.name}="Luba" and ${name}="Indeed")) and ${name}!="Monsterboard" and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_RaaakDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Raaak personeel") Or (${client.name}="Raaak personeel" and ${name}="Indeed"))
+    sql: CASE WHEN ((${client.name}="Raaak personeel") Or (${client.name}="Raaak personeel" and ${name}="Indeed")) and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_TrixxoDirectApply {
@@ -75,42 +75,42 @@ view: jobboard {
   }
   dimension: jobboard_VaproDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Vapro Recruitment") Or (${client.name}="Vapro Recruitment" and ${name}="Indeed"))
+    sql: CASE WHEN ((${client.name}="Vapro Recruitment") Or (${client.name}="Vapro Recruitment" and ${name}="Indeed")) and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_ApicsDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Apics FlexJobs") Or (${client.name}="Apics FlexJobs" and ${name}="Indeed")) and ${name}!="Monsterboard"
+    sql: CASE WHEN ((${client.name}="Apics FlexJobs") Or (${client.name}="Apics FlexJobs" and ${name}="Indeed")) and ${name}!="Monsterboard" and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_FlexVisieDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="FlexVisie") Or (${client.name}="FlexVisie" and ${name}="Indeed")) and ${name}!="Monsterboard"
+    sql: CASE WHEN ((${client.name}="FlexVisie") Or (${client.name}="FlexVisie" and ${name}="Indeed")) and ${name}!="Monsterboard" and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_SallandDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="Salland" and ${name}="Indeed")
+    sql: CASE WHEN (${client.name}="Salland" and ${name}="Indeed") and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_CarriereDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="Carriere" and ${name}="Monster")
+    sql: CASE WHEN (${client.name}="Carriere" and ${name}="Monster") and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_DjopzzDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Djopzz") Or (${client.name}="Djopzz" and ${name}="Indeed")) and ${name}!="Monsterboard"
+    sql: CASE WHEN ((${client.name}="Djopzz") Or (${client.name}="Djopzz" and ${name}="Indeed")) and ${name}!="Monsterboard" and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_JoppDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="Jopp" and ${name}="Indeed")
+    sql: CASE WHEN (${client.name}="Jopp" and ${name}="Indeed") and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_InviteJobsDirectApply {
     type: string
-    sql: CASE WHEN ((${client.name}="Invite" and ${name}="Monsterboard") Or (${client.name}="Invite" and ${name}="Indeed"))
+    sql: CASE WHEN ((${client.name}="Invite" and ${name}="Monsterboard") Or (${client.name}="Invite" and ${name}="Indeed")) and ${name} is not null
       THEN ${name} end;;
   }
   dimension: status {
