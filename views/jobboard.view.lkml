@@ -95,7 +95,7 @@ view: jobboard {
   }
   dimension: jobboard_CarriereDirectApply {
     type: string
-    sql: CASE WHEN (${client.name}="Carriere" and ${name}="Monster") and ${name} is not null
+    sql: CASE WHEN (${client.name}="Carriere" and ${name}="Monsterboard") and ${name} is not null
       THEN ${name} end;;
   }
   dimension: jobboard_DjopzzDirectApply {
