@@ -610,7 +610,7 @@ view: events_Vapro {
   measure: sollicitatie {
     type: count_distinct
     sql: CASE
-          WHEN ( (lower(${traffic_source__medium})="cpc") OR (${utm_id_integer} IS NOT NULL and lower(${UTM_Medium}) like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          WHEN ( (lower(${traffic_source__medium}) like "%cpc%") OR (${utm_id_integer} IS NOT NULL and lower(${UTM_Medium}) like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
             AND ${event_name}="sollicitatie"
             THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
