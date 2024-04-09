@@ -98,6 +98,11 @@ view: jobboard {
     sql: CASE WHEN (${client.name}="Carriere" and ${name}="Monsterboard" or ${name}="Werkzoeken" or ${name}="Indeed") and ${name} is not null
       THEN ${name} end;;
   }
+  dimension: jobboard_allCarriere {
+    type: string
+    sql: CASE WHEN ((${client.name}="Carriere") Or ( ${name}="Indeed")) and ${name} is not null
+      THEN ${name} end;;
+  }
   dimension: jobboard_DjopzzDirectApply {
     type: string
     sql: CASE WHEN ((${client.name}="Djopzz") Or (${client.name}="Djopzz" and ${name}="Indeed")) and ${name}!="Monsterboard" and ${name} is not null
