@@ -102,6 +102,12 @@ view: campaign {
     type: count
     drill_fields: [detail*]
   }
+  dimension: campaign_apics {
+    type: string
+    sql: CASE WHEN ${client.name}="Apics FlexJobs" and ${name} is not null
+    THEN ${name}
+    END;;
+  }
 
 
   # ----- Sets of fields for drilling ------

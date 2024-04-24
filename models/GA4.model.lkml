@@ -371,10 +371,10 @@ explore: events_Apics {
     sql_on: ${client.name}="Apics FlexJobs" ;;
     type: inner
   }
-  join: vacancy {
-    relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} ;;
-  }
+  # join: vacancy {
+  #   relationship: one_to_one
+  #   sql_on: ${vacancy.clientid}=${client.id} ;;
+  # }
   join: customers {
     relationship: one_to_one
     sql_on: lower(trim(${customers.name}))="apics" ;;
@@ -383,11 +383,11 @@ explore: events_Apics {
     relationship: one_to_one
     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
-  join: cpa {
-    relationship: one_to_one
-    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Apics.rn_id}
-      and ${cpa.application_origin_id}  = ${map_applicationoriginid.oldvalue} and lower(${events_Apics.traffic_source__medium}) like "cpc";;
-  }
+  # join: cpa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Apics.rn_id}
+  #     and ${cpa.application_origin_id}  = ${map_applicationoriginid.oldvalue} and lower(${events_Apics.traffic_source__medium}) like "cpc";;
+  # }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_Apics.rn_id}
@@ -402,10 +402,10 @@ explore: events_Apics {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid};;
   }
-  join: campaignvacancy {
-    relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
-  }
+  # join: campaignvacancy {
+  #   relationship: one_to_one
+  #   sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
+  # }
   join: campaign_job_board {
     relationship: many_to_many
     sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
