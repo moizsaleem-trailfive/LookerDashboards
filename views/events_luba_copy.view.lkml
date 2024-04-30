@@ -1,7 +1,5 @@
-# Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
-
-view: events_Apics {
-  sql_table_name: `evident-catcher-381918.analytics_299163363.events_*` ;;
+view: events_luba_copy {
+  sql_table_name: `evident-catcher-381918.analytics_256803368.events_*` ;;
 
   dimension: app_info__firebase_app_id {
     type: string
@@ -32,6 +30,60 @@ view: events_Apics {
     sql: ${TABLE}.app_info.version ;;
     group_label: "App Info"
     group_item_label: "Version"
+  }
+  dimension: collected_traffic_source__dclid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.dclid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Dclid"
+  }
+  dimension: collected_traffic_source__gclid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.gclid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Gclid"
+  }
+  dimension: collected_traffic_source__manual_campaign_id {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_campaign_id ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Campaign ID"
+  }
+  dimension: collected_traffic_source__manual_campaign_name {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_campaign_name ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Campaign Name"
+  }
+  dimension: collected_traffic_source__manual_content {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_content ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Content"
+  }
+  dimension: collected_traffic_source__manual_medium {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_medium ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Medium"
+  }
+  dimension: collected_traffic_source__manual_source {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_source ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Source"
+  }
+  dimension: collected_traffic_source__manual_term {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.manual_term ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Manual Term"
+  }
+  dimension: collected_traffic_source__srsltid {
+    type: string
+    sql: ${TABLE}.collected_traffic_source.srsltid ;;
+    group_label: "Collected Traffic Source"
+    group_item_label: "Srsltid"
   }
   dimension: device__advertising_id {
     type: string
@@ -225,7 +277,7 @@ view: events_Apics {
   }
   dimension: event_month_int {
 
-    type: string
+    type: number
 
     sql: cast(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) AS STRING);;
     label: "Event Month Int"
@@ -234,6 +286,11 @@ view: events_Apics {
     type: string
     sql: FORMAT_DATE("%B", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
     label: "Event Month"
+  }
+  dimension: event_year {
+    type: string
+    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
+    label: "Event Year"
   }
   dimension: event_dimensions__hostname {
     type: string
@@ -300,6 +357,10 @@ view: events_Apics {
     sql: ${TABLE}.geo.sub_continent ;;
     group_label: "Geo"
     group_item_label: "Sub Continent"
+  }
+  dimension: is_active_user {
+    type: yesno
+    sql: ${TABLE}.is_active_user ;;
   }
   dimension: items {
     hidden: yes
@@ -382,8 +443,8 @@ view: events_Apics {
     label: "Page Referrer"
     type: string
     sql: (SELECT value.string_value
-    FROM UNNEST(${event_params})
-    WHERE event_name="Sollicitatie_succesvol" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+             FROM UNNEST(${event_params})
+             WHERE event_name="sollicitatie" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
   }
   dimension: Page_views{
 
@@ -392,6 +453,14 @@ view: events_Apics {
     sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
              WHERE event_name = 'page_view' AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: Clicks{
+
+    label: "Clicks"
+    type: string
+    sql: (SELECT value.string_value
+            FROM UNNEST(${event_params})
+            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
   }
   dimension: UTM {
     label: "UTM"
@@ -409,30 +478,11 @@ view: events_Apics {
     sql: safe_cast(${UTM} AS INTEGER);;
 
   }
-  dimension: UTM_SOURCE_Clicks {
-    label: "UTM_SOURCE_Clicks"
-    type: string
-    sql:CASE
-      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
-      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
-      END;;
-  }
   dimension: UTM_SOURCE {
     label: "UTM_SOURCE"
     type: string
     sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_source=([^&]+)'));;
-    can_filter: yes
   }
-  dimension: Clicks_params{
-
-    label: "Clicks Params"
-    type: string
-    sql: (SELECT value.string_value
-            FROM UNNEST(${event_params})
-            WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
-  }
-
-
   dimension: Page_views_params{
 
     label: "Page Views Params"
@@ -451,10 +501,32 @@ view: events_Apics {
     type: number
     sql: REGEXP_EXTRACT(${Page_views_params}, 'utm_id=([^&]+)');;
   }
-  dimension: UTM_Campaign {
-    label: "UTM Campaign"
+  dimension: utm_id_integer_Page_views {
+    label: "utm_id_integer_Page_views"
+    type: number
+    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
+
+  }
+  dimension: Clicks_params{
+
+    label: "Clicks Params"
     type: string
-    sql:INITCAP(REGEXP_EXTRACT(${Page_location}, 'utm_campaign=([^&]+)'));;
+    sql: (SELECT value.string_value
+            FROM UNNEST(${event_params})
+            WHERE event_name="click" AND key = 'page_referrer' AND REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null);;
+  }
+  dimension: UTM_SOURCE_Clicks {
+    label: "UTM_SOURCE_Clicks"
+    type: string
+    sql:CASE
+      WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+      END;;
+  }
+  dimension: UTM_Clicks {
+    label: "UTM_Clicks"
+    type: number
+    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
   }
   dimension: utm_id_integer_Clicks {
     label: "utm_id_integer_Clicks"
@@ -462,32 +534,14 @@ view: events_Apics {
     sql: safe_cast(${UTM_Clicks} AS INTEGER);;
 
   }
-  dimension: UTM_Clicks {
-    label: "UTM_Clicks"
-    type: number
-    sql: REGEXP_EXTRACT(${Clicks_params}, 'utm_id=([^&]+)');;
-  }
-  dimension: utm_id_integer_Page_views {
-    label: "utm_id_integer_Page_views"
-    type: number
-    sql: safe_cast(${UTM_Page_views} AS INTEGER);;
-
-  }
-  dimension: primary_key {
-    primary_key: yes
-    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
-  }
-
   dimension: campaign_name {
     type: string
     sql: CASE
           WHEN ${UTM}=${campaign.id_str} THEN ${campaign.name}
-          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_succesvol" THEN ${campaign.name}
-          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_succesvol"
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie" THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
           THEN ${campaign.name}
-
       END;;
-
   }
   dimension: campaign_name_page_views {
     type: string
@@ -495,30 +549,22 @@ view: events_Apics {
           WHEN ${campaign.id_str}=${UTM_Page_views} THEN ${campaign.name}
           ELSE ''
         END;;
-
   }
-
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
-  dimension: Jobboard_name {
-    label: "Jobboard Name"
+  dimension: campaign_name_clicks {
     type: string
     sql: CASE
-        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
-        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="Sollicitatie_succesvol" THEN ${jobboard.name}
+          WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="sollicitatie"
+          THEN ${campaign.name}
+          WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="sollicitatie"
+          THEN ${campaign.name}
         END;;
   }
   dimension: session_id{
-
     label: "Session ID"
     type: number
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
-           WHERE event_name="Sollicitatie_succesvol" AND key = 'ga_session_id');;
-
+           WHERE event_name="sollicitatie" AND key = 'ga_session_id');;
   }
   dimension: rn_id{
 
@@ -526,94 +572,109 @@ view: events_Apics {
     type: number
     sql: (SELECT value.int_value
            FROM UNNEST(${event_params})
-           WHERE event_name="Sollicitatie_succesvol" AND key = 'rn_id');;
-
+           WHERE event_name="sollicitatie" AND key = 'rn_id');;
   }
-
   dimension: vacancy_id {
     type: string
-    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, r"\/(\d+)",1)
+    sql: (select lower((SELECT REGEXP_EXTRACT(value.string_value, 'vacancy=([^&]+)')
            FROM UNNEST(${event_params})
-           WHERE event_name="Sollicitatie_succesvol" and key = 'page_referrer')));;
+           WHERE event_name="sollicitatie" AND key = 'page_referrer')));;
+  }
+  dimension: Jobboard_name {
+    label: "Jobboard Name"
+    type: string
+    sql: CASE
+        WHEN lower(${jobboard.name})=${UTM_SOURCE} THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) like lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        WHEN (lower(${jobboard.name}) = lower(${traffic_source__source} )) and ${event_name}="sollicitatie" THEN ${jobboard.name}
+        END;;
+  }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${utm_id_integer},${Page_location},${user_pseudo_id},${event_bundle_sequence_id}) ;;
+  }
+  measure: count {
+    type: count
+    drill_fields: [detail*]
   }
   measure: sollitatie {
     type: count_distinct
     sql: CASE
           WHEN ( (lower(${traffic_source__medium})="cpc") OR (${utm_id_integer} IS NOT NULL and lower(${UTM_Medium}) like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="Sollicitatie_succesvol"
+          AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END;;
   }
-  dimension: campaign_name_clicks {
-    type: string
+  measure: sollitatie_distinct {
+    type: count_distinct
     sql: CASE
-             WHEN REGEXP_CONTAINS((lower(${traffic_source__name})), (lower(${campaign.name}))) = True and ${event_name}="Sollicitatie_succesvol"
-                      THEN ${campaign.name}
-                      WHEN lower(${traffic_source__name})=lower(${campaign.name}) and ${event_name}="Sollicitatie_succesvol"
-                      THEN ${campaign.name}
-                    END;;
+          WHEN (${utm_id_integer} IS NOT NULL OR  (lower(${traffic_source__medium}) is not null)) and ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="sollicitatie"
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
-  }
-
-  dimension: event_year {
-    type: string
-    sql: FORMAT_DATE("%Y", PARSE_DATE("%Y%m%d", ${TABLE}.event_date)) ;;
-    label: "Event Year"
-  }
-  dimension: Clicks{
-
-    label: "Clicks"
-    type: string
-    sql: (SELECT value.string_value
-            FROM UNNEST(${event_params})
-            WHERE event_name = 'click' AND key = 'page_referrer' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
+      END;;
   }
   measure: all_sollitatie {
     type: count_distinct
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="Sollicitatie_succesvol"
+          AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
+  }
+  measure: total_page_views {
+    type: sum
+    sql: CASE
+          WHEN ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
+        END;;
+
   }
   measure: total_clicks {
     type: count_distinct
     sql:  CASE
           WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
-          AND ${event_name}="Sollicitatie_succesvol"
+          AND ${event_name}="sollicitatie"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
 
       END
       ;;
-
-  }
-  measure: total_page_views {
-    type: count_distinct
-    sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN ${Page_views}
-        END;;
-
   }
 
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-  event_name,
-  traffic_source__name,
-  device__mobile_model_name,
-  device__mobile_brand_name,
-  device__web_info__hostname,
-  event_dimensions__hostname,
-  device__mobile_marketing_name
-  ]
+      event_name,
+      traffic_source__name,
+      device__mobile_model_name,
+      device__mobile_brand_name,
+      device__web_info__hostname,
+      event_dimensions__hostname,
+      device__mobile_marketing_name,
+      collected_traffic_source__manual_campaign_name
+    ]
   }
-
 }
+# measure: total_clicks {
+#   type: sum
+#   sql: CASE
+#         WHEN ${Clicks} is not null THEN 1
+#       END;;
 
-view: events_Apics__items {
+# }
+# measure: sollitatie {
+#   type: count_distinct
+#   sql: CASE
+#         WHEN (${utm_id_integer} IS NOT NULL OR  (${Jobboard_name} is not null and ${campaign_name} is not null) )   and   ${session_id} is not null AND ${user_pseudo_id} is not null
+#         AND ${event_name}="sollicitatie"
+#         THEN CONCAT(${session_id},${user_pseudo_id})
+
+#     END;;
+# }
+view: events_luba_copy__items {
   drill_fields: [item_id]
 
   dimension: item_id {
@@ -637,10 +698,10 @@ view: events_Apics__items {
     type: string
     sql: creative_slot ;;
   }
-  dimension: events_20230502__items {
+  dimension: events_20230901__items {
     type: string
     hidden: yes
-    sql: events_20230502__items ;;
+    sql: events_20230901__items ;;
   }
   dimension: item_brand {
     type: string
@@ -728,12 +789,12 @@ view: events_Apics__items {
   }
 }
 
-view: events_Apics__event_params {
+view: events_luba_copy__event_params {
 
-  dimension: events_20230502__event_params {
+  dimension: events_20230901__event_params {
     type: string
     hidden: yes
-    sql: events_20230502__event_params ;;
+    sql: events_20230901__event_params ;;
   }
   dimension: key {
     type: string
@@ -765,12 +826,12 @@ view: events_Apics__event_params {
   }
 }
 
-view: events_Apics__user_properties {
+view: events_luba_copy__user_properties {
 
-  dimension: events_20230502__user_properties {
+  dimension: events_20230901__user_properties {
     type: string
     hidden: yes
-    sql: events_20230502__user_properties ;;
+    sql: events_20230901__user_properties ;;
   }
   dimension: key {
     type: string

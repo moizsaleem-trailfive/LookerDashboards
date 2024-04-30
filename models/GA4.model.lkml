@@ -1,6 +1,5 @@
 connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-
 explore: my_dates {}
 explore: events_BDE{
   join: client {
@@ -324,13 +323,11 @@ explore: events_LabourLink {
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_LabourLink.rn_id}
       and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${events_LabourLink.traffic_source__medium}) like "%cpc%";;
   }
-
   join: cpqa {
     relationship: one_to_one
     sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_LabourLink.rn_id}
       and ${cpqa.application_origin_id}= ${map_applicationoriginid.oldvalue} and lower(${events_LabourLink.traffic_source__medium}) like "%cpc%";;
   }
-
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid} AND lower(${campaign.name}) NOT LIKE '%test%' AND ${campaign.publish}=True;;
@@ -422,6 +419,72 @@ explore: events_Apics {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_Apics.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_Apics.event_year}
+      ;;
+    type: inner
+  }
+
+}
+explore: apics {
+  join: combine_data_apics {
+    relationship: one_to_one
+    sql_on: REGEXP_CONTAINS((lower(${apics.vacancy_id})),(lower(${combine_data_apics.vacancy_number}))) = True and ${apics.jobboard_name}=${combine_data_apics.jobboard_name};;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Apics FlexJobs" ;;
+    type: inner
+  }
+  # join: vacancy {
+  #   relationship: one_to_one
+  #   sql_on: ${vacancy.clientid}=${client.id} ;;
+  # }
+  join: customers {
+    relationship: one_to_one
+    sql_on: lower(trim(${customers.name}))="apics" ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+  }
+  # join: cpa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_Apics.rn_id}
+  #     and ${cpa.application_origin_id}  = ${map_applicationoriginid.oldvalue} and lower(${events_Apics.traffic_source__medium}) like "cpc";;
+  # }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${apics.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${apics.traffic_medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${apics.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${apics.traffic_medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  # join: campaignvacancy {
+  #   relationship: one_to_one
+  #   sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
+  # }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken"  ;;
+    type: inner
+  }
+  join: jobboard_budget_amount_1 {
+    relationship: one_to_one
+    sql_on:
+    ${jobboard_budget_amount_1.client_name}="Apics FlexJobs"
+      AND ${jobboard_budget_amount_1.month}=${apics.month}
+      AND ${jobboard_budget_amount_1.year}=cast(${apics.year} as string)
       ;;
     type: inner
   }
@@ -885,16 +948,14 @@ explore: client {
     sql_on:  ${map_applicationoriginid.customerid}=${customers.customerid} and ((REGEXP_CONTAINS(lower(${map_applicationoriginid.value}),lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),lower(${map_applicationoriginid.value}))=True) OR lower(${map_applicationoriginid.value})="indeed apply")  ;;
     type: inner
   }
-    join: my_dates {
-      relationship: one_to_one
-      sql_on: cast(${job_board_budget_amount.month} as string)=cast(${my_dates.month} as string) and cast(${job_board_budget_amount.year} as string)=cast(${my_dates.year} as string) ;;
-    }
+
   join: campaignvacancy {
     relationship: one_to_one
     sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
 }
 explore: events_luba {
+
   join: combine_data_luba {
     relationship: one_to_one
     sql_on: lower(${events_luba.vacancy_id})=lower(${combine_data_luba.vacancy_id}) and ${events_luba.Jobboard_name}=${combine_data_luba.jobboard_name};;
@@ -916,11 +977,11 @@ explore: events_luba {
     relationship: one_to_one
      sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
-  join: cpa {
-    relationship: one_to_one
-    sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
-    and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
-  }
+  # join: cpa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
+  #   and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
+  # }
   join: cph {
     relationship: one_to_one
     sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba.rn_id}
@@ -955,6 +1016,71 @@ explore: events_luba {
     ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
       AND ${job_board_budget_amount.month}=cast(${events_luba.event_month_int} as string)
       AND ${job_board_budget_amount.year}=${events_luba.event_year}
+      ;;
+    type: inner
+  }
+}
+explore: events_luba_copy {
+
+  join: combine_data_luba {
+    relationship: one_to_one
+    sql_on: lower(${events_luba_copy.vacancy_id})=lower(${combine_data_luba.vacancy_id}) and ${events_luba_copy.Jobboard_name}=${combine_data_luba.jobboard_name};;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Luba" ;;
+    type: inner
+  }
+  join: vacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.clientid}=${client.id} ;;
+  }
+  join: customers {
+    relationship: one_to_one
+    sql_on: trim(${customers.name})="Luba" ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+  }
+  # join: cpa {
+  #   relationship: one_to_one
+  #   sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
+  #   and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
+  # }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba_copy.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba_copy.traffic_source__medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_luba_copy.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_luba_copy.traffic_source__medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  join: campaignvacancy {
+    relationship: one_to_one
+    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken" and ${jobboard.name} != "Technicus" ;;
+    type: inner
+  }
+  join: jobboard_budget_amount_1 {
+    relationship: one_to_one
+    sql_on:
+       ${jobboard_budget_amount_1.month}=cast(${events_luba_copy.event_month_int} as string)
+      AND ${jobboard_budget_amount_1.year}=${events_luba_copy.event_year}
       ;;
     type: inner
   }

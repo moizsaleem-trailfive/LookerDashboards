@@ -139,7 +139,7 @@ view: job_board_budget_amount {
     sql: ${amount_int} ;;
   }
   measure: budget {
-    type: sum_distinct
+    type: sum
     sql: CASE
           WHEN ${budgetsp_int} is not null AND ${budgetsp_int}!=0 and ${jobboard.name} is not null THEN ${budgetsp_int}
           WHEN ${jobboard.name} is not null THEN ${amount_int}
