@@ -953,6 +953,10 @@ explore: client {
     relationship: one_to_one
     sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
+  join: my_dates {
+    relationship: one_to_one
+    sql_on: cast(${job_board_budget_amount.month} as string)=cast(${my_dates.month} as string) and cast(${job_board_budget_amount.year} as string)=cast(${my_dates.year} as string) ;;
+  }
 }
 explore: events_luba {
 
