@@ -425,10 +425,6 @@ explore: events_Apics {
 
 }
 explore: apics {
-  join: combine_data_apics {
-    relationship: one_to_one
-    sql_on: REGEXP_CONTAINS((lower(${apics.vacancy_id})),(lower(${combine_data_apics.vacancy_number}))) = True and ${apics.jobboard_name}=${combine_data_apics.jobboard_name};;
-  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Apics FlexJobs" ;;

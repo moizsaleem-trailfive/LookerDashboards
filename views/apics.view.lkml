@@ -3,7 +3,6 @@ view: apics {
   drill_fields: [id]
 
   dimension: id {
-    primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
   }
@@ -74,10 +73,7 @@ view: apics {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-  dimension: utm_clicks {
-    type: string
-    sql: ${TABLE}.utm_clicks ;;
-  }
+
   dimension: utm_id {
     type: number
     sql: ${TABLE}.utm_id ;;
@@ -93,6 +89,10 @@ view: apics {
   dimension: vacancy_id {
     type: string
     sql: ${TABLE}.vacancy_id ;;
+  }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${event_date}, ${id}) ;;
   }
   measure: count {
     type: count
