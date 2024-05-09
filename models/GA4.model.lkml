@@ -1020,20 +1020,16 @@ explore: events_luba {
     type: inner
   }
 }
-explore: events_luba_copy {
+explore: luba {
 
   join: combine_data_luba {
     relationship: one_to_one
-    sql_on: lower(${events_luba_copy.vacancy_id})=lower(${combine_data_luba.vacancy_id}) and ${events_luba_copy.Jobboard_name}=${combine_data_luba.jobboard_name};;
+    sql_on: lower(${luba.vacancy_id})=lower(${combine_data_luba.vacancy_id}) and ${luba.jobboard_name}=${combine_data_luba.jobboard_name};;
   }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Luba" ;;
     type: inner
-  }
-  join: vacancy {
-    relationship: one_to_one
-    sql_on: ${vacancy.clientid}=${client.id} ;;
   }
   join: customers {
     relationship: one_to_one
@@ -1043,28 +1039,19 @@ explore: events_luba_copy {
     relationship: one_to_one
     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
-  # join: cpa {
-  #   relationship: one_to_one
-  #   sql_on: ${cpa.customer_id}=${customers.customerid} and ${cpa.rn_id}=${events_luba.rn_id}
-  #   and ${cpa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba.traffic_source__medium}) like "cpc";;
-  # }
   join: cph {
     relationship: one_to_one
-    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${events_luba_copy.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${events_luba_copy.traffic_source__medium}) like "cpc";;
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${luba.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${luba.traffic_medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one
-    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${events_luba_copy.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${events_luba_copy.traffic_source__medium}) like "cpc";;
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${luba.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${luba.traffic_medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
     sql_on: ${client.id}=${campaign.clientid};;
-  }
-  join: campaignvacancy {
-    relationship: one_to_one
-    sql_on: ${vacancy.id}=${campaignvacancy.vacancyid} ;;
   }
   join: campaign_job_board {
     relationship: many_to_many
@@ -1079,10 +1066,14 @@ explore: events_luba_copy {
   join: jobboard_budget_amount_1 {
     relationship: one_to_one
     sql_on:
-       ${jobboard_budget_amount_1.month}=cast(${events_luba_copy.event_month_int} as string)
-      AND ${jobboard_budget_amount_1.year}=${events_luba_copy.event_year}
-      ;;
+       ${jobboard_budget_amount_1.client_name}="Luba"
+      AND ${jobboard_budget_amount_1.month}=${luba.month}
+      AND ${jobboard_budget_amount_1.year}=cast(${luba.year} as string);;
     type: inner
+  }
+  join: my_dates {
+    relationship: one_to_one
+    sql_on: cast(${luba.month} as string)=cast(${my_dates.month} as string) and cast(${luba.year} as string)=cast(${my_dates.year} as string) ;;
   }
 }
 
