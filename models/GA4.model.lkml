@@ -1031,22 +1031,14 @@ explore: luba {
     sql_on: ${client.name}="Luba" ;;
     type: inner
   }
-  join: customers {
-    relationship: one_to_one
-    sql_on: trim(${customers.name})="Luba" ;;
-  }
-  join: map_applicationoriginid {
-    relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
-  }
   join: normalized_cph {
     relationship: one_to_one
     sql_on: ${normalized_cph.customer_name}="Luba" and ${normalized_cph.rnid}=${luba.rn_id} and lower(${luba.traffic_medium}) like "cpc";;
   }
-  join: cpqa {
+  join: normalized_cpqa{
     relationship: one_to_one
-    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${luba.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply"  and lower(${luba.traffic_medium}) like "cpc";;
+    sql_on: ${normalized_cpqa.customer_name}="Luba" and ${normalized_cpqa.rnid}=${luba.rn_id} and
+      lower(${luba.traffic_medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
