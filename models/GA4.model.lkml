@@ -1039,10 +1039,9 @@ explore: luba {
     relationship: one_to_one
     sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
   }
-  join: cph {
+  join: normalized_cph {
     relationship: one_to_one
-    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${luba.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${map_applicationoriginid.value}) != "indeed apply" and lower(${luba.traffic_medium}) like "cpc";;
+    sql_on: ${normalized_cph.customer_name}="Luba" and ${normalized_cph.rnid}=${luba.rn_id} and lower(${luba.traffic_medium}) like "cpc";;
   }
   join: cpqa {
     relationship: one_to_one

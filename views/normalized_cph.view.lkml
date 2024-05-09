@@ -49,4 +49,11 @@ view: normalized_cph {
     type: count
     drill_fields: [id, customer_name]
   }
+  measure: total_hired {
+    type: count_distinct
+    sql: CASE
+          WHEN  ${userpseudoid} IS NOT NULL and ${rnid} is not null AND ${hired}=True
+          THEN concat(${userpseudoid},${rnid})
+        END;;
+  }
 }
