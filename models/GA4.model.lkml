@@ -1,6 +1,55 @@
 connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 explore: my_dates {}
+explore: derived_apics {
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Apics FlexJobs" ;;
+    type: inner
+  }
+
+  join: customers {
+    relationship: one_to_one
+    sql_on: lower(trim(${customers.name}))="apics" ;;
+  }
+  join: map_applicationoriginid {
+    relationship: one_to_one
+    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+  }
+  join: cph {
+    relationship: one_to_one
+    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${derived_apics.rn_id}
+      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${derived_apics.traffic_medium}) like "cpc";;
+  }
+  join: cpqa {
+    relationship: one_to_one
+    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${derived_apics.rn_id}
+      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${derived_apics.traffic_medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken"  ;;
+    type: inner
+  }
+  join: job_board_budget_amount {
+    relationship: one_to_one
+    sql_on:
+    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
+      AND ${job_board_budget_amount.month}=cast(${derived_apics.month} as string)
+      AND ${job_board_budget_amount.year}=cast(${derived_apics.year} as string)
+      ;;
+    type: inner
+  }
+}
 explore: events_BDE{
   join: client {
     relationship: one_to_one
