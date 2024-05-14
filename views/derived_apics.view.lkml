@@ -112,7 +112,6 @@ view: derived_apics {
           WHEN ( ((${traffic_medium})="cpc") OR (${utm_id} IS NOT NULL and ${utm_medium} like "%cpc%")) and ${session_id} is not null AND ${user_pseudo_id} is not null
           AND ${event_name}="Sollicitatie_succesvol"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
-
       END;;
   }
 }
