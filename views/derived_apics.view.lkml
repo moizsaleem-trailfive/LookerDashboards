@@ -33,7 +33,7 @@ view: derived_apics {
           THEN user_pseudo_id
         END AS utm_page_views
       FROM
-        `events_*` AS events_Apics,
+        `evident-catcher-381918.analytics_299163363.events_*` AS events_Apics ,
         UNNEST(event_params) AS event_params
       WHERE
         event_name IN ('Sollicitatie_succesvol', 'page_view', 'click')
