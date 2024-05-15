@@ -1,7 +1,7 @@
 view: derived_apics {
   derived_table: {
     sql:
-      SELECT
+      SELECT ROW_NUMBER() OVER() AS id, * FROM( SELECT distinct
         PARSE_DATE("%Y%m%d", event_date) AS event_date,
         CAST(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", event_date)) AS STRING) AS event_month,
         EXTRACT(YEAR FROM PARSE_DATE("%Y%m%d", event_date)) AS event_year,
@@ -31,14 +31,108 @@ view: derived_apics {
         CASE
           WHEN event_name='page_view' AND key='page_referrer' AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
           THEN user_pseudo_id
-        END AS utm_page_views
+        END AS utm_page_views,
+        CASE
+          WHEN event_name="Sollicitatie_succesvol" and event_params.key="page_referrer"
+               AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
+               AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)')=(CAST(campaign.id AS STRING))
+          THEN
+            (CASE
+               WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id THEN campaign.name
+             END)
+          WHEN REGEXP_CONTAINS((LOWER(traffic_source.name)), (LOWER((CASE
+                                                                         WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id
+                                                                         THEN campaign.name
+                                                                       END))))
+               = TRUE AND event_name="Sollicitatie_succesvol"
+          THEN
+            (CASE
+               WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id THEN campaign.name
+             END)
+        END AS campaign_name,
+        CASE
+          WHEN event_name="Sollicitatie_succesvol" AND event_params.key="page_referrer"
+               AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
+               AND LOWER(jobboard.name)=LOWER(REGEXP_EXTRACT(value.string_value, 'utm_source=([^&]+)'))
+          THEN
+            jobboard.name
+          WHEN (LOWER(jobboard.name) = LOWER(traffic_source.source)) AND event_name="Sollicitatie_succesvol"
+          THEN
+            jobboard.name
+        END AS jobboard_name,
+        CASE
+          WHEN REGEXP_CONTAINS((LOWER(events_Apics.traffic_source.name)), (LOWER((CASE
+                                                                                      WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id
+                                                                                      THEN campaign.name
+                                                                                    END))))
+               = TRUE AND events_Apics.event_name="Sollicitatie_succesvol"
+          THEN
+            (CASE
+               WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id THEN campaign.name
+             END)
+          WHEN LOWER(events_Apics.traffic_source.name)=LOWER((CASE
+                                                                WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id
+                                                                THEN campaign.name
+                                                              END))
+               AND events_Apics.event_name="Sollicitatie_succesvol"
+          THEN
+            (CASE
+               WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id THEN campaign.name
+             END)
+        END AS campaign_name_clicks,
+        CASE
+          WHEN event_name="Sollicitatie_succesvol" and event_params.key="page_referrer"
+               AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
+               AND (CAST(campaign.id AS STRING))=(REGEXP_EXTRACT(event_params.value.string_value , 'utm_id=([^&]+)'))
+          THEN
+            (CASE
+               WHEN LOWER(campaign.name) NOT LIKE '%test%' AND campaign.clientid=client.id THEN campaign.name
+             END)
+        END AS campaign_name_page_views,
+        CASE
+          WHEN (LOWER(jobboard.name) = LOWER(events_Apics.traffic_source.source))
+               AND events_Apics.event_name="Sollicitatie_succesvol"
+          THEN
+            jobboard.name
+        END AS jobboard_clicks,
+        CASE
+          WHEN event_name="page_view" and event_params.key="page_referrer"
+               AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
+               AND lower(REGEXP_EXTRACT(event_params.value.string_value, 'utm_source=([^&]+)'))=lower(jobboard.name)
+          THEN
+            jobboard.name
+        END AS jobboard_page_views
       FROM
         `evident-catcher-381918.analytics_299163363.events_*` AS events_Apics ,
         UNNEST(event_params) AS event_params
+        INNER JOIN
+     `evident-catcher-381918.script_campaign_tool_data.Client` AS client
+       ON
+         client.name = "Apics FlexJobs"
+       LEFT JOIN
+         `evident-catcher-381918.script_campaign_tool_data.Campaign` AS campaign
+       ON
+         client.id = campaign.clientid
+       LEFT JOIN
+         `evident-catcher-381918.script_campaign_tool_data.CampaignJobBoards` AS campaign_job_board
+       ON
+         campaign_job_board.campaignid = campaign.id
+       LEFT JOIN
+         `evident-catcher-381918.script_campaign_tool_data.JobBoard` AS jobboard
+       ON
+         jobboard.id = campaign_job_board.jobboardid
+         AND jobboard.name != "Werkzoeken"
       WHERE
         event_name IN ('Sollicitatie_succesvol', 'page_view', 'click')
-        AND event_params.key IN ('page_referrer', 'vacancy_id', 'rn_id', 'ga_session_id')
+        AND event_params.key IN ('page_referrer', 'vacancy_id', 'rn_id', 'ga_session_id'));
     ;;
+    datagroup_trigger: apics_datagroup
+    increment_key: "event_date"
+    increment_offset: 1
+  }
+  dimension: id {
+    type: number
+    sql: ${TABLE}.id ;;
   }
   dimension_group: date {
     type: time
@@ -106,6 +200,34 @@ view: derived_apics {
     type: string
     sql: ${TABLE}.utm_page_views ;;
   }
+  dimension: campaign_name {
+    type: string
+    sql: ${TABLE}.campaign_name ;;
+  }
+  dimension: campaign_name_clicks {
+    type: string
+    sql: ${TABLE}.campaign_name_clicks ;;
+  }
+  dimension: campaign_name_page_views {
+    type: string
+    sql: ${TABLE}.campaign_name_page_views ;;
+  }
+  dimension: jobboard_name {
+    type: string
+    sql: ${TABLE}.jobboard_name ;;
+  }
+  dimension: jobboard_clicks {
+    type: string
+    sql: ${TABLE}.jobboard_clicks ;;
+  }
+  dimension: jobboard_page_views {
+    type: string
+    sql: ${TABLE}.jobboard_page_views ;;
+  }
+  dimension: primary_key {
+    primary_key: yes
+    sql: CONCAT(${date_date}, ${id}) ;;
+  }
   measure: sollitatie {
     type: count_distinct
     sql: CASE
@@ -113,5 +235,31 @@ view: derived_apics {
           AND ${event_name}="Sollicitatie_succesvol"
           THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
       END;;
+  }
+  measure: all_sollitatie {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_succesvol"
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
+
+      END
+      ;;
+  }
+  measure: total_clicks {
+    type: count_distinct
+    sql:  CASE
+          WHEN ${session_id} is not null AND ${user_pseudo_id} is not null
+          AND ${event_name}="Sollicitatie_succesvol"
+          THEN CONCAT(${session_id},${user_pseudo_id},${vacancy_id})
+
+      END
+      ;;
+
+  }
+  measure: total_page_views {
+    type: count_distinct
+    sql: CASE WHEN ${utm_page_views} is not null THEN ${utm_page_views} END ;;
+
   }
 }

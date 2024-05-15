@@ -1,6 +1,10 @@
 connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 explore: my_dates {}
+datagroup: apics_datagroup {
+  max_cache_age: "24 hours"
+  sql_trigger: SELECT CURRENT_DATE();;
+}
 explore: derived_apics {
   join: client {
     relationship: one_to_one

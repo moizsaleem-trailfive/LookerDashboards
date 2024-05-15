@@ -1,5 +1,19 @@
 connection: "googlebigquery"
-include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
+include: "/views/events_NoBrothers*.view.lkml"                # include all views in the views/ folder in this project
+include: "/views/combine_data_nb.view.lkml"
+include: "/views/client.view.lkml"
+include: "/views/vacancy.view.lkml"
+include: "/views/customers.view.lkml"
+include: "/views/cpa*.view.lkml"
+include: "/views/cph*.view.lkml"
+include: "/views/cpqa*.view.lkml"
+include: "/views/campaign.view.lkml"
+include: "/views/campaignvacancy.view.lkml"
+include: "/views/campaign_job_board.view.lkml"
+include: "/views/jobboard.view.lkml"
+include: "/views/job_board_budget_amount.view.lkml"
+include: "/views/map_applicationoriginid.view.lkml"
+# include all views in the views/ folder in this project
 
 explore: events_NoBrothers {
   join: combine_data_nb {
