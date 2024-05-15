@@ -44,12 +44,12 @@ explore: derived_apics {
     sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken"  ;;
     type: inner
   }
-  join: job_board_budget_amount {
+  join: derived_budget {
     relationship: one_to_one
     sql_on:
-    ${campaign_job_board.id}=${job_board_budget_amount.campaignjobboardid}
-      AND ${job_board_budget_amount.month}=cast(${derived_apics.month} as string)
-      AND ${job_board_budget_amount.year}=cast(${derived_apics.year} as string)
+    ${derived_budget.client_name}="Apics FlexJobs"
+      AND ${derived_budget.month}=${derived_apics.month}
+      AND ${derived_budget.year}=cast(${derived_apics.year} as string)
       ;;
     type: inner
   }

@@ -93,4 +93,9 @@ view: derived_budget {
       type: number
       sql: ${TABLE}.budget ;;
     }
+  measure: total_budget {
+    type: sum_distinct
+    sql: ${budget} ;;
+
+  }
   }
