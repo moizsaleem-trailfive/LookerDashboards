@@ -40,7 +40,7 @@ view: derived_budget {
           ON
             campaign_job_board.id = job_board_budget_amount.campaignjobboardid
         ;;
-      persist_for: "3 hours"
+      persist_for: "24 hours"
     }
 
     dimension: id {
