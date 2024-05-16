@@ -4,7 +4,7 @@ explore: my_dates {}
 explore: derived_cph {}
 datagroup: apics_datagroup {
   max_cache_age: "24 hours"
-  sql_trigger: SELECT CURRENT_DATE();;
+  sql_trigger: SELECT DATE(CURRENT_DATE());;
 }
 explore: derived_apics {
   join: client {

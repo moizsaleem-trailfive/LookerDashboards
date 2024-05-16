@@ -124,10 +124,10 @@ view: derived_apics {
          AND jobboard.name != "Werkzoeken"
       WHERE
         event_name IN ('Sollicitatie_succesvol', 'page_view', 'click')
-        AND event_params.key IN ('page_referrer', 'vacancy_id', 'rn_id', 'ga_session_id'));
+        AND event_params.key IN ('page_referrer', 'vacancy_id', 'rn_id', 'ga_session_id'))
     ;;
     datagroup_trigger: apics_datagroup
-    increment_key: "id"
+    increment_key: "event_date"
     increment_offset: 1
   }
   dimension: id {
@@ -135,8 +135,8 @@ view: derived_apics {
     sql: ${TABLE}.id ;;
   }
   dimension: event_date {
-    type: string
-    sql: ${TABLE}.event_date ;;
+    type: date
+    sql: TIMESTAMP(${TABLE}.event_date) ;;
   }
   dimension_group: date {
     type: time
