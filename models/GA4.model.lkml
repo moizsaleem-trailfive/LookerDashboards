@@ -1,6 +1,7 @@
 connection: "googlebigquery"
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 explore: my_dates {}
+explore: derived_cph {}
 datagroup: apics_datagroup {
   max_cache_age: "24 hours"
   sql_trigger: SELECT CURRENT_DATE();;
@@ -16,19 +17,16 @@ explore: derived_apics {
     relationship: one_to_one
     sql_on: lower(trim(${customers.name}))="apics" ;;
   }
-  join: map_applicationoriginid {
+
+  join: derived_cph {
     relationship: one_to_one
-    sql_on: ${customers.customerid}=${map_applicationoriginid.customerid} and ${map_applicationoriginid.value} = "Eigen website";;
+    sql_on: ${derived_cph.customer_id}=${customers.customerid} and ${derived_cph.rnid}=${derived_apics.rn_id}
+      and ${derived_cph.map_applicationoriginid_value} = "eigen website" and lower(${derived_apics.traffic_medium}) like "cpc";;
   }
-  join: cph {
+  join: derived_cpqa {
     relationship: one_to_one
-    sql_on: ${cph.customer_id}=${customers.customerid} and ${cph.rn_id}=${derived_apics.rn_id}
-      and ${cph.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${derived_apics.traffic_medium}) like "cpc";;
-  }
-  join: cpqa {
-    relationship: one_to_one
-    sql_on: ${cpqa.customer_id}=${customers.customerid} and ${cpqa.rn_id}=${derived_apics.rn_id}
-      and ${cpqa.application_origin_id} = ${map_applicationoriginid.oldvalue} and lower(${derived_apics.traffic_medium}) like "cpc";;
+    sql_on: ${derived_cpqa.customer_id}=${customers.customerid} and ${derived_cpqa.rnid}=${derived_apics.rn_id}
+      and ${derived_cpqa.map_applicationoriginid_value} = "eigen website" and lower(${derived_apics.traffic_medium}) like "cpc";;
   }
   join: campaign {
     relationship: one_to_one
