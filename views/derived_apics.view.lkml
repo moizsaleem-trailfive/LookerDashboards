@@ -127,12 +127,16 @@ view: derived_apics {
         AND event_params.key IN ('page_referrer', 'vacancy_id', 'rn_id', 'ga_session_id'));
     ;;
     datagroup_trigger: apics_datagroup
-    increment_key: "event_date"
+    increment_key: "id"
     increment_offset: 1
   }
   dimension: id {
     type: number
     sql: ${TABLE}.id ;;
+  }
+  dimension: event_date {
+    type: string
+    sql: ${TABLE}.event_date ;;
   }
   dimension_group: date {
     type: time
