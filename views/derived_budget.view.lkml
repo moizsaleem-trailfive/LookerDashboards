@@ -33,8 +33,6 @@ view: derived_budget {
             `evident-catcher-381918.script_campaign_tool_data.JobBoard` AS jobboard
           ON
             jobboard.id = campaign_job_board.jobboardid
-            AND jobboard.name != "Werkzoeken"
-            AND jobboard.name != "Technicus"
           INNER JOIN
             `evident-catcher-381918.script_campaign_tool_data.JobboardBudgetAmount` AS job_board_budget_amount
           ON

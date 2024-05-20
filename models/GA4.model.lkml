@@ -46,6 +46,8 @@ explore: derived_apics {
     relationship: one_to_one
     sql_on:
     ${derived_budget.client_name}="Apics FlexJobs"
+     AND ${derived_budget.jobboard_name} != "Werkzoeken"
+    AND ${derived_budget.jobboard_name} != "Technicus"
       AND ${derived_budget.month}=${derived_apics.month}
       AND ${derived_budget.year}=cast(${derived_apics.year} as string)
       ;;
