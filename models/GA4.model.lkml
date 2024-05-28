@@ -6,6 +6,51 @@ datagroup: apics_datagroup {
   max_cache_age: "24 hours"
   sql_trigger: SELECT DATE(CURRENT_DATE());;
 }
+explore: derived_budget {
+  join: my_dates {
+    relationship: one_to_one
+    sql_on: cast(${derived_budget.month} as string)=cast(${my_dates.month} as string) and cast(${derived_budget.year} as string)=cast(${my_dates.year} as string) ;;
+  }
+}
+explore: derived_budget_planning {
+  join: my_dates {
+    relationship: one_to_one
+    sql_on: cast(${derived_budget_planning.month} as string)=cast(${my_dates.month} as string) and cast(${derived_budget_planning.year} as string)=cast(${my_dates.year} as string) ;;
+  }
+}
+explore: derived_cpqa_direct_apply {}
+explore: derived_cph_direct_apply {}
+explore: derived_cpa_direct_apply {
+  join: customers {
+    relationship: one_to_one
+    sql_on: ${derived_cpa_direct_apply.customer_id}=${customers.customerid} ;;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: (lower(trim(${client.name})) like lower(trim(${customers.name}))
+          OR (lower(trim(replace(${client.name}, ' ', '')))) = (lower(trim(replace(${customers.name}, ' ', '')))))
+          OR (REGEXP_CONTAINS(lower(trim(${client.name})),lower(trim(${customers.name})))=True and lower(trim(${client.name})) not like "%luba%")
+          OR (REGEXP_CONTAINS(lower(trim(${customers.name})),lower(trim(${client.name})))=True and lower(trim(${client.name})) not like "%luba%");;
+
+    type: inner
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+    type: inner
+
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: one_to_one
+    sql_on:  ((REGEXP_CONTAINS(${derived_cpa_direct_apply.map_applicationoriginid_value},lower(${jobboard.name}))=True) OR (REGEXP_CONTAINS(lower(${jobboard.name}),${derived_cpa_direct_apply.map_applicationoriginid_value})=True))  ;;
+    type: inner
+  }
+}
 explore: derived_nb {
   join: combine_data_nb {
     relationship: one_to_one

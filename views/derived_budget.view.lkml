@@ -67,6 +67,10 @@ view: derived_budget {
       sql: ${TABLE}.jobboard_name ;;
     }
 
+  dimension: jobboard_name_filter {
+    type: string
+    sql: ${TABLE}.jobboard_name ;;
+  }
     dimension: month {
       type: string
       sql: ${TABLE}.month ;;
