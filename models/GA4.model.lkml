@@ -6,6 +6,55 @@ datagroup: apics_datagroup {
   max_cache_age: "24 hours"
   sql_trigger: SELECT DATE(CURRENT_DATE());;
 }
+explore: derived_nb {
+  join: combine_data_nb {
+    relationship: one_to_one
+    sql_on: lower(${derived_nb.vacancy_id})=lower(${combine_data_nb.vacancy_id}) and ${derived_nb.jobboard_name}=${combine_data_nb.jobboard_name};;
+  }
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="No Brothers" ;;
+    type: inner
+  }
+  join: customers {
+    relationship: one_to_one
+    sql_on: lower(trim(${customers.name}))="nobrothers" ;;
+  }
+
+  join: derived_cph {
+    relationship: one_to_one
+    sql_on: ${derived_cph.customer_id}=${customers.customerid} and ${derived_cph.rnid}=${derived_nb.rn_id}
+      and ${derived_cph.map_applicationoriginid_value} = "eigen website" and lower(${derived_nb.traffic_medium}) like "cpc";;
+  }
+  join: derived_cpqa {
+    relationship: one_to_one
+    sql_on: ${derived_cpqa.customer_id}=${customers.customerid} and ${derived_cpqa.rnid}=${derived_nb.rn_id}
+      and ${derived_cpqa.map_applicationoriginid_value} = "eigen website" and lower(${derived_nb.traffic_medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid};;
+    type: inner
+  }
+  join: derived_budget {
+    relationship: one_to_one
+    sql_on:
+    ${derived_budget.client_name}="No Brothers"
+      AND ${derived_budget.month}=${derived_nb.month}
+      AND ${derived_budget.year}=cast(${derived_nb.year} as string)
+      ;;
+    type: inner
+  }
+}
 explore: derived_apics {
   join: client {
     relationship: one_to_one

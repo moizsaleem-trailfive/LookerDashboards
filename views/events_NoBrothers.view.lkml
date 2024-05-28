@@ -700,10 +700,9 @@ view: events_NoBrothers {
   }
 
   measure: total_page_views {
-    type: sum
+    type: count_distinct
     sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN 1
-          ELSE 0
+          WHEN ${Page_views} IS NOT NULL THEN ${Page_views}
         END;;
 
   }
