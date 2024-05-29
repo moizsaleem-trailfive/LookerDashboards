@@ -452,7 +452,7 @@ view: events_Raak {
     type: string
     sql: (SELECT ${user_pseudo_id}
              FROM UNNEST(${event_params})
-             WHERE event_name = 'page_view' AND key = 'page_location' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null OR (traffic_source.source is not null and traffic_source.medium ="cpc")));;
+             WHERE event_name = 'page_view' AND key = 'page_location' AND (REGEXP_EXTRACT(value.string_value, 'utm_id=([^&]+)') is not null ));;
   }
   dimension: Clicks{
 
@@ -623,10 +623,9 @@ view: events_Raak {
       ;;
   }
   measure: total_page_views {
-    type: sum
+    type: count_distinct
     sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN 1
-          ELSE 0
+          WHEN ${Page_views} IS NOT NULL THEN ${Page_views}
         END;;
 
   }
