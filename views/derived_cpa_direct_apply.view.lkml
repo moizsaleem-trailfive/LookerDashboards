@@ -66,6 +66,11 @@ view: derived_cpa_direct_apply {
            THEN ${jobboard_name}
          END ;;
   }
+  dimension: jobboard_LubaDirectApply {
+    type: string
+    sql: CASE WHEN ((${client.name}="Luba") Or (${client.name}="Luba" and ${jobboard_name}="Indeed")) and ${jobboard_name}!="Monsterboard" and ${jobboard_name} is not null
+      THEN ${jobboard_name} end;;
+  }
 
   dimension: customer_name {
     type: string
