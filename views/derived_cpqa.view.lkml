@@ -51,6 +51,7 @@ view: derived_cpqa {
       type: time
       timeframes: [raw, time, date, week, month, quarter, year]
       sql: ${TABLE}.date ;;
+      datatype: datetime
     }
 
     dimension: map_applicationoriginid_oldvalue {

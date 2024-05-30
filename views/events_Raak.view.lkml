@@ -623,9 +623,10 @@ view: events_Raak {
       ;;
   }
   measure: total_page_views {
-    type: count_distinct
+    type: sum
     sql: CASE
-          WHEN ${Page_views} IS NOT NULL THEN ${Page_views}
+          WHEN ${Page_views} IS NOT NULL THEN 1
+          ELSE 0
         END;;
 
   }

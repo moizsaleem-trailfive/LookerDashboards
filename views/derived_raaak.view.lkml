@@ -30,7 +30,7 @@ view: derived_raaak {
         END AS utm_medium,
         CASE
           WHEN event_name='page_view' AND key='page_location' AND REGEXP_EXTRACT(event_params.value.string_value, 'utm_id=([^&]+)') IS NOT NULL
-          THEN user_pseudo_id
+          THEN concat(user_pseudo_id,event_params.value.string_value,event_bundle_sequence_id,event_timestamp)
         END AS utm_page_views,
         CASE
           WHEN event_name="ApplyEvent" and event_params.key="page_referrer"

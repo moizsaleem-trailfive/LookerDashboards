@@ -6,6 +6,52 @@ datagroup: apics_datagroup {
   max_cache_age: "24 hours"
   sql_trigger: SELECT DATE(CURRENT_DATE());;
 }
+explore: derived_trixxo {
+  join: client {
+    relationship: one_to_one
+    sql_on: ${client.name}="Trixxo" ;;
+    type: inner
+  }
+  join: customers {
+    relationship: one_to_one
+    sql_on: lower(trim(${customers.name}))="trixxo" ;;
+  }
+
+  join: derived_cph {
+    relationship: one_to_one
+    sql_on: ${derived_cph.customer_id}=${customers.customerid} and ${derived_cph.rnid}=${derived_trixxo.rn_id}
+      and ${derived_cph.map_applicationoriginid_value} = "eigen website" and lower(${derived_trixxo.traffic_medium}) like "cpc";;
+  }
+  join: derived_cpqa {
+    relationship: one_to_one
+    sql_on: ${derived_cpqa.customer_id}=${customers.customerid} and ${derived_cpqa.rnid}=${derived_trixxo.rn_id}
+      and ${derived_cpqa.map_applicationoriginid_value} = "eigen website" and lower(${derived_trixxo.traffic_medium}) like "cpc";;
+  }
+  join: campaign {
+    relationship: one_to_one
+    sql_on: ${client.id}=${campaign.clientid};;
+  }
+  join: campaign_job_board {
+    relationship: many_to_many
+    sql_on: ${campaign_job_board.campaignid}=${campaign.id} ;;
+    type: inner
+  }
+  join: jobboard {
+    relationship: many_to_many
+    sql_on:  ${jobboard.id}=${campaign_job_board.jobboardid} and ${jobboard.name} != "Werkzoeken" and ${jobboard.name} != "Monsterboard";;
+    type: inner
+  }
+  join: derived_budget {
+    relationship: one_to_one
+    sql_on:
+    ${derived_budget.client_name}="Trixxo"
+    and ${derived_budget.jobboard_name} != "Werkzoeken" and ${derived_budget.jobboard_name} != "Monsterboard"
+      AND ${derived_budget.month}=${derived_trixxo.month}
+      AND ${derived_budget.year}=cast(${derived_trixxo.year} as string)
+      ;;
+    type: inner
+  }
+  }
 explore: derived_raaak {
   join: client {
     relationship: one_to_one
