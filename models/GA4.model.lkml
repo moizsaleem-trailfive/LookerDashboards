@@ -7,6 +7,10 @@ datagroup: apics_datagroup {
   sql_trigger: SELECT DATE(CURRENT_DATE());;
 }
 explore: derived_trixxo {
+  join: combine_data_trixxo {
+    relationship: one_to_one
+    sql_on: lower(${derived_trixxo.vacancy_id})=lower(${combine_data_trixxo.vacancy_id}) and ${derived_trixxo.jobboard_name}=${combine_data_trixxo.jobboard_name};;
+  }
   join: client {
     relationship: one_to_one
     sql_on: ${client.name}="Trixxo" ;;
