@@ -76,6 +76,11 @@ view: derived_cpa_direct_apply {
     sql: CASE WHEN ((${client_name}="Raaak personeel") Or (${client_name}="Raaak personeel" and ${jobboard_name}="Indeed")) and ${jobboard_name} is not null
       THEN ${jobboard_name} end;;
   }
+  dimension: jobboard_TrixxoDirectApply {
+    type: string
+    sql: CASE WHEN ((${client_name}="Trixxo") Or (${client_name}="Trixxo" and ${jobboard_name}="Indeed")) and ${jobboard_name} is not null
+      THEN ${jobboard_name} end;;
+  }
   dimension: customer_name {
     type: string
     sql: ${TABLE}.customer_name ;;
