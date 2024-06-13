@@ -2,6 +2,7 @@ view: derived_nb {
   derived_table: {
     sql:
       SELECT ROW_NUMBER() OVER() AS id, * FROM( SELECT distinct
+        client.name as client_name,
         PARSE_DATE("%Y%m%d", event_date) AS event_date,
         CAST(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", event_date)) AS STRING) AS event_month,
         EXTRACT(YEAR FROM PARSE_DATE("%Y%m%d", event_date)) AS event_year,
@@ -151,6 +152,10 @@ view: derived_nb {
     datatype: date
     sql: ${TABLE}.event_date ;;
   }
+  dimension: client_name {
+    type: string
+    sql: ${TABLE}.client_name ;;
+  }
   dimension: month {
     type: string
     sql: ${TABLE}.event_month ;;
@@ -269,4 +274,5 @@ view: derived_nb {
     sql: CASE WHEN ${utm_page_views} is not null THEN ${utm_page_views} END ;;
 
   }
+
 }

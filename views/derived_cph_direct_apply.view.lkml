@@ -23,6 +23,7 @@ view: derived_cph_direct_apply {
         `evident-catcher-381918.script_campaign_tool_data.Client` AS client
         ON (LOWER(TRIM(client.name)) LIKE LOWER(TRIM(customers.customerName))
           OR LOWER(TRIM(REPLACE(client.name, ' ', ''))) = LOWER(TRIM(REPLACE(customers.customerName, ' ', '')))
+          OR (REGEXP_CONTAINS(LOWER(TRIM(REPLACE(customers.customerName, ' ', ''))), LOWER(TRIM(REPLACE(client.name, ' ', '')))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(client.name)), LOWER(TRIM(customers.customerName))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(customers.customerName)), LOWER(TRIM(client.name))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%"))
       LEFT JOIN

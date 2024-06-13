@@ -21,6 +21,7 @@ view: derived_cpa_direct_apply {
         `evident-catcher-381918.script_campaign_tool_data.Client` AS client
         ON (LOWER(TRIM(client.name)) LIKE LOWER(TRIM(customers.customerName))
           OR LOWER(TRIM(REPLACE(client.name, ' ', ''))) = LOWER(TRIM(REPLACE(customers.customerName, ' ', '')))
+          OR (REGEXP_CONTAINS(LOWER(TRIM(REPLACE(customers.customerName, ' ', ''))), LOWER(TRIM(REPLACE(client.name, ' ', '')))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(client.name)), LOWER(TRIM(customers.customerName))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(customers.customerName)), LOWER(TRIM(client.name))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%"))
       LEFT JOIN
@@ -79,6 +80,11 @@ view: derived_cpa_direct_apply {
   dimension: jobboard_TrixxoDirectApply {
     type: string
     sql: CASE WHEN ((${client_name}="Trixxo") Or (${client_name}="Trixxo" and ${jobboard_name}="Indeed")) and ${jobboard_name} is not null
+      THEN ${jobboard_name} end;;
+  }
+  dimension: jobboard_APSDirectApply {
+    type: string
+    sql: CASE WHEN ((${client_name}="APS Personeel") Or (${client_name}="APS Personeel" and ${jobboard_name}="Indeed")) and ${jobboard_name} is not null
       THEN ${jobboard_name} end;;
   }
   dimension: customer_name {

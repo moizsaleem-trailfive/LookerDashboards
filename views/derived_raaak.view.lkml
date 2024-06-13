@@ -2,6 +2,7 @@ view: derived_raaak {
  derived_table: {
   sql:
       SELECT ROW_NUMBER() OVER() AS id, * FROM( SELECT distinct
+      client.name as client_name,
         PARSE_DATE("%Y%m%d", event_date) AS event_date,
         CAST(EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", event_date)) AS STRING) AS event_month,
         EXTRACT(YEAR FROM PARSE_DATE("%Y%m%d", event_date)) AS event_year,
@@ -151,6 +152,10 @@ dimension_group: date {
   datatype: date
   sql: ${TABLE}.event_date ;;
 }
+  dimension: client_name {
+    type: string
+    sql: ${TABLE}.client_name ;;
+  }
 dimension: month {
   type: string
   sql: ${TABLE}.event_month ;;

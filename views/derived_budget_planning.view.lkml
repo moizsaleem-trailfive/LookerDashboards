@@ -16,6 +16,7 @@ view: derived_budget_planning {
       INNER JOIN `evident-catcher-381918.script_campaign_tool_data.Client` AS client
         ON (LOWER(TRIM(client.name)) LIKE LOWER(TRIM(customers.customername))
           OR LOWER(TRIM(REPLACE(client.name, ' ', ''))) = LOWER(TRIM(REPLACE(customers.customername, ' ', '')))
+          OR (REGEXP_CONTAINS(LOWER(TRIM(REPLACE(customers.customerName, ' ', ''))), LOWER(TRIM(REPLACE(client.name, ' ', '')))) AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(client.name)), LOWER(TRIM(customers.customername))) = TRUE AND LOWER(TRIM(client.name)) NOT LIKE "%luba%")
           OR (REGEXP_CONTAINS(LOWER(TRIM(customers.customername)), LOWER(TRIM(client.name))) = TRUE AND LOWER(TRIM(client.name)) NOT LIKE "%luba%"))
       LEFT JOIN `evident-catcher-381918.script_ETL_Data.map_applicationoriginid` AS map_applicationoriginid
